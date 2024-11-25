@@ -5,12 +5,12 @@ type Player struct {
 	Age 		int
 	Ranking		int
 	Material 	[]string
-	Teams		[]string
+	Teams		[]Team
 }
 
 type Team struct {
-	Name 		string
-	PlayerList 		[]string
+	Name 			string
+	PlayerList 		[]Player
 	TeamComposition map[string]int
 }
 
@@ -34,35 +34,27 @@ type TeamMatch struct{
 	ReceiverTeamMatchOutcome	Outcome
 }
 
-func (p *Player) setMaterial(forehand string, backhand string, blade string) (){
+func (p *Player) SetPlayerAge(age int) {
+	p.Age = age
+}
+
+func (p *Player) SetPlayerRanking(ranking int) {
+	p.Ranking = ranking
+}
+
+func (p *Player) SetPlayerMaterial(forehand string, backhand string, blade string) {
 	material := []string{forehand, backhand, blade}
 	p.Material = material
 }
 
-func (p *Player) NewPlayer(name string, age int, ranking int, material []string, teams []string){
-	p.Name = name
-	p.Age = age
-	if ranking == 0 {
-		p.Ranking = 0
-	} else {
-		p.Ranking  = ranking
-	}
-	if material == nil {
-		p.setMaterial("","","")
-	} else {
-		p.Material = material
-	}
-	if teams == nil {
-		p.Teams = nil
-	} else {
-		for _, team := range teams {
-			p.Teams = append(p.Teams, team)
-		}
-	}
+func (p *Player) SetPlayerTeam(team Team) {
+	p.Teams = append(p.Teams, team)
 }
 
-func (t *Team) addPlayerToTeam(player *Player){
-	t.PlayerList = append(t.PlayerList, player.Name)
-	player.Teams = append(player.Teams, t.Name)
+func (t *Team) SetTeamPlayerList(playerList []Player) {
+	t.PlayerList = playerList
+}
 
+func (t *Team) SetTeamComposition(teamComposition map[string]int) {
+	t.TeamComposition = teamComposition
 }
