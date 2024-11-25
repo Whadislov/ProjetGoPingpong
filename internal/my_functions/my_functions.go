@@ -2,7 +2,6 @@ package myfunctions
 
 
 import (
-	"errors"
 	"fmt"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -30,30 +29,18 @@ func isPlayerInTeam(p mt.Player, t mt.Team) (bool){
 	return false
 }
 
-func isTeamInPlayerTeams(p mt.Player, t mt.Team) (bool){
-	if p.Teams == nil {
-		return false
-	}
-	for i := range p.Teams {
-		if p.Teams[i].Name == t.Name {
-			return true
-		}
-	}
-	return false
-}
-
-func AddPlayerToTeam(p *mt.Player, t *mt.Team)(err error) {
+func AddPlayerToTeam(p *mt.Player, t *mt.Team) error {
 	if isPlayerInTeam(*p, *t) {
-		return errors.New(fmt.Sprintf("%v is already in team %v", p.Name, t.Name))
+		return fmt.Errorf("%v is already in team %v", p.Name, t.Name)
 	}
-	p.Teams = append(p.Teams, t)
-	t.PlayerList = append(t.PlayerList, p)
+	p.Teams = append(p.Teams, *t)
+	t.PlayerList = append(t.PlayerList, *p)
 	return nil
 }
 
 func RemovePlayerFromTeam(p *mt.Player, t *mt.Team)(err error) {
 	if !isPlayerInTeam(*p, *t) {
-		return errors.New(fmt.Sprintf("%v is not in team %v", p.Name, t.Name))
+		return fmt.Errorf("%v is not in team %v", p.Name, t.Name)
 	} 
 	for i := range t.PlayerList {
 		if t.PlayerList[i].Name == p.Name {
@@ -78,7 +65,7 @@ func DeletePlayer(p *mt.Player)(err error) {
 		}
 	}
 	p = nil
-	return errors.New(fmt.Sprintf("%f has been successfully deleted", pName))
+	return fmt.Errorf("%f has been successfully deleted", pName)
 }
 
 func DeleteTeam(t *mt.Team)(err error) {
@@ -89,5 +76,5 @@ func DeleteTeam(t *mt.Team)(err error) {
 		}
 	}
 	t = nil
-	return errors.New(fmt.Sprintf("%f has been successfully deleted", tName))
+	return fmt.Errorf("%f has been successfully deleted", tName)
 }
