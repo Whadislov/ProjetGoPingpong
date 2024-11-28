@@ -5,81 +5,112 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-
-func NewPlayer(name string)(p mt.Player) {
-	p.Name = name
-	p.Age = 0
-	p.Ranking = 0
-	p.Material = []string{"Unknown", "Unknown", "Unknown"}
-	p.Teams = nil
-	return p
+func NewClub(name string)(c mt.Club) {
+	c.Name = name
+	c.PlayerList = nil
+	c.TeamList = nil
+	return c
 }
 
-func NewTeam(name string)(t mt.Team) {
-	t.Name = name
-	t.PlayerList = nil
-	t.TeamComposition = nil
-	return t
-}
-
-func isPlayerInTeam(p mt.Player, t mt.Team) (bool) {
-	if p.Teams == nil {
-		return false
-	}
-	fmt.Println("Team: ", t.Name)
-	fmt.Println("PlayList: ", t.PlayerList)
-	for _, playerFromList := range t.PlayerList {
-		if playerFromList.Name == p.Name {
-			fmt.Println("Ok, player in PlayList")
+func isPlayerAlreadyDefined(playerName string, c mt.Club)(bool) {
+	for _, player := range c.GetPlayerList() {
+		if player.Name == playerName {
 			return true
 		}
 	}
 	return false
 }
 
+func isTeamAlreadyDefined(teamName string, c mt.Club)(bool) {
+	for _, team := range c.GetTeamList() {
+		if team.Name == teamName {
+			return true
+		}
+	}
+	return false
+}
+
+func NewPlayer(playerName string, club *mt.Club)(p mt.Player, err error) {
+	if isPlayerAlreadyDefined(playerName, *club) {
+		fmt.Printf("Error ! Player %v already exists.", playerName)
+		return mt.Player{}, fmt.Errorf("player already exists")
+	}
+	p.Name = playerName
+	p.Age = 0
+	p.Ranking = 0
+	p.Material = []string{"Unknown", "Unknown", "Unknown"}
+	p.TeamList = nil
+	fmt.Printf("Player %v sucessfully created.\n", playerName)
+	club.PlayerList = append(club.PlayerList, p)
+	return p, err
+}
+
+func NewTeam(teamName string, club *mt.Club)(t mt.Team, err error) {
+	if isTeamAlreadyDefined(teamName, *club) {
+		fmt.Printf("Error ! Team %v already exists.\n", teamName)
+		return mt.Team{}, fmt.Errorf("team already exists")
+	}
+	t.Name = teamName
+	t.PlayerList = nil
+	fmt.Printf("Team %v sucessfully created.\n", teamName)
+	club.TeamList = append(club.TeamList, t)
+	return t, err
+}
+
+func isPlayerInTeam(p *mt.Player, t *mt.Team) (bool) {
+	fmt.Println("t.PlayerList", t.Name)
+	fmt.Println("t.PlayerList", t.PlayerList)
+	for _, player := range t.PlayerList {
+		fmt.Println("Say ok")
+		if player.Name == p.Name {
+
+			return true
+		}
+	}
+	return false
+}
+
+//Ajouter vérification de doublon (2x meme équipe, 2x meme joueur)
 func AddPlayerToTeam(p *mt.Player, t *mt.Team) (err error) {
-	if isPlayerInTeam(*p, *t) {
+	if isPlayerInTeam(p, t) {
 		fmt.Printf("Error ! %v is already in %v.\n", p.Name, t.Name)
 		return fmt.Errorf("%v is already in %v", p.Name, t.Name)
 	}
-	p.Teams = append(p.Teams, *t)
+	p.TeamList = append(p.TeamList, t.Name)
 	t.PlayerList = append(t.PlayerList, *p)
+	fmt.Printf("Successfully added %v in %v.\n", p.Name, t.Name)
 	return nil
 }
 
 func RemovePlayerFromTeam(p *mt.Player, t *mt.Team) (err error) {
-	fmt.Println("Valeur du bool: " ,isPlayerInTeam(*p, *t))
-	if !isPlayerInTeam(*p, *t) {
+	if !isPlayerInTeam(p, t) {
 		fmt.Printf("Error ! %v is not in team %v.\n", p.Name, t.Name)
 		return fmt.Errorf("%v is not in team %v", p.Name, t.Name)
 	} 
-	for i := range t.PlayerList {
-		if t.PlayerList[i].Name == p.Name {
-			t.PlayerList[i] = t.PlayerList[len(t.PlayerList)-1]
-			t.PlayerList = t.PlayerList[:len(t.PlayerList)-1]
-		}
-	}
-	for i := range p.Teams {
-		if p.Teams[i].Name == t.Name {
-			p.Teams[i] = p.Teams[len(p.Teams)-1]
-			p.Teams = p.Teams[:len(p.Teams)-1]
-		}
-	}
+	// Remove player name from the team player list
+	fmt.Printf("%v removed from %v\n", p.Name, t.Name)
+	t.RemovePlayer(p)
+	// Remove the team from the team list of the player
+	fmt.Printf("%v removed from %v\n", t.Name, p.Name)
+	p.RemoveTeam(t.Name)
 	return nil
 }
 
-func DeletePlayer(p *mt.Player) (err error) {
+func DeletePlayer(p *mt.Player, c *mt.Club) (err error) {
 	if p.IsEmpty() {
 		fmt.Println("Error ! Player does not exist")
 		return fmt.Errorf("player does not exist")
 	}
 	
-	if p.Teams != nil {
-		for _, team := range p.Teams {
-			fmt.Printf("%v removed from %v\n", p.Name, team.Name)
-			RemovePlayerFromTeam(p, &team)
+	if p.TeamList != nil {
+		for _, team := range p.TeamList {
+			t := p.GetTeam(team, *c)
+			RemovePlayerFromTeam(p, t)
 		}
 	}
+	fmt.Printf("%v removed from %v\n", p.Name, c.Name)
+	c.RemovePlayer(p.Name)
+
 	*p = mt.Player{}
 	fmt.Println("Player has been successfully deleted")
 	return nil 
