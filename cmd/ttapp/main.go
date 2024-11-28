@@ -5,11 +5,6 @@ import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 )
 
-
-func typeof(v interface{}) (string) {
-	return fmt.Sprintf("%T", v)
-}
-
 func main() {
 
 	c1 := mf.NewClub("TSG Heilbronn")
@@ -21,6 +16,10 @@ func main() {
 	m5, _ := mf.NewTeam("Mannschaft 5", &c1)
 	m7, _:= mf.NewTeam("Mannschaft 7", &c1)
 	m8, _ := mf.NewTeam("Mannschaft 8", &c1)
+
+	fmt.Println("")
+	fmt.Println("####################### club show")
+	c1.Show()
 	
 
 	lasse, _  := mf.NewPlayer("Lasse", &c1)
@@ -28,13 +27,13 @@ func main() {
 	lasse.SetPlayerRanking(1300)
 	lasse.SetPlayerMaterial("Victas V22 double Extra", "Victas V20 double Extra", "Koki Niwa Wood")
 	lasse.Show()
-	mf.AddPlayerToTeam(&lasse, &m5)
+	mf.AddPlayerToTeam(lasse, mf.GetName(m5), &c1)
 	
 	julien, _  := mf.NewPlayer("Julien", &c1)
 	julien.SetPlayerAge(27)
 	julien.SetPlayerRanking(1585)
 	julien.SetPlayerMaterial("Victas V20 double Extra", "Victas V20 double Extra", "Koki Niwa Wood")
-	mf.AddPlayerToTeam(&julien, &m2)
+	mf.AddPlayerToTeam(julien, mf.GetName(m2), &c1)
 	julien.Show()
 
 	robin, _  := mf.NewPlayer("Robin", &c1)
@@ -44,41 +43,49 @@ func main() {
 	sumi, _  := mf.NewPlayer("Sumi", &c1)
 	martin, _  := mf.NewPlayer("Martin", &c1)
 
-	mf.AddPlayerToTeam(&robin, &m2)
-	mf.AddPlayerToTeam(&leon, &m2)
-	mf.AddPlayerToTeam(&patrick, &m2)
-	mf.AddPlayerToTeam(&jonathan, &m2)
-	mf.AddPlayerToTeam(&sumi, &m2)
-	mf.AddPlayerToTeam(&martin, &m2)
+	mf.AddPlayerToTeam(robin, mf.GetName(m2), &c1)
+	mf.AddPlayerToTeam(leon, mf.GetName(m2), &c1)
+	mf.AddPlayerToTeam(patrick, mf.GetName(m2), &c1)
+	mf.AddPlayerToTeam(jonathan, mf.GetName(m2), &c1)
+	mf.AddPlayerToTeam(sumi, mf.GetName(m2), &c1)
+	mf.AddPlayerToTeam(martin, mf.GetName(m2), &c1)
 	fmt.Println("")
 	fmt.Println("####################### team.Show()")
 	m2.Show()
 
-	mf.AddPlayerToTeam(&julien, &m3)
+	mf.AddPlayerToTeam(julien, mf.GetName(m3), &c1)
 	fmt.Println("")
 	fmt.Println("####################### Julien 2 teams ")
 	julien.Show()
-	mf.AddPlayerToTeam(&lasse, &m5)
+	mf.AddPlayerToTeam(lasse, mf.GetName(m5), &c1)
 
-	mf.AddPlayerToTeam(&julien, &m7)
+	mf.AddPlayerToTeam(julien, mf.GetName(m7), &c1)
+
+	fmt.Println("")
+	fmt.Println("####################### club show")
+	c1.Show()
+	
 
 	fmt.Println("")
 	fmt.Println("####################### Team 7 delete show ")
-	mf.DeleteTeam(&m7)
+	mf.DeleteTeam(mf.GetName(m7), &c1)
 	m7.Show()
-
+	fmt.Println("")
+	fmt.Println("####################### club player list ")
+	fmt.Println(c1.PlayerList)
+	
 	fmt.Println("")
 	fmt.Println("####################### Julien delete show ")
-	mf.DeletePlayer(&julien, &c1)
+	mf.DeletePlayer(julien, &c1)
 	julien.Show()
 	fmt.Println("")
 	fmt.Println("####################### Team 2 show ")
 	m2.Show()
 	fmt.Println("")
 	fmt.Println("#######################  Team 5 show ")
-	mf.AddPlayerToTeam(&robin, &m5)
+	mf.AddPlayerToTeam(robin, mf.GetName(m5), &c1)
 	fmt.Println(m5.PlayerList[0])
-	fmt.Println(m5.PlayerList[1])
+	//fmt.Println(m5.PlayerList[1])
 	fmt.Println("")
 	fmt.Println("#######################  Team 8 show ")
 	m8.Show()

@@ -11,19 +11,21 @@ type Player struct {
 	Age 		int
 	Ranking		int
 	Material 	[]string
-	TeamList	[]string  //Max 2
+	TeamList	[]*Team  
 }
 
 type Team struct {
 	Name 		string
-	PlayerList 	[]Player
+	PlayerList 	[]*Player
 }
 
 type Club struct {
 	Name 		string
-	PlayerList	[]Player
-	TeamList	[]Team
+	PlayerList	[]*Player
+	TeamList	[]*Team //Teams map[string]*Team
 }
+
+
 
 type PlayerMatch struct{
 	League				string
@@ -63,17 +65,9 @@ func (p *Player) SetPlayerMaterial(forehand string, backhand string, blade strin
 	p.Material = material
 }
 
-func (t *Team) SetTeamPlayerList(playerList []Player) {
-	t.PlayerList = playerList
-}
-
 // ajouter erreur si la value de la clé (joueur) ne fait pas partie de la liste des joueurs
 func (t *TeamMatch) SetTeamComposition(teamComposition map[int]string) {
 	t.TeamComposition = teamComposition
-}
-
-type IsEmpty interface {
-	IsEmpty()
 }
 
 func (p *Player) IsEmpty()(bool) {
@@ -95,7 +89,7 @@ func (c *Club) IsEmpty()(bool) {
 	c.TeamList == nil
 }
 
-func (p *Player) Show()(err error) {
+func (p Player) Show()(err error) {
 	if p.IsEmpty() {
 		fmt.Println("Error ! Player does not exist")
 		return fmt.Errorf("Player does not exist")
@@ -108,11 +102,11 @@ func (p *Player) Show()(err error) {
 		return nil
 	}
 	case 1: {
-		fmt.Printf("%v plays in %v.\n", p.Name, p.TeamList[0])
+		fmt.Printf("%v plays in %v.\n", p.Name, p.TeamList[0].Name)
 		return nil
 	}
 	case 2: {
-		fmt.Printf("%v plays in %v and in %v.\n", p.Name, p.TeamList[0], p.TeamList[1])
+		fmt.Printf("%v plays in %v and in %v.\n", p.Name, p.TeamList[0].Name, p.TeamList[1].Name)
 		return nil
 	}
 	default: {
@@ -122,7 +116,7 @@ func (p *Player) Show()(err error) {
 	}
 }
 
-func (t *Team) Show()(err error) {
+func (t Team) Show()(err error) {
 	if t.IsEmpty() {
 		fmt.Println("Error ! Team does not exist")
 		return fmt.Errorf("Team does not exist")
@@ -140,14 +134,14 @@ func (t *Team) Show()(err error) {
 		fmt.Printf("%v has %v players.\n", t.Name, len(t.PlayerList))
 		fmt.Println("The players are :")
 		for i := 0; i < len(t.PlayerList); i++ {
-			fmt.Println(t.PlayerList[i])
+			fmt.Printf("Player %v : %v\n", i+1, t.PlayerList[i].Name)
 		}
-	}
+		}
 	}
 	return nil
 }
 
-func (c *Club) Show()(err error) {
+func (c Club) Show()(err error) {
 	if c.IsEmpty() {
 		fmt.Println("Error ! Club does not exist")
 		return fmt.Errorf("Club does not exist")
@@ -166,7 +160,14 @@ func (c *Club) Show()(err error) {
 		fmt.Printf("%v has %v teams.\n", c.Name, len(c.TeamList))
 		fmt.Println("The teams are :")
 		for i := 0; i < len(c.TeamList); i++ {
-			fmt.Println(c.TeamList[i])
+			fmt.Println(c.TeamList[i].Name)
+
+			if len(c.TeamList[i].PlayerList) == 0 {
+				fmt.Println("There is no player in this team")
+			}
+			for j := 0; j < len(c.TeamList[i].PlayerList); j++ {
+				fmt.Printf("Player %v : %v\n", j+1, c.TeamList[i].PlayerList[j].Name)
+			}
 		}
 	}
 	}
@@ -187,71 +188,171 @@ func (c *Club) Show()(err error) {
 	}
 	}
 	return nil
-}
+	}
 
-func (t *Team) AddPlayer(player Player) {
-	t.PlayerList = append(t.PlayerList, player)
-}
 
-func (c *Club) AddPlayer(player Player) {
+func (c *Club) AddPlayer(player *Player) {
 	c.PlayerList = append(c.PlayerList, player)
 }
 
-func (t *Team) RemovePlayer(player *Player) {
-	if len(t.PlayerList) == 1 {
-		t.PlayerList = nil
-	}
-	for i, p := range t.PlayerList {
-		if p.Name == player.Name {
-			fmt.Println("%88888888888888888888888888888888")
-			fmt.Println(t.PlayerList[len(t.PlayerList)-1])
-			fmt.Println("888888888888888888888888888888888")
-			t.PlayerList[i] = t.PlayerList[len(t.PlayerList)-1]
-			t.PlayerList = t.PlayerList[:len(t.PlayerList)-1]
-			break
-		}
-	}
-}
-
-func (c *Club) RemovePlayer(player string) {
-	for i, p := range c.PlayerList {
-		if p.Name == player {
-			c.PlayerList[i] = c.PlayerList[len(c.PlayerList)-1]
-			c.PlayerList = c.PlayerList[:len(c.PlayerList)-1]
-			break
-		}
-	}
-}
-
-func (p *Player) AddTeam(team string) {
-	p.TeamList = append(p.TeamList, team)
-}
-
-func (c *Club) AddTeam(team Team) {
+func (c *Club) AddTeam(team *Team) {
 	c.TeamList = append(c.TeamList, team)
 }
 
-func (p *Player) RemoveTeam(team string) {
-	for i, t := range p.TeamList {
-		if t == team {
-			p.TeamList[i] = p.TeamList[len(p.TeamList)-1]
-			p.TeamList = p.TeamList[:len(p.TeamList)-1]
+func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
+	teamIndex, err := c.FindTeam(teamName)
+	if err != nil {
+		return err
+	}
+	team := c.TeamList[teamIndex]
+
+	// Add player the in the team if not already in
+	found := false
+	for _, p := range team.PlayerList {
+		if p.Name == player.Name {
+			found = true
 			break
 		}
 	}
+
+	if !found {
+		team.PlayerList = append(team.PlayerList, player)
+	}
+
+	// Add team to the list of team of the player
+	found = false
+	for _, t := range player.TeamList {
+		if t.Name == team.Name {
+			found = true
+			break
+		}
+	}
+	if !found {
+		player.TeamList = append(player.TeamList, team)
+	}
+	return nil
 }
 
-func (c *Club) RemoveTeam(team string) {
+func (c *Club) FindTeam(teamName string)(int, error) {
+	for i := range c.TeamList {
+		if c.TeamList[i].Name == teamName {
+			return i, nil
+		}
+	}
+	return 0, fmt.Errorf("%v not found in the club", teamName)
+}
+
+func (c *Club) FindPlayer(playerName string)(int, error) {
+	for i := range c.PlayerList {
+		if c.PlayerList[i].Name == playerName {
+			return i, nil
+		}
+	}
+	return 0, fmt.Errorf("%v not found in the club", playerName)
+}
+
+func (c *Club) RemovePlayer(player *Player)(error) {
+	index, err := c.FindPlayer(player.Name)
+	if err != nil {
+		return err
+	}
+	// Move the player at the end of the club list
+	c.PlayerList[index] = c.PlayerList[len(c.PlayerList)-1]
+	// Remove the player from the list
+	c.PlayerList = c.PlayerList[:len(c.PlayerList)-1]
+
+
+	for _, team := range player.TeamList {
+		if err := c.RemovePlayerFromTeam(player, team.Name); err != nil {
+			fmt.Printf("Error when deleting player %s from team %s : %s\n", player.Name, team.Name, err)
+		}
+	}
+	// Delete the player, make it empty
+	*player = Player{}
+	return nil
+}
+
+	func (c *Club) RemovePlayerFromTeam(player *Player, teamName string) error {
+		// Find team, club view
+		teamIndex, err := c.FindTeam(teamName)
+		if err != nil {
+			return fmt.Errorf("team %s not found: %w", teamName, err)
+		}
+	
+		// Find player in team
+		playerIndex := -1
+		for i, p := range c.TeamList[teamIndex].PlayerList {
+			if p.Name == player.Name {
+				playerIndex = i
+				break
+			}
+		}
+		if playerIndex == -1 {
+			return fmt.Errorf("player %s not found in team %s", player.Name, teamName)
+		}
+	
+		// Delete player in the list
+		// ... means we append element per element, the slice is sliced in individual element before being added
+		c.TeamList[teamIndex].PlayerList = append(
+			c.TeamList[teamIndex].PlayerList[:playerIndex], 
+			c.TeamList[teamIndex].PlayerList[playerIndex+1:]..., 
+		)
+	
+		// Delete team from the team list of the player
+		teamIndexInPlayer := -1
+		for i, t := range player.TeamList {
+			if t.Name == teamName {
+				teamIndexInPlayer = i
+				break
+			}
+		}
+		if teamIndexInPlayer != -1 {
+			player.TeamList = append(
+				player.TeamList[:teamIndexInPlayer],
+				player.TeamList[teamIndexInPlayer+1:]...,
+			)
+		}
+	
+		return nil
+	}
+
+
+func (c *Club) RemoveTeam(teamName string)(error) {
+	index, err := c.FindTeam(teamName)
+	if err != nil {
+		return err
+	}
+	// Team to remove
+	teamToRemove := c.TeamList[index]
+
+	// Remove the link between players and the team
+	for _, p := range teamToRemove.PlayerList {
+		if err := c.RemovePlayerFromTeam(p, teamName); err != nil {
+			return fmt.Errorf("error when deleting player %s from team %s : %w", p.Name, teamName, err)
+		}
+	}
+	
+	// Create list of teams without the removed team
+	newTeamList := []*Team{}
+
 	for i, t := range c.TeamList {
-		if t.Name == team {
-			c.TeamList[i] = c.TeamList[len(c.TeamList)-1]
-			c.TeamList = c.TeamList[:len(c.TeamList)-1]
-			break
+		if i != index {
+			newTeamList = append(newTeamList, t)
+		} else {
+			c.TeamList[index] = nil
 		}
 	}
+	// Set the list
+	c.TeamList = newTeamList
+	// Set all values to "" or nil
+	teamToRemove.Name = ""
+    teamToRemove.PlayerList = nil
+	// Set pointer to nil
+	teamToRemove = nil
+	return nil
 }
 
-func (c *Club) GetPlayerList()([]Player) {
+func (c *Club) GetPlayerList()([]*Player) {
 	return c.PlayerList
 }
 
@@ -259,23 +360,12 @@ func (p *Player) GetTeam(teamName string, c Club)(*Team) {
 	for _, team := range c.TeamList {
 		fmt.Println("c.TeamList", c.TeamList)
 		if team.Name == teamName {
-			return &team
+			return team
 		}
 	}
 	return nil
 }
 
-func (c *Club) GetTeamList()([]Team) {
+func (c *Club) GetTeamList()([]*Team) {
 	return c.TeamList
 }
-
-
-/*
-
-if len(t.TeamComposition) > 0 {
-	fmt.Printf("The team composition for the next match is :\n")
-	for j := 0; j < len(t.TeamComposition); j++ {
-		fmt.Printf("Position %v : %v\n", j+1, t.TeamComposition[j])
-	}
-}
-*/
