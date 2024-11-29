@@ -239,7 +239,7 @@ func (c *Club) FindTeam(teamName string)(int, error) {
 			return i, nil
 		}
 	}
-	return 0, fmt.Errorf("%v not found in the club", teamName)
+	return -1, fmt.Errorf("%v not found in the club", teamName)
 }
 
 func (c *Club) FindPlayer(playerName string)(int, error) {
@@ -248,7 +248,7 @@ func (c *Club) FindPlayer(playerName string)(int, error) {
 			return i, nil
 		}
 	}
-	return 0, fmt.Errorf("%v not found in the club", playerName)
+	return -1, fmt.Errorf("%v not found in the club", playerName)
 }
 
 func (c *Club) RemovePlayer(player *Player)(error) {
