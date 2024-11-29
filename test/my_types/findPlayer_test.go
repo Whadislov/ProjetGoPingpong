@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
-func TestFindTeam(t *testing.T) {
+func TestFindPlayer(t *testing.T) {
 	type testCase struct {
 		club 			my_types.Club
-		teamName       	string
+		playerName      string
 		expectedIndex 	int
 		expectedError 	error
 	}
@@ -16,26 +16,26 @@ func TestFindTeam(t *testing.T) {
 		{
 			club: my_types.Club{
 				Name: "TSG Heilbronn",
-				TeamList: []*my_types.Team{
-					{Name: "Mannschaft 1"},
-					{Name: "Mannschaft 2"},
+				PlayerList: []*my_types.Player{
+					{Name: "Julien"},
+					{Name: "Lasse"},
 				},
 			},
-			teamName:      "Mannschaft 1",
-			expectedIndex: 0,
-			expectedError: nil,
+			playerName:		"Julien",
+			expectedIndex: 	0,
+			expectedError: 	nil,
 		},
 		{
 			club: my_types.Club{
 				Name: "TSG Heilbronn",
 				TeamList: []*my_types.Team{
-					{Name: "Mannschaft 1"},
-					{Name: "Mannschaft 2"},
+					{Name: "Julien"},
+					{Name: "Lasse"},
 				},
 			},
-			teamName:      "Mannschaft 0",
-			expectedIndex: -1,
-			expectedError: fmt.Errorf("Mannschaft 0 not found in the club"),
+			playerName:		"Dominik",
+			expectedIndex: 	-1,
+			expectedError: 	fmt.Errorf("Dominik not found in the club"),
 		},
 	}
 
@@ -43,8 +43,8 @@ func TestFindTeam(t *testing.T) {
 	failCount := 0
 
 	for _, test := range tests {
-		t.Run(fmt.Sprintf("Finding team %s in club %s", test.teamName, test.club.Name), func(t *testing.T) {
-			index, err := test.club.FindTeam(test.teamName)
+		t.Run(fmt.Sprintf("Finding player %s in club %s", test.playerName, test.club.Name), func(t *testing.T) {
+			index, err := test.club.FindPlayer(test.playerName)
 			
 		
 			// Verify index

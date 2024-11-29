@@ -211,7 +211,19 @@ func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
 	for _, p := range team.PlayerList {
 		if p.Name == player.Name {
 			found = true
-			break
+
+			// Add team to the list of team of the player if not already in (can debug the link between the team and the player)
+			found2 := false
+			for _, t := range player.TeamList {
+				if t.Name == team.Name {
+					found2 = true
+					return fmt.Errorf("team %s and player %s are already in each other's respective list", teamName, player.Name)
+				}
+			}
+			if !found2 {
+				player.TeamList = append(player.TeamList, team)
+			}
+			return fmt.Errorf("player %s is already in team %s", player.Name, teamName)
 		}
 	}
 
@@ -219,12 +231,12 @@ func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
 		team.PlayerList = append(team.PlayerList, player)
 	}
 
-	// Add team to the list of team of the player
+	// Add team to the list of team of the player if not already in
 	found = false
 	for _, t := range player.TeamList {
 		if t.Name == team.Name {
 			found = true
-			break
+			return fmt.Errorf("team %s and player %s are already in each other's respective list", teamName, player.Name)
 		}
 	}
 	if !found {
