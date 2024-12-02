@@ -1,9 +1,16 @@
 package my_functions
 
 import (
+	"log"
 	"fmt"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
+
+const DefaultMaterial = "Unknown"
+
+func DefaultPlayerMaterial() []string {
+    return []string{DefaultMaterial, DefaultMaterial, DefaultMaterial}
+}
 
 func NewClub(name string)(c mt.Club) {
 	c.Name = name
@@ -12,46 +19,53 @@ func NewClub(name string)(c mt.Club) {
 	return c
 }
 
-func isPlayerAlreadyDefined(playerName string, c mt.Club)(bool) {
-	_, err := c.FindPlayer(playerName)
-	return err == nil
-}
-
-func isTeamAlreadyDefined(teamName string, c mt.Club)(bool) {
-	_, err := c.FindTeam(teamName)
-	return err == nil
-}
-
-func NewPlayer(playerName string, club *mt.Club)(*mt.Player, error) {
-	if isPlayerAlreadyDefined(playerName, *club) {
-		return nil, fmt.Errorf("player %v already exists", playerName)
+func isPlayerAlreadyDefined(playerName string, c *mt.Club)(error) {
+	if c == nil {
+		return fmt.Errorf("club is not defined")
 	}
-	p := &mt.Player{
+	_, err := c.FindPlayer(playerName)
+	return err
+}
+
+func isTeamAlreadyDefined(teamName string, c *mt.Club)(error) {
+	if c == nil {
+		return fmt.Errorf("club is not defined")
+	}
+	_, err := c.FindTeam(teamName)
+	return err
+}
+
+func NewPlayer(playerName string, club *mt.Club)(mt.Player, error) {
+	
+	if err := isPlayerAlreadyDefined(playerName, club); err == nil {
+		return mt.Player{}, fmt.Errorf("player %v already exists", playerName)
+	}
+	p := mt.Player{
 		Name:		playerName,
 		Age:		0,
 		Ranking: 	0,
-		Material: 	[]string{"Unknown", "Unknown", "Unknown"},
-		TeamList: 	nil,
+		Material: 	DefaultPlayerMaterial(),
+		TeamList: 	[]*mt.Team{},
 	}
 	// Add player on player list
-	club.AddPlayer(p)
+	club.AddPlayer(&p)
 
-	fmt.Printf("Player %v sucessfully created.\n", playerName)
+	log.Printf("Player %v sucessfully created.", playerName)
 	return p, nil
 }
 
-func NewTeam(teamName string, club *mt.Club)(*mt.Team, error) {
-	if isTeamAlreadyDefined(teamName, *club) {
-		return nil, fmt.Errorf("team %v already exists", teamName)
+func NewTeam(teamName string, club *mt.Club)(mt.Team, error) {
+	if err := isTeamAlreadyDefined(teamName, club); err == nil {
+		return mt.Team{}, fmt.Errorf("team %v already exists", teamName)
 	}
-	t := &mt.Team{
+	t := mt.Team{
 		Name:			teamName,
-		PlayerList:		nil,
+		PlayerList:		[]*mt.Player{},
 	}
 	// Add team on team list
-	club.AddTeam(t)
+	club.AddTeam(&t)
 
-	fmt.Printf("Team %v sucessfully created.\n", teamName)
+	log.Printf("Team %v sucessfully created.", teamName)
 	return t, nil
 }
 
@@ -76,9 +90,9 @@ func AddPlayerToTeam(p *mt.Player, teamName string, c *mt.Club) (error) {
 
 func RemovePlayerFromTeam(p *mt.Player, teamName string, c *mt.Club) (e error) {
 	if c.RemovePlayerFromTeam(p, teamName) == nil {
-		fmt.Println(p.Name, "removed from", teamName)
+		log.Println(p.Name, "removed from", teamName)
 	} else {
-		fmt.Println("has not been successfully removed from", teamName)
+		log.Println("has not been successfully removed from", teamName)
 	}
 	return nil
 }

@@ -17,7 +17,7 @@ func TestAddTeam(t *testing.T) {
 	expectedTeamList  := []*my_types.Team{&team}
 
 
-	t.Run(fmt.Sprintf("Add player to player list of club %s", club.Name), func(t *testing.T) {
+	t.Run(fmt.Sprintf("Add team to teamlist of club %s", club.Name), func(t *testing.T) {
 		club.AddTeam(&team)
 	for i := range club.TeamList {
 		if club.TeamList[i] != &team {

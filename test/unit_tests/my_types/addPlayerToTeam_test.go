@@ -10,7 +10,7 @@ import (
 
 
 
-func TestAddPlayerToTeamTest(t *testing.T) {
+func TestAddPlayerToTeam(t *testing.T) {
 	// Helper function
 	setupClub := func() my_types.Club {
         return my_types.Club{Name: "c1"}
@@ -56,8 +56,7 @@ func TestAddPlayerToTeamTest(t *testing.T) {
 	//Expected
 	expectedPlayerTeamList1	:= []*my_types.Team{&team1}
 	expectedTeamPlayerList1	:= []*my_types.Player{&player1}
-	var expectedError1 error 
-	expectedError1 = nil
+	var expectedError1 error = nil
 
 	/* Test 2 : 
 	Setup

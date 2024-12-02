@@ -268,29 +268,36 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 	if err != nil {
 		return err
 	}
-	// Move the player at the end of the club list
-	c.PlayerList[index] = c.PlayerList[len(c.PlayerList)-1]
-	// Remove the player from the list
-	c.PlayerList = c.PlayerList[:len(c.PlayerList)-1]
-
-
+	
 	for _, team := range player.TeamList {
 		if err := c.RemovePlayerFromTeam(player, team.Name); err != nil {
 			fmt.Printf("Error when deleting player %s from team %s : %s\n", player.Name, team.Name, err)
 		}
 	}
+	
+	// Move the player at the end of the club list
+	c.PlayerList[index] = c.PlayerList[len(c.PlayerList)-1]
+	// Remove the player from the list
+	c.PlayerList = c.PlayerList[:len(c.PlayerList)-1]
+
 	// Delete the player, make it empty
 	*player = Player{}
 	return nil
 }
 
 	func (c *Club) RemovePlayerFromTeam(player *Player, teamName string) error {
-		// Find team, club view
-		teamIndex, err := c.FindTeam(teamName)
+		// Find player, club view
+		_, err := c.FindPlayer(player.Name)
 		if err != nil {
-			return fmt.Errorf("team %s not found: %w", teamName, err)
+			return err
 		}
-	
+		
+		// Find team, club view
+		teamIndex, err2 := c.FindTeam(teamName)
+		if err2 != nil {
+			return fmt.Errorf("team %s not found: %w", teamName, err2)
+		}
+
 		// Find player in team
 		playerIndex := -1
 		for i, p := range c.TeamList[teamIndex].PlayerList {
@@ -299,16 +306,33 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 				break
 			}
 		}
+		// player is not in team playerlist
 		if playerIndex == -1 {
-			return fmt.Errorf("player %s not found in team %s", player.Name, teamName)
+			// Check if the team is in the player's teamlist
+			for teamIndexInPlayer := range player.TeamList {
+				if player.TeamList[teamIndexInPlayer].Name == teamName {
+					// Found the team in the player's teamlist. Need to remove the team from the list
+					copy(player.TeamList[teamIndexInPlayer:], player.TeamList[teamIndexInPlayer+1:])
+					player.TeamList[len(player.TeamList)-1] = nil // Clean the last position
+					player.TeamList = player.TeamList[:len(player.TeamList)-1]
+				}
+			}
+			return fmt.Errorf("player %s does not belong to team %s", player.Name, teamName)
 		}
-	
-		// Delete player in the list
+
+		// Delete player in the playerlist
 		// ... means we append element per element, the slice is sliced in individual element before being added
+		/*
+		// Code below does not work because append creates a new slice
 		c.TeamList[teamIndex].PlayerList = append(
 			c.TeamList[teamIndex].PlayerList[:playerIndex], 
 			c.TeamList[teamIndex].PlayerList[playerIndex+1:]..., 
 		)
+		*/
+
+		copy(c.TeamList[teamIndex].PlayerList[playerIndex:], c.TeamList[teamIndex].PlayerList[playerIndex+1:])
+		c.TeamList[teamIndex].PlayerList[len(c.TeamList[teamIndex].PlayerList)-1] = nil // Clean the last position
+		c.TeamList[teamIndex].PlayerList = c.TeamList[teamIndex].PlayerList[:len(c.TeamList[teamIndex].PlayerList)-1]
 	
 		// Delete team from the team list of the player
 		teamIndexInPlayer := -1
@@ -318,13 +342,18 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 				break
 			}
 		}
-		if teamIndexInPlayer != -1 {
-			player.TeamList = append(
-				player.TeamList[:teamIndexInPlayer],
-				player.TeamList[teamIndexInPlayer+1:]...,
-			)
+
+		// Team not found in player's team list
+		if teamIndexInPlayer == -1 {
+			return fmt.Errorf("team %s is not in player %s's team list", teamName, player.Name)
 		}
-	
+
+		// Team found
+		if teamIndexInPlayer != -1 {
+			copy(player.TeamList[teamIndexInPlayer:], player.TeamList[teamIndexInPlayer+1:])
+			player.TeamList[len(player.TeamList)-1] = nil // Clean the last position
+			player.TeamList = player.TeamList[:len(player.TeamList)-1]
+		}
 		return nil
 	}
 
