@@ -6,7 +6,7 @@ import (
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-func TestRemovePlayer(t *testing.T) {
+func TestDeletePlayer(t *testing.T) {
 
 	var julien my_types.Player
 	julien.Name = "Julien"
@@ -18,7 +18,7 @@ func TestRemovePlayer(t *testing.T) {
 
 
 	t.Run(fmt.Sprintf("Remove a player from the club playerlist %s", club.Name), func(t *testing.T) {
-		club.RemovePlayer(&julien)
+		club.DeletePlayer(&julien)
 
 	for i := range club.PlayerList {
 		if club.PlayerList[i] == &julien {

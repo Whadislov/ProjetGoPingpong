@@ -22,6 +22,9 @@ func TestNewPlayer(t *testing.T) {
 
 	p1, err1 := mf.NewPlayer("p1", &club)
 	_, err2 := mf.NewPlayer("p1", &club)
+	_, err3 := mf.NewPlayer("", &club)
+
+	fmt.Println(p1)
 
 	expectedLen := 0
 
@@ -53,33 +56,8 @@ func TestNewPlayer(t *testing.T) {
 		if err2 == nil {
 			t.Errorf("Error 2 issue: got %v, expected an error", err2)
 		}
+		if err3 == nil {
+			t.Errorf("Player name issue: got %v, expected %v", err3, fmt.Errorf("player name cannot be empty"))
+		}
 	})
 }
-
-/*
-
-	if p1.Name != expectedPlayer.Name ||
-	p1.Age != expectedPlayer.Age ||
-	p1.Ranking != expectedPlayer.Ranking ||
-	p1.Material[0] != "" ||
-	p1.Material[1] != "" ||
-	p1.Material[2] != "" ||
-	len(p1.TeamList) != expectedLen ||
-	err1 != nil ||
-	err2 == nil {
-		t.Errorf(`-----------------------------------
-		Expecting:		(%v, %v, %v, "", "", "", %v, %v, %v)
-		Actual:			(%v, %v, %v, %v, %v, %v, %v, %v, %v)
-		Fail`, 
-		expectedPlayer.Name, expectedPlayer.Age, expectedPlayer.Ranking, expectedLen, nil, nil,
-		p1.Name, p1.Age, p1.Ranking, p1.Material[0], p1.Material[1], p1.Material[2], len(p1.TeamList), err1, err2)
-	} else {
-		fmt.Printf(`-----------------------------------
-		Expecting:		(%v, %v, %v, "", "", "", %v, %v, %v)
-		Actual:			(%v, %v, %v, %v, %v, %v, %v, %v, %v)
-		Pass
-		`, 
-		expectedPlayer.Name, expectedPlayer.Age, expectedPlayer.Ranking, expectedLen, nil, nil,
-		p1.Name, p1.Age, p1.Ranking, p1.Material[0], p1.Material[1], p1.Material[2], len(p1.TeamList), err1, err2)
-	}
-*/

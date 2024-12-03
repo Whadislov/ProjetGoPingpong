@@ -7,7 +7,7 @@ import (
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-func TestRemoveTeam(t *testing.T) {
+func TestDeleteTeam(t *testing.T) {
 
 	var team my_types.Team
 	team.Name = "Mannschaft 1"
@@ -19,7 +19,7 @@ func TestRemoveTeam(t *testing.T) {
 
 
 	t.Run(fmt.Sprintf("Remove team to teamlist of club %s", club.Name), func(t *testing.T) {
-		club.RemoveTeam(team.Name)
+		club.DeleteTeam(team.Name)
 	for i := range club.TeamList {
 		if club.TeamList[i] == &team {
 			t.Errorf("Team list of %s is currently %v and is expected to be %v", club.Name, club.TeamList[i], expectedTeamList)

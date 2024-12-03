@@ -19,6 +19,7 @@ func TestNewTeam(t *testing.T) {
 
 	t1, err1 := mf.NewTeam("t1", &club)
 	_, err2 := mf.NewTeam("t1", &club)
+	_, err3 := mf.NewTeam("", &club)
 
 	expectedLen := 0
 
@@ -34,6 +35,9 @@ func TestNewTeam(t *testing.T) {
 		}
 		if err2 == nil {
 			t.Errorf("Error 2 issue: got %v, expected an error", err2)
+		}
+		if err3 == nil {
+			t.Errorf("Team name issue: got %v, expected %v", err3, fmt.Errorf("team name cannot be empty"))
 		}
 	})
 }

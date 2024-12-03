@@ -7,7 +7,7 @@ import (
 )
 
 
-func TestRemoveTeam(t *testing.T) {
+func TestDeleteTeam(t *testing.T) {
 
 	var player1 my_types.Player
 	player1.Name = "p1"
@@ -27,7 +27,7 @@ func TestRemoveTeam(t *testing.T) {
 
 
 	t.Run(fmt.Sprintf("Remove team from the club teamlist %s", club1.Name), func(t *testing.T) {
-		actualError := club1.RemoveTeam(team1.Name)
+		actualError := club1.DeleteTeam(team1.Name)
 	for i := range club1.PlayerList {
 		if team1.Name != "" || 
 		team1.PlayerList != nil ||

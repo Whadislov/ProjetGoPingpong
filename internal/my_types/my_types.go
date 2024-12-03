@@ -2,9 +2,8 @@ package my_types
 
 import (
 	"fmt"
+	"log"
 )
-
-
 
 type Player struct {
 	Name 		string
@@ -24,8 +23,6 @@ type Club struct {
 	PlayerList	[]*Player
 	TeamList	[]*Team //Teams map[string]*Team
 }
-
-
 
 type PlayerMatch struct{
 	League				string
@@ -89,39 +86,46 @@ func (c *Club) IsEmpty()(bool) {
 	c.TeamList == nil
 }
 
-func (p Player) Show()(err error) {
+func (p *Player) Show()(error) {
+	if p == nil {
+        log.Println("Error! Player does not exist (nil pointer)")
+        return fmt.Errorf("player does not exist")
+    }
+
 	if p.IsEmpty() {
-		fmt.Println("Error ! Player does not exist")
+		log.Println("Error ! Player does not exist")
 		return fmt.Errorf("Player does not exist")
 	}
 
-	fmt.Printf("%v is %v years old. Ranking : %v. %v plays with %v on the forehand, %v on the backhand and %v.\n", p.Name, p.Age, p.Ranking, p.Name, p.Material[0], p.Material[1], p.Material[2])
-	switch len(p.TeamList){
-	case 0: {
-		fmt.Printf("%v does not have a team.\n", p.Name)
-		return nil
+	fmt.Println("Showing characteristics of", p.Name)
+
+	// Get team name, we don't want to show the address of the pointer
+	teams := []string{}
+	for _, team := range p.TeamList {
+		teams = append(teams, team.Name)
 	}
-	case 1: {
-		fmt.Printf("%v plays in %v.\n", p.Name, p.TeamList[0].Name)
-		return nil
-	}
-	case 2: {
-		fmt.Printf("%v plays in %v and in %v.\n", p.Name, p.TeamList[0].Name, p.TeamList[1].Name)
-		return nil
-	}
-	default: {
-		fmt.Printf("%v plays in more than 2 teams.\n", p.Name)
-		return nil
-	}
-	}
+
+	fmt.Printf("%s, Age: %d, Ranking: %d, Material: %v, Teams: %v\n", 
+				p.Name, 
+				p.Age, 
+				p.Ranking, 
+				p.Material,
+				teams,
+	)
+	return nil
 }
 
-func (t Team) Show()(err error) {
+func (t *Team) Show()(error) {
+	if t == nil {
+        log.Println("Error! Team does not exist (nil pointer)")
+        return fmt.Errorf("team does not exist")
+    }
+
 	if t.IsEmpty() {
-		fmt.Println("Error ! Team does not exist")
+		log.Println("Error ! Team does not exist")
 		return fmt.Errorf("Team does not exist")
 	}
-	fmt.Println("Team name:", t.Name)
+	fmt.Println("Showing characteristics of", t.Name)
 	switch len(t.PlayerList)  {
 	case 0: {
 		fmt.Printf("%v has 0 player.\n", t.Name)
@@ -141,13 +145,26 @@ func (t Team) Show()(err error) {
 	return nil
 }
 
-func (c Club) Show()(err error) {
+func (p Player) String() string {
+	return fmt.Sprintf("%s (Age: %d, Ranking: %d, Material: %v)", 
+		p.Name, 
+		p.Age, 
+		p.Ranking, 
+		p.Material,
+	)
+}
+
+func (c *Club) Show()(error) {
+	if c == nil {
+        log.Println("Error! Club does not exist (nil pointer)")
+        return fmt.Errorf("club does not exist")
+    }
+
 	if c.IsEmpty() {
 		fmt.Println("Error ! Club does not exist")
 		return fmt.Errorf("Club does not exist")
 	}
-
-	fmt.Println("Club name :", c.Name)
+	fmt.Println("Showing characteristics of", c.Name)
 	switch len(c.TeamList)  {
 	case 0: {
 		fmt.Printf("%v has 0 team.\n", c.Name)
@@ -182,8 +199,15 @@ func (c Club) Show()(err error) {
 	default: {
 		fmt.Printf("%v has %v players.\n", c.Name, len(c.PlayerList))
 		fmt.Println("The players are :")
-		for i := 0; i < len(c.PlayerList); i++ {
-			fmt.Println(c.PlayerList[i])
+		for i := 0; i < len(c.PlayerList); i++ {	
+			fmt.Printf("Player %v: %s, Age: %d, Ranking: %d, Material: %v\n", 
+				i+1, 
+				c.PlayerList[i].Name, 
+				c.PlayerList[i].Age, 
+				c.PlayerList[i].Ranking, 
+				c.PlayerList[i].Material,
+			)
+				
 		}
 	}
 	}
@@ -194,7 +218,7 @@ func (c Club) Show()(err error) {
 func (c *Club) AddPlayer(player *Player) {
 	c.PlayerList = append(c.PlayerList, player)
 }
-
+	
 func (c *Club) AddTeam(team *Team) {
 	c.TeamList = append(c.TeamList, team)
 }
@@ -263,15 +287,19 @@ func (c *Club) FindPlayer(playerName string)(int, error) {
 	return -1, fmt.Errorf("%v not found in the club", playerName)
 }
 
-func (c *Club) RemovePlayer(player *Player)(error) {
+func (c *Club) DeletePlayer(player *Player)(error) {
 	index, err := c.FindPlayer(player.Name)
 	if err != nil {
-		return err
+		return fmt.Errorf("error when deleting player %s : %w", player.Name, err)
 	}
 	
-	for _, team := range player.TeamList {
+
+	// Copy of the slice (working directly on the modified slice cause probleme with index)
+	teamListCopy := append([]*Team{}, player.TeamList...)
+
+	for _, team := range teamListCopy {
 		if err := c.RemovePlayerFromTeam(player, team.Name); err != nil {
-			fmt.Printf("Error when deleting player %s from team %s : %s\n", player.Name, team.Name, err)
+			return fmt.Errorf("error when deleting player %s from team %s : %s", player.Name, team.Name, err)
 		}
 	}
 	
@@ -288,6 +316,7 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 	func (c *Club) RemovePlayerFromTeam(player *Player, teamName string) error {
 		// Find player, club view
 		_, err := c.FindPlayer(player.Name)
+
 		if err != nil {
 			return err
 		}
@@ -320,16 +349,6 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 			return fmt.Errorf("player %s does not belong to team %s", player.Name, teamName)
 		}
 
-		// Delete player in the playerlist
-		// ... means we append element per element, the slice is sliced in individual element before being added
-		/*
-		// Code below does not work because append creates a new slice
-		c.TeamList[teamIndex].PlayerList = append(
-			c.TeamList[teamIndex].PlayerList[:playerIndex], 
-			c.TeamList[teamIndex].PlayerList[playerIndex+1:]..., 
-		)
-		*/
-
 		copy(c.TeamList[teamIndex].PlayerList[playerIndex:], c.TeamList[teamIndex].PlayerList[playerIndex+1:])
 		c.TeamList[teamIndex].PlayerList[len(c.TeamList[teamIndex].PlayerList)-1] = nil // Clean the last position
 		c.TeamList[teamIndex].PlayerList = c.TeamList[teamIndex].PlayerList[:len(c.TeamList[teamIndex].PlayerList)-1]
@@ -354,14 +373,15 @@ func (c *Club) RemovePlayer(player *Player)(error) {
 			player.TeamList[len(player.TeamList)-1] = nil // Clean the last position
 			player.TeamList = player.TeamList[:len(player.TeamList)-1]
 		}
+		//log.Printf("Player %v has been successfully removed from team %v.", player.Name, teamName)
 		return nil
 	}
 
 
-func (c *Club) RemoveTeam(teamName string)(error) {
+func (c *Club) DeleteTeam(teamName string)(error) {
 	index, err := c.FindTeam(teamName)
 	if err != nil {
-		return err
+		return fmt.Errorf("error when deleting team %s : %w", teamName, err)
 	}
 	// Team to remove
 	teamToRemove := c.TeamList[index]
@@ -389,24 +409,7 @@ func (c *Club) RemoveTeam(teamName string)(error) {
 	teamToRemove.Name = ""
     teamToRemove.PlayerList = nil
 	// Set pointer to nil
-	teamToRemove = nil
+	//teamToRemove = nil
+	//log.Printf("Team %v has been successfully deleted.", teamName)
 	return nil
-}
-
-func (c *Club) GetPlayerList()([]*Player) {
-	return c.PlayerList
-}
-
-func (p *Player) GetTeam(teamName string, c Club)(*Team) {
-	for _, team := range c.TeamList {
-		fmt.Println("c.TeamList", c.TeamList)
-		if team.Name == teamName {
-			return team
-		}
-	}
-	return nil
-}
-
-func (c *Club) GetTeamList()([]*Team) {
-	return c.TeamList
 }
