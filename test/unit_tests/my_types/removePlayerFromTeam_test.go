@@ -95,7 +95,7 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	club1.TeamList = append(club1.TeamList, &team1)
 
 	//Action
-	actualError1 := club1.RemovePlayerFromTeam(&player1, team1.Name)
+	actualError1 := club1.RemovePlayerFromTeam(&player1, &team1)
 
 	//Expected
 	expectedPlayerTeamList1	:= []*my_types.Team{}
@@ -114,7 +114,7 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	club2.PlayerList = append(club2.PlayerList, &player2)
 	club2.TeamList = append(club2.TeamList, &team2)
 	//Action
-	actualError2 := club2.RemovePlayerFromTeam(&player2, team2.Name)
+	actualError2 := club2.RemovePlayerFromTeam(&player2, &team2)
 
 	//Expected
 	expectedPlayerTeamList2	:= []*my_types.Team{}
@@ -133,7 +133,7 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	club3.PlayerList = append(club3.PlayerList, &player3)
 	club3.TeamList = append(club3.TeamList, &team3)
 	//Action
-	actualError3 := club3.RemovePlayerFromTeam(&player3, team3.Name)
+	actualError3 := club3.RemovePlayerFromTeam(&player3, &team3)
 
 	//Expected
 	expectedPlayerTeamList3	:= []*my_types.Team{}
@@ -152,7 +152,7 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	club4.PlayerList = append(club4.PlayerList, &player4)
 	club4.TeamList = append(club4.TeamList, &team4)
 	//Action
-	actualError4 := club4.RemovePlayerFromTeam(&player4, team4.Name)
+	actualError4 := club4.RemovePlayerFromTeam(&player4, &team4)
 
 	//Expected
 	expectedPlayerTeamList4	:= []*my_types.Team{}

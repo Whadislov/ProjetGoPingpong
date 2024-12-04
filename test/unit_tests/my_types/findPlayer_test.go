@@ -8,22 +8,30 @@ import (
 func TestFindPlayer(t *testing.T) {
 	type testCase struct {
 		club 			my_types.Club
-		playerName      string
-		expectedIndex 	int
+		player      	my_types.Player
 		expectedError 	error
 	}
+	player1 := my_types.Player{
+		Name: "Julien",
+	}
+	player2 := my_types.Player{
+		Name: "Lasse",
+	}
+	player3 := my_types.Player{
+		Name: "Dominik",
+	}
+
 	tests := []testCase{
 		{
 			club: my_types.Club{
 				Name: "TSG Heilbronn",
 				PlayerList: []*my_types.Player{
-					{Name: "Julien"},
-					{Name: "Lasse"},
+					&player1,
+					&player2,
 				},
 			},
-			playerName:		"Julien",
-			expectedIndex: 	0,
-			expectedError: 	nil,
+			player:	player1,
+			expectedError: nil,
 		},
 		{
 			club: my_types.Club{
@@ -33,9 +41,8 @@ func TestFindPlayer(t *testing.T) {
 					{Name: "Lasse"},
 				},
 			},
-			playerName:		"Dominik",
-			expectedIndex: 	-1,
-			expectedError: 	fmt.Errorf("Dominik not found in the club"),
+			player:	player3,
+			expectedError: fmt.Errorf("Dominik not found in TSG Heilbronn"),
 		},
 	}
 
@@ -43,28 +50,9 @@ func TestFindPlayer(t *testing.T) {
 	failCount := 0
 
 	for _, test := range tests {
-		t.Run(fmt.Sprintf("Finding player %s in club %s", test.playerName, test.club.Name), func(t *testing.T) {
-			index, err := test.club.FindPlayer(test.playerName)
+		t.Run(fmt.Sprintf("Finding player %s in club %s", test.player.Name, test.club.Name), func(t *testing.T) {
+			err := test.club.FindPlayer(&test.player)
 			
-		
-			// Verify index
-			if index != test.expectedIndex {
-				//t.Errorf("Expected index: %d, got: %d", test.expectedIndex, index)
-				t.Errorf(`-------------------------
-				Inputs:     %v
-				Expecting:  (%d)
-				Actual:     (%d)
-				Fail`, test.club, test.expectedIndex, index)
-				failCount++
-			} else {
-				fmt.Printf(`-------------------------
-				Inputs:     %v
-				Expecting:  (%d)
-				Actual:     (%d)
-				Pass
-				`, test.club, test.expectedIndex, index)
-				passCount++
-			}
 
 			// Verify Error
 			if (err == nil && test.expectedError != nil) || (err != nil && test.expectedError == nil) ||

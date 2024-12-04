@@ -164,52 +164,44 @@ func (c *Club) Show()(error) {
 		fmt.Println("Error ! Club does not exist")
 		return fmt.Errorf("Club does not exist")
 	}
-	fmt.Println("Showing characteristics of", c.Name)
-	switch len(c.TeamList)  {
-	case 0: {
-		fmt.Printf("%v has 0 team.\n", c.Name)
-	}
-	case 1: {
-		fmt.Printf("%v has 1 team.\n", c.Name)
-		fmt.Println("The team is :", c.TeamList[0])
-	}
-	default: {
-		fmt.Printf("%v has %v teams.\n", c.Name, len(c.TeamList))
-		fmt.Println("The teams are :")
-		for i := 0; i < len(c.TeamList); i++ {
-			fmt.Println(c.TeamList[i].Name)
+	fmt.Println("Characteristics of", c.Name)
 
-			if len(c.TeamList[i].PlayerList) == 0 {
-				fmt.Println("There is no player in this team")
-			}
-			for j := 0; j < len(c.TeamList[i].PlayerList); j++ {
-				fmt.Printf("Player %v : %v\n", j+1, c.TeamList[i].PlayerList[j].Name)
-			}
+	if n := len(c.TeamList); n <= 1 {
+		fmt.Printf("%v has %v team.\n", c.Name, n)
+	} else {
+		fmt.Printf("%v has %v teams.\n", c.Name, n)
+	}
+	for i := 0; i < len(c.TeamList); i++ {	
+		m := len(c.TeamList[i].PlayerList)
+		if m <= 1 {
+			fmt.Printf("Team %v: %v. %v player.\n", 
+			i+1, 
+			c.TeamList[i].Name,
+			m,
+			)
+		} else {
+			fmt.Printf("Team %v: %v. %v players.\n", 
+			i+1, 
+			c.TeamList[i].Name, 
+			m,
+			)
 		}
 	}
-	}
-	switch len(c.PlayerList)  {
-	case 0: {
-		fmt.Printf("%v has 0 player.\n", c.Name)
-	}
-	case 1: {
-		fmt.Printf("%v has 1 player.\n", c.Name)
-		fmt.Println("The player is :", c.PlayerList[0])
-	}
-	default: {
-		fmt.Printf("%v has %v players.\n", c.Name, len(c.PlayerList))
-		fmt.Println("The players are :")
+
+	if n := len(c.PlayerList); n <= 1 {
+		fmt.Printf("%v has %v player.\n", c.Name, n)
+	} else {
+		fmt.Printf("%v has %v players.\n", c.Name, n)
 		for i := 0; i < len(c.PlayerList); i++ {	
-			fmt.Printf("Player %v: %s, Age: %d, Ranking: %d, Material: %v\n", 
+			fmt.Printf("Player %v: %s, Age: %d, Ranking: %d, Material: %v, Team: %v\n", 
 				i+1, 
 				c.PlayerList[i].Name, 
 				c.PlayerList[i].Age, 
 				c.PlayerList[i].Ranking, 
 				c.PlayerList[i].Material,
+				c.PlayerList[i].TeamList,
 			)
-				
 		}
-	}
 	}
 	return nil
 	}
@@ -223,12 +215,11 @@ func (c *Club) AddTeam(team *Team) {
 	c.TeamList = append(c.TeamList, team)
 }
 
-func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
-	teamIndex, err := c.FindTeam(teamName)
+func (c *Club) AddPlayerToTeam(player *Player, team *Team)(error) {
+	err := c.FindTeam(team)
 	if err != nil {
 		return err
 	}
-	team := c.TeamList[teamIndex]
 
 	// Add player the in the team if not already in
 	found := false
@@ -241,13 +232,13 @@ func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
 			for _, t := range player.TeamList {
 				if t.Name == team.Name {
 					found2 = true
-					return fmt.Errorf("team %s and player %s are already in each other's respective list", teamName, player.Name)
+					return fmt.Errorf("team %s and player %s are already in each other's respective list", team.Name, player.Name)
 				}
 			}
 			if !found2 {
 				player.TeamList = append(player.TeamList, team)
 			}
-			return fmt.Errorf("player %s is already in team %s", player.Name, teamName)
+			return fmt.Errorf("player %s is already in team %s", player.Name, team.Name)
 		}
 	}
 
@@ -260,35 +251,37 @@ func (c *Club) AddPlayerToTeam(player *Player, teamName string)(error) {
 	for _, t := range player.TeamList {
 		if t.Name == team.Name {
 			found = true
-			return fmt.Errorf("team %s and player %s are already in each other's respective list", teamName, player.Name)
+			return fmt.Errorf("team %s and player %s are already in each other's respective list", team.Name, player.Name)
 		}
 	}
 	if !found {
 		player.TeamList = append(player.TeamList, team)
 	}
+	log.Printf("%s has been successfully added in %s", player.Name, team.Name)
 	return nil
 }
 
-func (c *Club) FindTeam(teamName string)(int, error) {
+func (c *Club) FindTeam(team *Team)(error) {
 	for i := range c.TeamList {
-		if c.TeamList[i].Name == teamName {
-			return i, nil
+		if c.TeamList[i].Name == team.Name {
+			return nil
 		}
 	}
-	return -1, fmt.Errorf("%v not found in the club", teamName)
+	return fmt.Errorf("%v not found in %v", team.Name, c.Name)
 }
 
-func (c *Club) FindPlayer(playerName string)(int, error) {
+func (c *Club) FindPlayer(player *Player)(error) {
 	for i := range c.PlayerList {
-		if c.PlayerList[i].Name == playerName {
-			return i, nil
+		if c.PlayerList[i].Name == player.Name {
+			return nil
 		}
 	}
-	return -1, fmt.Errorf("%v not found in the club", playerName)
+	return fmt.Errorf("%v not found in %v", player.Name, c.Name)
 }
 
 func (c *Club) DeletePlayer(player *Player)(error) {
-	index, err := c.FindPlayer(player.Name)
+	pName := player.Name
+	err := c.FindPlayer(player)
 	if err != nil {
 		return fmt.Errorf("error when deleting player %s : %w", player.Name, err)
 	}
@@ -298,118 +291,133 @@ func (c *Club) DeletePlayer(player *Player)(error) {
 	teamListCopy := append([]*Team{}, player.TeamList...)
 
 	for _, team := range teamListCopy {
-		if err := c.RemovePlayerFromTeam(player, team.Name); err != nil {
-			return fmt.Errorf("error when deleting player %s from team %s : %s", player.Name, team.Name, err)
+		if err := c.RemovePlayerFromTeam(player, team); err != nil {
+			log.Printf("%v has not been successfully deleted from %v. Reason : %v", player.Name, c.Name, err)
+			return err
 		}
 	}
 	
-	// Move the player at the end of the club list
-	c.PlayerList[index] = c.PlayerList[len(c.PlayerList)-1]
+	// Find the index of the player in the club playerlist.
+	index := 0
+	for _, p := range c.PlayerList {
+		if p.Name == player.Name {
+			c.PlayerList[index] = c.PlayerList[len(c.PlayerList)-1]
+			//index = i
+			break
+		}
+	}
+
 	// Remove the player from the list
 	c.PlayerList = c.PlayerList[:len(c.PlayerList)-1]
 
 	// Delete the player, make it empty
 	*player = Player{}
+	log.Printf("%v has been successfully deleted from %v", pName, c.Name)
 	return nil
 }
 
-	func (c *Club) RemovePlayerFromTeam(player *Player, teamName string) error {
+	func (c *Club) RemovePlayerFromTeam(player *Player, team *Team) error {
+		// **** Verifications with club lists
 		// Find player, club view
-		_, err := c.FindPlayer(player.Name)
+		err := c.FindPlayer(player)
 
 		if err != nil {
+			log.Printf("%v has not been successfully removed from %v. Reason : %v", player.Name, team.Name, err)
 			return err
 		}
 		
 		// Find team, club view
-		teamIndex, err2 := c.FindTeam(teamName)
+		err2 := c.FindTeam(team)
 		if err2 != nil {
-			return fmt.Errorf("team %s not found: %w", teamName, err2)
+			log.Printf("%v has not been successfully removed from %v. Reason : %v", player.Name, team.Name, err2)
+			return err2
 		}
 
-		// Find player in team
+		// **** Delete player from the team player list 
+		// Find player in team playerlist
 		playerIndex := -1
-		for i, p := range c.TeamList[teamIndex].PlayerList {
+		for i, p := range team.PlayerList {
 			if p.Name == player.Name {
 				playerIndex = i
 				break
 			}
 		}
-		// player is not in team playerlist
+		// Player is not in team playerlist
 		if playerIndex == -1 {
 			// Check if the team is in the player's teamlist
 			for teamIndexInPlayer := range player.TeamList {
-				if player.TeamList[teamIndexInPlayer].Name == teamName {
+				if player.TeamList[teamIndexInPlayer].Name == team.Name {
 					// Found the team in the player's teamlist. Need to remove the team from the list
 					copy(player.TeamList[teamIndexInPlayer:], player.TeamList[teamIndexInPlayer+1:])
 					player.TeamList[len(player.TeamList)-1] = nil // Clean the last position
 					player.TeamList = player.TeamList[:len(player.TeamList)-1]
 				}
 			}
-			return fmt.Errorf("player %s does not belong to team %s", player.Name, teamName)
+			err := fmt.Errorf("player %s does not belong to team %s", player.Name, team.Name)
+			log.Printf("%v has not been successfully removed from %v. Reason : %v", player.Name, team.Name, err)
+			return err
 		}
 
-		copy(c.TeamList[teamIndex].PlayerList[playerIndex:], c.TeamList[teamIndex].PlayerList[playerIndex+1:])
-		c.TeamList[teamIndex].PlayerList[len(c.TeamList[teamIndex].PlayerList)-1] = nil // Clean the last position
-		c.TeamList[teamIndex].PlayerList = c.TeamList[teamIndex].PlayerList[:len(c.TeamList[teamIndex].PlayerList)-1]
+		copy(team.PlayerList[playerIndex:], team.PlayerList[playerIndex+1:])
+		team.PlayerList[len(team.PlayerList)-1] = nil // Clean the last position
+		team.PlayerList = team.PlayerList[:len(team.PlayerList)-1]
 	
-		// Delete team from the team list of the player
+		// **** Delete team from the player team list 
 		teamIndexInPlayer := -1
 		for i, t := range player.TeamList {
-			if t.Name == teamName {
+			if t.Name == team.Name {
 				teamIndexInPlayer = i
 				break
 			}
 		}
 
-		// Team not found in player's team list
+		// Find team in player teamlist
 		if teamIndexInPlayer == -1 {
-			return fmt.Errorf("team %s is not in player %s's team list", teamName, player.Name)
+			err := fmt.Errorf("team %s is not in player %s's team list", team.Name, player.Name)
+			log.Printf("%v has not been successfully removed from %v. Reason : %v", player.Name, team.Name, err)
+			return err
 		}
 
-		// Team found
+		// Team is not in player teamlist
 		if teamIndexInPlayer != -1 {
 			copy(player.TeamList[teamIndexInPlayer:], player.TeamList[teamIndexInPlayer+1:])
 			player.TeamList[len(player.TeamList)-1] = nil // Clean the last position
 			player.TeamList = player.TeamList[:len(player.TeamList)-1]
 		}
-		//log.Printf("Player %v has been successfully removed from team %v.", player.Name, teamName)
+		log.Printf("Player %v has been successfully removed from team %v.", player.Name, team.Name)
 		return nil
 	}
 
 
-func (c *Club) DeleteTeam(teamName string)(error) {
-	index, err := c.FindTeam(teamName)
+func (c *Club) DeleteTeam(team *Team)(error) {
+	err := c.FindTeam(team)
 	if err != nil {
-		return fmt.Errorf("error when deleting team %s : %w", teamName, err)
+		return err
 	}
-	// Team to remove
-	teamToRemove := c.TeamList[index]
+
+	tName := team.Name
 
 	// Remove the link between players and the team
-	for _, p := range teamToRemove.PlayerList {
-		if err := c.RemovePlayerFromTeam(p, teamName); err != nil {
-			return fmt.Errorf("error when deleting player %s from team %s : %w", p.Name, teamName, err)
+	for _, p := range team.PlayerList {
+		if err := c.RemovePlayerFromTeam(p, team); err != nil {
+			return err
 		}
 	}
 	
 	// Create list of teams without the removed team
 	newTeamList := []*Team{}
 
-	for i, t := range c.TeamList {
-		if i != index {
+	for _, t := range c.TeamList {
+		if t.Name != team.Name {
 			newTeamList = append(newTeamList, t)
 		} else {
-			c.TeamList[index] = nil
+			team.Name = ""
+			team.PlayerList = nil
 		}
 	}
 	// Set the list
 	c.TeamList = newTeamList
-	// Set all values to "" or nil
-	teamToRemove.Name = ""
-    teamToRemove.PlayerList = nil
-	// Set pointer to nil
-	//teamToRemove = nil
-	//log.Printf("Team %v has been successfully deleted.", teamName)
+
+	log.Printf("%v has been successfully deleted from %v", tName, c.Name)
 	return nil
 }

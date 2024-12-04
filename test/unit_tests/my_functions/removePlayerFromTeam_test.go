@@ -2,6 +2,7 @@ package my_functions_test
 
 import (
 	"testing"
+
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -23,15 +24,17 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 		TeamList: []*mt.Team{&team},
 	}
 
-	err := mf.RemovePlayerFromTeam(&player, team.Name, &club)
+	err := mf.RemovePlayerFromTeam(&player, &team, &club)
 
-	expectedLen := 0
+	var expectedLen = 0
+
+
 
 	t.Run("Remove player from team", func(t *testing.T) {
-		if len(team.PlayerList) != expectedLen {
+		if len(team.PlayerList) != 0 {
 			t.Errorf("Playerlist of team issue: got %v, expected %v", len(team.PlayerList), expectedLen)
 		}
-		if len(player.TeamList) != expectedLen {
+		if len(player.TeamList) != 0 {
 			t.Errorf("Teamlist of player issue: got %v, expected %v", len(player.TeamList), expectedLen)
 		}
 		if err != nil {

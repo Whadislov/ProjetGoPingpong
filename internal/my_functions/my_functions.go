@@ -99,49 +99,42 @@ func NewTeam(teamName string, club *mt.Club)(*mt.Team, error) {
 	return t, nil
 }
 
-func AddPlayerToTeam(p *mt.Player, teamName string, c *mt.Club) (error) {
+func AddPlayerToTeam(p *mt.Player, t *mt.Team, c *mt.Club) (error) {
 	if p == nil {
-		return fmt.Errorf("player is nil")
+		return fmt.Errorf("player has not been successfully added in %s. Reason : player is nil", t.Name)
 	}
 
-	_, err := c.FindTeam(teamName)
+	err := c.FindTeam(t)
 	if err != nil {
-		return fmt.Errorf("team %s not found: %w", teamName, err)
+		return fmt.Errorf("%s has not been successfully added in %s. Reason : %w", p.Name, t.Name, err)
 	}
 
-	err = c.AddPlayerToTeam(p, teamName)
-	if  err == nil {
-		log.Printf("%s has been successfully added in %s", p.Name, teamName)
-	} else {
-		return fmt.Errorf("%s has not been successfully added in %s : %w", p.Name, teamName, err)
+	err = c.AddPlayerToTeam(p, t)
+	if err != nil {
+		return fmt.Errorf("%s has not been successfully added in %s. Reason : %w", p.Name, t.Name, err)
 	}
 	return nil
 }
 
-func RemovePlayerFromTeam(p *mt.Player, teamName string, c *mt.Club) (error) {
-	if err := c.RemovePlayerFromTeam(p, teamName); err != nil {
-		log.Printf("%v has not been successfully removed from %v. Reason : %v", p.Name, teamName, err)
-		return err
+func RemovePlayerFromTeam(p *mt.Player, t *mt.Team, c *mt.Club) (error) {
+	err := c.RemovePlayerFromTeam(p, t)
+	if err != nil {
+		return fmt.Errorf("%s has not been successfully removed from %s. Reason : %w", p.Name, t.Name, err)
 	}
-	log.Printf("%v has been successfully removed from %v", p.Name, teamName)
 	return nil
 }
 
 func DeletePlayer(p *mt.Player, c *mt.Club) (error) {
 	if err := c.DeletePlayer(p); err != nil {
-		log.Printf("%v has not been successfully deleted from %v. Reason : %v", p.Name, c.Name, err)
-		return err
+		return fmt.Errorf("error when deleting player %s. Reason : %w", p.Name, err)
 	}
-	log.Printf("%v has been successfully deleted from %v", p.Name, c.Name)
 	return nil
 }
 
-func DeleteTeam(teamName string, c *mt.Club) (error) {
-	if err := c.DeleteTeam(teamName); err != nil {
-		log.Printf("%v has not been successfully deleted from %v. Reason : %v", teamName, c.Name, err)
-		return err
+func DeleteTeam(t *mt.Team, c *mt.Club) (error) {
+	if err := c.DeleteTeam(t); err != nil {
+		return fmt.Errorf("error when deleting team %s. Reason : %w", t.Name, err)
 	}
-	log.Printf("%v has been successfully deleted from %v", teamName, c.Name)
 	return nil
 }
 

@@ -17,7 +17,7 @@ func TestDeleteTeam(t *testing.T) {
 		TeamList: []*mt.Team{&t1},
 	}
 
-	err := mf.DeleteTeam(t1.Name, &c1)
+	err := mf.DeleteTeam(&t1, &c1)
 
 
 	t.Run("Delete team", func(t *testing.T){

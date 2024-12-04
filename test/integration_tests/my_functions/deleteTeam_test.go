@@ -27,7 +27,7 @@ func TestDeleteTeam(t *testing.T) {
 
 
 	t.Run(fmt.Sprintf("Remove team from the club teamlist %s", club1.Name), func(t *testing.T) {
-		actualError := mf.DeleteTeam(team1.Name, &club1)
+		actualError := mf.DeleteTeam(&team1, &club1)
 	for i := range club1.PlayerList {
 		if team1.Name != "" || 
 		team1.PlayerList != nil ||

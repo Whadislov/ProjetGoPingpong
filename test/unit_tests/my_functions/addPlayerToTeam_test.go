@@ -22,9 +22,11 @@ func TestAddPlayerToTeam(t *testing.T) {
 		PlayerList: []*mt.Player{&p1},
 		TeamList: []*mt.Team{&t1},
 	}
+	NonExistantTeam := mt.Team{}
 
-	err := mf.AddPlayerToTeam(&p1, t1.Name, &c1)
-	err2 := mf.AddPlayerToTeam(&p1, "NonExistantTeam", &c1)
+
+	err := mf.AddPlayerToTeam(&p1, &t1, &c1)
+	err2 := mf.AddPlayerToTeam(&p1, &NonExistantTeam, &c1)
 
 
 	t.Run("Add a player to a team", func(t *testing.T){
