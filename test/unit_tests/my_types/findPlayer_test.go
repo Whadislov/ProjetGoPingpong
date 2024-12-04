@@ -1,15 +1,16 @@
 package my_types_test
 
 import (
-	"testing"
 	"fmt"
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"testing"
 )
+
 func TestFindPlayer(t *testing.T) {
 	type testCase struct {
-		club 			my_types.Club
-		player      	my_types.Player
-		expectedError 	error
+		club          my_types.Club
+		player        my_types.Player
+		expectedError error
 	}
 	player1 := my_types.Player{
 		Name: "Julien",
@@ -30,7 +31,7 @@ func TestFindPlayer(t *testing.T) {
 					&player2,
 				},
 			},
-			player:	player1,
+			player:        player1,
 			expectedError: nil,
 		},
 		{
@@ -41,7 +42,7 @@ func TestFindPlayer(t *testing.T) {
 					{Name: "Lasse"},
 				},
 			},
-			player:	player3,
+			player:        player3,
 			expectedError: fmt.Errorf("Dominik not found in TSG Heilbronn"),
 		},
 	}
@@ -52,7 +53,6 @@ func TestFindPlayer(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("Finding player %s in club %s", test.player.Name, test.club.Name), func(t *testing.T) {
 			err := test.club.FindPlayer(&test.player)
-			
 
 			// Verify Error
 			if (err == nil && test.expectedError != nil) || (err != nil && test.expectedError == nil) ||

@@ -2,17 +2,17 @@ package my_functions_test
 
 import (
 	"fmt"
-	"testing"
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"testing"
 )
 
 func TestNewPlayer(t *testing.T) {
 	expectedPlayer := mt.Player{
-		Name: "p1",
-		Age: 0,
-		Ranking: 0,
-		Material: []string{"","",""},
+		Name:     "p1",
+		Age:      0,
+		Ranking:  0,
+		Material: []string{"", "", ""},
 		TeamList: []*mt.Team{},
 	}
 

@@ -1,15 +1,16 @@
 package my_types_test
 
 import (
-	"testing"
 	"fmt"
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"testing"
 )
+
 func TestFindTeam(t *testing.T) {
 	type testCase struct {
-		club 			my_types.Club
-		team			my_types.Team	
-		expectedError 	error
+		club          my_types.Club
+		team          my_types.Team
+		expectedError error
 	}
 	team1 := my_types.Team{
 		Name: "Mannschaft 1",
@@ -18,22 +19,21 @@ func TestFindTeam(t *testing.T) {
 		Name: "Mannschaft 0",
 	}
 
-
 	tests := []testCase{
 		{
 			club: my_types.Club{
-				Name: "TSG Heilbronn",
-				TeamList: []*my_types.Team{&team1,},
+				Name:     "TSG Heilbronn",
+				TeamList: []*my_types.Team{&team1},
 			},
-			team: team1,
+			team:          team1,
 			expectedError: nil,
 		},
 		{
 			club: my_types.Club{
-				Name: "TSG Heilbronn",
-				TeamList: []*my_types.Team{&team1,},
+				Name:     "TSG Heilbronn",
+				TeamList: []*my_types.Team{&team1},
 			},
-			team: team0,
+			team:          team0,
 			expectedError: fmt.Errorf("Mannschaft 0 not found in TSG Heilbronn"),
 		},
 	}
@@ -44,7 +44,7 @@ func TestFindTeam(t *testing.T) {
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("Finding team %s in club %s", test.team.Name, test.club.Name), func(t *testing.T) {
 			err := test.club.FindTeam(&test.team)
-			
+
 			if (err == nil && test.expectedError != nil) || (err != nil && test.expectedError == nil) ||
 				(err != nil && test.expectedError != nil && err.Error() != test.expectedError.Error()) {
 				//t.Errorf("Expected error: %v, got: %v", test.expectedError, err)

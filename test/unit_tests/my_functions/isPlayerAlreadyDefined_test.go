@@ -2,13 +2,13 @@ package my_functions_test
 
 import (
 	"fmt"
-	"testing"
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"testing"
 )
 
 func TestIsPlayerAlreadyDefined(t *testing.T) {
-	
+
 	player1 := mt.Player{
 		Name: "p1",
 	}
@@ -18,7 +18,7 @@ func TestIsPlayerAlreadyDefined(t *testing.T) {
 	}
 
 	club1 := mt.Club{
-		Name: "club",
+		Name:       "club",
 		PlayerList: []*mt.Player{},
 	}
 
@@ -31,7 +31,6 @@ func TestIsPlayerAlreadyDefined(t *testing.T) {
 	err2 := mf.IsPlayerAlreadyDefined(player2.Name, &club1)
 	err3 := mf.IsPlayerAlreadyDefined(player1.Name, &club2)
 	err4 := mf.IsPlayerAlreadyDefined(player1.Name, club3)
-
 
 	t.Run("Test if player is already defined", func(t *testing.T) {
 		if err1 != nil {

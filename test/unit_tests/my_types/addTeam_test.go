@@ -1,9 +1,9 @@
 package my_types_test
 
 import (
-	"testing"
 	"fmt"
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"testing"
 )
 
 func TestAddTeam(t *testing.T) {
@@ -14,17 +14,16 @@ func TestAddTeam(t *testing.T) {
 
 	var team my_types.Team
 	team.Name = "Mannschaft 1"
-	expectedTeamList  := []*my_types.Team{&team}
-
+	expectedTeamList := []*my_types.Team{&team}
 
 	t.Run(fmt.Sprintf("Add team to teamlist of club %s", club.Name), func(t *testing.T) {
 		club.AddTeam(&team)
-	for i := range club.TeamList {
-		if club.TeamList[i] != &team {
-			t.Errorf("Team list of %s is currently %v and is expected to be %v", club.Name, club.TeamList[i], expectedTeamList[i])
-		} else {
-			fmt.Printf("Team list of %s is currently %v and is expected to be %v", club.Name, club.TeamList[i], expectedTeamList[i])
+		for i := range club.TeamList {
+			if club.TeamList[i] != &team {
+				t.Errorf("Team list of %s is currently %v and is expected to be %v", club.Name, club.TeamList[i], expectedTeamList[i])
+			} else {
+				fmt.Printf("Team list of %s is currently %v and is expected to be %v", club.Name, club.TeamList[i], expectedTeamList[i])
+			}
 		}
-	}
 	})
 }
