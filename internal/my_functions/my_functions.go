@@ -24,7 +24,7 @@ func NewClub(name string) (c mt.Club, err error) {
 	return c, nil
 }
 
-func IsPlayerAlreadyDefined(playerName string, c *mt.Club) error {
+func IsPlayerAlreadyDefined(playerId int, c *mt.Club) error {
 	if c == nil {
 		return fmt.Errorf("club is nil")
 	}
@@ -34,8 +34,8 @@ func IsPlayerAlreadyDefined(playerName string, c *mt.Club) error {
 	}
 
 	for _, player := range c.PlayerList {
-		if player.Name == playerName {
-			return fmt.Errorf("player %v is already defined", playerName)
+		if player.Id == playerId {
+			return fmt.Errorf("player %v is already defined", playerId)
 		}
 	}
 	return nil
@@ -63,10 +63,8 @@ func NewPlayer(playerName string, club *mt.Club) (*mt.Player, error) {
 		return nil, fmt.Errorf("player name cannot be empty")
 	}
 
-	if err := IsPlayerAlreadyDefined(playerName, club); err != nil {
-		return nil, fmt.Errorf("player %v already exists", playerName)
-	}
 	p := &mt.Player{
+		Id:       len(club.PlayerList),
 		Name:     playerName,
 		Age:      0,
 		Ranking:  0,

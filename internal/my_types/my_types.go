@@ -6,6 +6,7 @@ import (
 )
 
 type Player struct {
+	Id       int
 	Name     string
 	Age      int
 	Ranking  int
@@ -124,25 +125,20 @@ func (t *Team) Show() error {
 		log.Println("Error ! Team does not exist")
 		return fmt.Errorf("Team does not exist")
 	}
-	fmt.Println("Showing characteristics of", t.Name)
-	switch len(t.PlayerList) {
-	case 0:
-		{
-			fmt.Printf("%v has 0 player.\n", t.Name)
+	fmt.Println("Showing the characteristics of", t.Name)
+	n := len(t.PlayerList)
+	if n >= 1 {
+		for i := 0; i < n; i++ {
+			fmt.Printf("Player %v: %v\n",
+				i+1,
+				t.PlayerList[i].Name,
+			)
 		}
-	case 1:
-		{
-			fmt.Printf("%v has 1 player.\n", t.Name)
-			fmt.Println("The player is :", t.PlayerList[0])
-		}
-	default:
-		{
-			fmt.Printf("%v has %v players.\n", t.Name, len(t.PlayerList))
-			fmt.Println("The players are :")
-			for i := 0; i < len(t.PlayerList); i++ {
-				fmt.Printf("Player %v : %v\n", i+1, t.PlayerList[i].Name)
-			}
-		}
+
+	} else {
+		fmt.Printf("There is no player in %v.\n",
+			t.Name,
+		)
 	}
 	return nil
 }
@@ -154,6 +150,14 @@ func (p Player) String() string {
 		p.Ranking,
 		p.Material,
 	)
+}
+
+func TeamNames(t []*Team) []string {
+	teamNames := []string{}
+	for _, team := range t {
+		teamNames = append(teamNames, team.Name)
+	}
+	return teamNames
 }
 
 func (c *Club) Show() error {
@@ -201,7 +205,7 @@ func (c *Club) Show() error {
 				c.PlayerList[i].Age,
 				c.PlayerList[i].Ranking,
 				c.PlayerList[i].Material,
-				c.PlayerList[i].TeamList,
+				TeamNames(c.PlayerList[i].TeamList),
 			)
 		}
 	}
@@ -225,7 +229,7 @@ func (c *Club) AddPlayerToTeam(player *Player, team *Team) error {
 	// Add player the in the team if not already in
 	found := false
 	for _, p := range team.PlayerList {
-		if p.Name == player.Name {
+		if p.Id == player.Id {
 			found = true
 
 			// Add team to the list of team of the player if not already in (can debug the link between the team and the player)
@@ -273,7 +277,7 @@ func (c *Club) FindTeam(team *Team) error {
 
 func (c *Club) FindPlayer(player *Player) error {
 	for i := range c.PlayerList {
-		if c.PlayerList[i].Name == player.Name {
+		if c.PlayerList[i].Id == player.Id {
 			return nil
 		}
 	}
@@ -337,7 +341,7 @@ func (c *Club) RemovePlayerFromTeam(player *Player, team *Team) error {
 	// Find player in team playerlist
 	playerIndex := -1
 	for i, p := range team.PlayerList {
-		if p.Name == player.Name {
+		if p.Id == player.Id {
 			playerIndex = i
 			break
 		}
