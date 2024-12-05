@@ -8,18 +8,21 @@ import (
 )
 
 func TestNewTeam(t *testing.T) {
-	expectedTeam := mt.Team{
-		Name:       "t1",
-		PlayerList: []*mt.Player{},
-	}
+	db := mt.Database{}
 
 	club := mt.Club{
 		Name: "club",
 	}
 
-	t1, err1 := mf.NewTeam("t1", &club)
-	_, err2 := mf.NewTeam("t1", &club)
-	_, err3 := mf.NewTeam("", &club)
+	expectedTeam := mt.Team{
+		Name:       "t1",
+		PlayerList: []*mt.Player{},
+		Club:       &club,
+	}
+
+	t1, err1 := mf.NewTeam("t1", &club, &db)
+	_, err2 := mf.NewTeam("t1", &club, &db)
+	_, err3 := mf.NewTeam("", &club, &db)
 
 	expectedLen := 0
 

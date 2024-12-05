@@ -1,23 +1,30 @@
 package my_types
 
 type Club struct {
-	Name       string
-	PlayerList []*Player
-	TeamList   []*Team //Teams map[string]*Team
+	Name       string    `json:"name"`
+	PlayerList []*Player `json:"player_list"`
+	TeamList   []*Team   `json:"team_list"`
 }
 
 type Player struct {
-	Id       int
-	Name     string
-	Age      int
-	Ranking  int
-	Material []string
-	TeamList []*Team
+	Id       int      `json:"id"`
+	Name     string   `json:"name"`
+	Age      int      `json:"age"`
+	Ranking  int      `json:"ranking"`
+	Material []string `json:"material"`
+	TeamList []*Team  `json:"team_list"`
 }
 
 type Team struct {
-	Name       string
-	PlayerList []*Player
+	Name       string    `json:"name"`
+	PlayerList []*Player `json:"player_list"`
+	Club       *Club     `json:"club"`
+}
+
+type Database struct {
+	ClubList   []*Club   `json:"club_list"`
+	TeamList   []*Team   `json:"team_list"`
+	PlayerList []*Player `json:"player_list"`
 }
 
 type PlayerMatch struct {

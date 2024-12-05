@@ -130,3 +130,28 @@ func (c *Club) Show() error {
 	}
 	return nil
 }
+
+func (d *Database) Show() error {
+	fmt.Println("Clubs :")
+	for _, club := range d.ClubList {
+		err1 := club.Show()
+		if err1 != nil {
+			return err1
+		}
+	}
+	fmt.Println("Teams :")
+	for _, team := range d.TeamList {
+		err2 := team.Show()
+		if err2 != nil {
+			return err2
+		}
+	}
+	fmt.Println("Players :")
+	for _, player := range d.PlayerList {
+		err3 := player.Show()
+		if err3 != nil {
+			return err3
+		}
+	}
+	return nil
+}

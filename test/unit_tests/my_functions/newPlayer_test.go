@@ -8,6 +8,8 @@ import (
 )
 
 func TestNewPlayer(t *testing.T) {
+	db := mt.Database{}
+
 	expectedPlayer := mt.Player{
 		Name:     "p1",
 		Age:      0,
@@ -20,9 +22,9 @@ func TestNewPlayer(t *testing.T) {
 		Name: "club",
 	}
 
-	p1, err1 := mf.NewPlayer("p1", &club)
-	_, err2 := mf.NewPlayer("p1", &club)
-	_, err3 := mf.NewPlayer("", &club)
+	p1, err1 := mf.NewPlayer("p1", &club, &db)
+	_, err2 := mf.NewPlayer("p1", &club, &db)
+	_, err3 := mf.NewPlayer("", &club, &db)
 
 	fmt.Println(p1)
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	"testing"
-	//"github.com/stretchr/testify/mock"
 )
 
 func TestAddPlayerToTeam(t *testing.T) {

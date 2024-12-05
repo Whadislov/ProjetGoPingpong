@@ -8,6 +8,8 @@ import (
 )
 
 func TestNewClub(t *testing.T) {
+	db := mt.Database{}
+
 	expectedClub := mt.Club{
 		Name:       "club",
 		PlayerList: []*mt.Player{},
@@ -20,8 +22,8 @@ func TestNewClub(t *testing.T) {
 		Name: "club",
 	}
 
-	c, _ := mf.NewClub("club")
-	_, err := mf.NewClub("")
+	c, _ := mf.NewClub("club", &db)
+	_, err := mf.NewClub("", &db)
 
 	t.Run(fmt.Sprintf("Create club %s", club.Name), func(t *testing.T) {
 		if c.Name != expectedClub.Name {
