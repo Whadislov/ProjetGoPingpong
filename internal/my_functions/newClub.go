@@ -8,14 +8,12 @@ import (
 
 func NewClub(clubName string, db *mt.Database) (*mt.Club, error) {
 	if clubName == "" {
-		err := fmt.Errorf("club name cannot be empty")
-		return nil, err
+		return nil, fmt.Errorf("club name cannot be empty")
 	}
 
 	c := &mt.Club{
-		Name:       clubName,
-		PlayerList: []*mt.Player{},
-		TeamList:   []*mt.Team{},
+		ID:   len(db.Clubs),
+		Name: clubName,
 	}
 
 	db.AddClub(c)

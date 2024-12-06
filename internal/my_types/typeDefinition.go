@@ -1,32 +1,45 @@
 package my_types
 
 type Club struct {
-	Name       string    `json:"name"`
-	PlayerList []*Player `json:"player_list"`
-	TeamList   []*Team   `json:"team_list"`
+	ID        int            `json:"id"`
+	Name      string         `json:"name"`
+	PlayerIDs map[int]string `json:"player_id_list"`
+	TeamIDs   map[int]string `json:"team_id_list"`
+	// map[player.ID] = player.Name, nil per default
+	// map[team.ID] = team.Name, nil per default
 }
 
 type Player struct {
-	Id       int      `json:"id"`
-	Name     string   `json:"name"`
-	Age      int      `json:"age"`
-	Ranking  int      `json:"ranking"`
-	Material []string `json:"material"`
-	TeamList []*Team  `json:"team_list"`
+	ID       int            `json:"id"`
+	Name     string         `json:"name"`
+	Age      int            `json:"age"`
+	Ranking  int            `json:"ranking"`
+	Material []string       `json:"material"`
+	TeamIDs  map[int]string `json:"team_id_list"`
+	ClubIDs  map[int]string `json:"club_id"`
+	// map[team.ID] = team.Name, nil per default
+	// map[club.ID] = club.Name, nil per default
 }
 
 type Team struct {
-	Name       string    `json:"name"`
-	PlayerList []*Player `json:"player_list"`
-	Club       *Club     `json:"club"`
+	ID        int            `json:"id"`
+	Name      string         `json:"name"`
+	PlayerIDs map[int]string `json:"player_id_list"`
+	ClubID    map[int]string `json:"club_id"`
+	// map[player.ID] = player.Name, nil per default
+	// map[club.ID] = club.Name, nil per default
 }
 
 type Database struct {
-	ClubList   []*Club   `json:"club_list"`
-	TeamList   []*Team   `json:"team_list"`
-	PlayerList []*Player `json:"player_list"`
+	Clubs   map[int]*Club   `json:"club_list"`
+	Teams   map[int]*Team   `json:"team_list"`
+	Players map[int]*Player `json:"player_list"`
+	//  map[club.ID] = *Club
+	//  map[team.ID] = *Team
+	//  map[player.ID] = *Player
 }
 
+/*
 type PlayerMatch struct {
 	League             string
 	Player             string
@@ -55,3 +68,4 @@ type Match struct {
 func (t *TeamMatch) SetTeamComposition(teamComposition map[int]string) {
 	t.TeamComposition = teamComposition
 }
+*/

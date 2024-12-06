@@ -16,7 +16,7 @@ func LoadDb(filename string) (*mt.Database, error) {
 			// Return empty database if the file does not exist
 			return &mt.Database{}, nil
 		}
-		return nil, fmt.Errorf("error while opening database : %w", err)
+		return nil, fmt.Errorf("error during database opening: %w", err)
 	}
 	defer file.Close()
 
@@ -25,7 +25,7 @@ func LoadDb(filename string) (*mt.Database, error) {
 	err = decoder.Decode(db)
 
 	if err != nil {
-		return nil, fmt.Errorf("error while JSON decoding : %w", err)
+		return nil, fmt.Errorf("error during JSON decoding: %w", err)
 	}
 
 	return db, nil

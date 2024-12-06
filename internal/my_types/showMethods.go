@@ -20,35 +20,29 @@ func (p *Player) Show() error {
 		return fmt.Errorf("player does not exist")
 	}
 
-	if p.IsEmpty() {
-		log.Println("Error ! Player does not exist")
-		return fmt.Errorf("Player does not exist")
-	}
-
 	fmt.Println("Showing characteristics of", p.Name)
 
-	// Get team name, we don't want to show the address of the pointer
+	// Get team name
 	teams := []string{}
-	for _, team := range p.TeamList {
-		teams = append(teams, team.Name)
+	for _, team := range p.TeamIDs {
+		teams = append(teams, team)
 	}
 
-	fmt.Printf("%s, Age: %d, Ranking: %d, Material: %v, Teams: %v\n",
+	// Get club name
+	clubs := []string{}
+	for _, club := range p.ClubIDs {
+		clubs = append(clubs, club)
+	}
+
+	fmt.Printf("%s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v.\n",
 		p.Name,
 		p.Age,
 		p.Ranking,
 		p.Material,
 		teams,
+		clubs,
 	)
 	return nil
-}
-
-func TeamNames(t []*Team) []string {
-	teamNames := []string{}
-	for _, team := range t {
-		teamNames = append(teamNames, team.Name)
-	}
-	return teamNames
 }
 
 func (t *Team) Show() error {
@@ -57,20 +51,15 @@ func (t *Team) Show() error {
 		return fmt.Errorf("team does not exist")
 	}
 
-	if t.IsEmpty() {
-		log.Println("Error ! Team does not exist")
-		return fmt.Errorf("Team does not exist")
-	}
 	fmt.Println("Showing the characteristics of", t.Name)
-	n := len(t.PlayerList)
+	n := len(t.PlayerIDs)
 	if n >= 1 {
-		for i := 0; i < n; i++ {
+		for i, player := range t.PlayerIDs {
 			fmt.Printf("Player %v: %v\n",
-				i+1,
-				t.PlayerList[i].Name,
+				i,
+				player,
 			)
 		}
-
 	} else {
 		fmt.Printf("There is no player in %v.\n",
 			t.Name,
@@ -85,69 +74,40 @@ func (c *Club) Show() error {
 		return fmt.Errorf("club does not exist")
 	}
 
-	if c.IsEmpty() {
-		fmt.Println("Error ! Club does not exist")
-		return fmt.Errorf("Club does not exist")
-	}
 	fmt.Println("Characteristics of", c.Name)
-
-	if n := len(c.TeamList); n <= 1 {
-		fmt.Printf("%v has %v team.\n", c.Name, n)
-	} else {
-		fmt.Printf("%v has %v teams.\n", c.Name, n)
-	}
-	for i := 0; i < len(c.TeamList); i++ {
-		m := len(c.TeamList[i].PlayerList)
-		if m <= 1 {
-			fmt.Printf("Team %v: %v. %v player.\n",
-				i+1,
-				c.TeamList[i].Name,
-				m,
-			)
-		} else {
-			fmt.Printf("Team %v: %v. %v players.\n",
-				i+1,
-				c.TeamList[i].Name,
-				m,
+	n := len(c.TeamIDs)
+	if n >= 1 {
+		for i, team := range c.TeamIDs {
+			fmt.Printf("Team %v: %v.\n",
+				i,
+				team,
 			)
 		}
-	}
-
-	if n := len(c.PlayerList); n <= 1 {
-		fmt.Printf("%v has %v player.\n", c.Name, n)
 	} else {
-		fmt.Printf("%v has %v players.\n", c.Name, n)
-		for i := 0; i < len(c.PlayerList); i++ {
-			fmt.Printf("Player %v: %s, Age: %d, Ranking: %d, Material: %v, Team: %v\n",
-				i+1,
-				c.PlayerList[i].Name,
-				c.PlayerList[i].Age,
-				c.PlayerList[i].Ranking,
-				c.PlayerList[i].Material,
-				TeamNames(c.PlayerList[i].TeamList),
-			)
-		}
+		fmt.Printf("There is no team in %v.\n",
+			c.Name,
+		)
 	}
 	return nil
 }
 
 func (d *Database) Show() error {
 	fmt.Println("Clubs :")
-	for _, club := range d.ClubList {
+	for _, club := range d.Clubs {
 		err1 := club.Show()
 		if err1 != nil {
 			return err1
 		}
 	}
 	fmt.Println("Teams :")
-	for _, team := range d.TeamList {
+	for _, team := range d.Teams {
 		err2 := team.Show()
 		if err2 != nil {
 			return err2
 		}
 	}
 	fmt.Println("Players :")
-	for _, player := range d.PlayerList {
+	for _, player := range d.Players {
 		err3 := player.Show()
 		if err3 != nil {
 			return err3
