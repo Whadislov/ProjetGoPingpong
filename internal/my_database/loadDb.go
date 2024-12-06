@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func LoadDatabase(filename string) (*mt.Database, error) {
+func LoadDb(filename string) (*mt.Database, error) {
 
 	// Check if file exists
 	file, err := os.Open(filename)

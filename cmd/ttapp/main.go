@@ -14,9 +14,9 @@ func main() {
 	filename := "database.json"
 
 	// Charger ou créer une nouvelle base de données
-	db, err := md.LoadDatabase(filename)
+	db, err := md.LoadDb(filename)
 	if err != nil {
-		fmt.Println("Error while loading database :", err)
+		fmt.Println("Error while loading database:", err)
 		return
 	}
 
@@ -55,9 +55,9 @@ func main() {
 	mf.AddPlayerToTeam(martin, m2, c1)
 
 	// Sauvegarder les modifications
-	err = md.SaveDatabase(filename, db)
+	err = md.SaveDb(filename, db)
 	if err != nil {
-		fmt.Println("Erreur lors de la sauvegarde de la base de données :", err)
+		fmt.Println("Erreur lors de la sauvegarde de la base de données:", err)
 		return
 	}
 

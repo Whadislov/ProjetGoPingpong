@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func SaveDatabase(filename string, db *mt.Database) error {
+func SaveDb(filename string, db *mt.Database) error {
 	// create or open the file and appends new content
 	file, err := os.Create(filename)
 	if err != nil {

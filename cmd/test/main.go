@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	db, _ := md.LoadDatabase("database.json")
+	db, _ := md.LoadDb("database.json")
 
 	c1, _ := mf.NewClub("TSG Heilbronn", db)
 
