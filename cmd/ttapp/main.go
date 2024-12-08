@@ -12,6 +12,7 @@ import (
 
 func main() {
 	filename := "database.json"
+	fmt.Println("ok")
 
 	// Charger ou créer une nouvelle base de données
 	db, err := md.LoadDb(filename)
@@ -28,36 +29,36 @@ func main() {
 	mf.NewTeam("Mannschaft 7", c1, db)
 	mf.NewTeam("Mannschaft 8", c1, db)
 
-	lasse, _ := mf.NewPlayer("Lasse", c1, db)
+	lasse, _ := mf.NewPlayer("Lasse", db)
 	lasse.SetPlayerAge(20)
 	lasse.SetPlayerRanking(1300)
 	lasse.SetPlayerMaterial("Victas V22 double Extra", "Victas V20 double Extra", "Koki Niwa Wood")
-	mf.AddPlayerToTeam(lasse, m5, c1)
+	mf.AddPlayerToTeam(lasse, m5)
 
-	julien, _ := mf.NewPlayer("Julien", c1, db)
+	julien, _ := mf.NewPlayer("Julien", db)
 	julien.SetPlayerAge(27)
 	julien.SetPlayerRanking(1585)
 	julien.SetPlayerMaterial("Victas V20 double Extra", "Victas V20 double Extra", "Koki Niwa Wood")
-	mf.AddPlayerToTeam(julien, m2, c1)
+	mf.AddPlayerToTeam(julien, m2)
 
-	robin, _ := mf.NewPlayer("Robin", c1, db)
-	leon, _ := mf.NewPlayer("Leon", c1, db)
-	patrick, _ := mf.NewPlayer("Patrick", c1, db)
-	jonathan, _ := mf.NewPlayer("Jonathan", c1, db)
-	sumi, _ := mf.NewPlayer("Sumi", c1, db)
-	martin, _ := mf.NewPlayer("Martin", c1, db)
+	robin, _ := mf.NewPlayer("Robin", db)
+	leon, _ := mf.NewPlayer("Leon", db)
+	patrick, _ := mf.NewPlayer("Patrick", db)
+	jonathan, _ := mf.NewPlayer("Jonathan", db)
+	sumi, _ := mf.NewPlayer("Sumi", db)
+	martin, _ := mf.NewPlayer("Martin", db)
 
-	mf.AddPlayerToTeam(robin, m2, c1)
-	mf.AddPlayerToTeam(leon, m2, c1)
-	mf.AddPlayerToTeam(patrick, m2, c1)
-	mf.AddPlayerToTeam(jonathan, m2, c1)
-	mf.AddPlayerToTeam(sumi, m2, c1)
-	mf.AddPlayerToTeam(martin, m2, c1)
+	mf.AddPlayerToTeam(robin, m2)
+	mf.AddPlayerToTeam(leon, m2)
+	mf.AddPlayerToTeam(patrick, m2)
+	mf.AddPlayerToTeam(jonathan, m2)
+	mf.AddPlayerToTeam(sumi, m2)
+	mf.AddPlayerToTeam(martin, m2)
 
 	// Sauvegarder les modifications
 	err = md.SaveDb(filename, db)
 	if err != nil {
-		fmt.Println("Erreur lors de la sauvegarde de la base de données:", err)
+		fmt.Println("Error while saving database:", err)
 		return
 	}
 

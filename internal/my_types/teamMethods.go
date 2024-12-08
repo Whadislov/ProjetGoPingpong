@@ -23,15 +23,15 @@ func (t *Team) SetTeamName(name string) {
 
 func (t *Team) AddPlayer(player *Player) error {
 	if _, ok := t.PlayerIDs[player.ID]; ok {
-		return fmt.Errorf("player %v is already in team %v.", player.Name, t.Name)
+		return fmt.Errorf("player %v is already in team %v", player.Name, t.Name)
 	}
 	t.PlayerIDs[player.ID] = player.Name
 	return nil
 }
 
 func (t *Team) AddClub(club *Club) error {
-	if _, ok := t.ClubID[club.ID]; ok {
-		return fmt.Errorf("team %v is already in club %v.", t.Name, club.Name)
+	if len(t.ClubID) > 0 {
+		return fmt.Errorf("team %v is already in a club", t.Name)
 	}
 	t.ClubID[club.ID] = club.Name
 	return nil
@@ -39,7 +39,7 @@ func (t *Team) AddClub(club *Club) error {
 
 func (t *Team) RemovePlayer(player *Player) error {
 	if _, ok := t.PlayerIDs[player.ID]; !ok {
-		return fmt.Errorf("player %v is not in team %v.", player.Name, t.Name)
+		return fmt.Errorf("player %v is not in team %v", player.Name, t.Name)
 	}
 	delete(t.PlayerIDs, player.ID)
 	return nil
@@ -47,22 +47,16 @@ func (t *Team) RemovePlayer(player *Player) error {
 
 func (t *Team) RemoveClub(club *Club) error {
 	if _, ok := t.ClubID[club.ID]; !ok {
-		return fmt.Errorf("team %v is not in club %v.", t.Name, club.Name)
+		return fmt.Errorf("team %v is not in club %v", t.Name, club.Name)
 	}
 	delete(t.ClubID, club.ID)
 	return nil
 }
 
 func (t *Team) HasPlayer() bool {
-	if len(t.PlayerIDs) > 0 {
-		return false
-	}
-	return true
+	return len(t.PlayerIDs) > 0
 }
 
 func (t *Team) HasClub() bool {
-	if len(t.ClubID) > 0 {
-		return false
-	}
-	return true
+	return len(t.ClubID) > 0
 }

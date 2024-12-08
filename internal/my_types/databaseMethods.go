@@ -32,15 +32,15 @@ func (d *Database) AddTeam(team *Team) {
 }
 
 func (d *Database) DeleteTeam(teamID int) error {
-	if _, ok := d.Players[teamID]; !ok {
+	if _, ok := d.Teams[teamID]; !ok {
 		return fmt.Errorf("teamID %v does not exist", teamID)
 	}
-	delete(d.Players, teamID)
+	delete(d.Teams, teamID)
 	return nil
 }
 
 func (d *Database) GetTeam(teamID int) (*Team, error) {
-	if _, ok := d.Players[teamID]; !ok {
+	if _, ok := d.Teams[teamID]; !ok {
 		return nil, fmt.Errorf("teamID %v does not exist", teamID)
 	}
 	return d.Teams[teamID], nil
@@ -53,15 +53,15 @@ func (d *Database) AddClub(club *Club) {
 }
 
 func (d *Database) DeleteClub(clubID int) error {
-	if _, ok := d.Players[clubID]; !ok {
+	if _, ok := d.Clubs[clubID]; !ok {
 		return fmt.Errorf("clubID %v does not exist", clubID)
 	}
-	delete(d.Players, clubID)
+	delete(d.Clubs, clubID)
 	return nil
 }
 
 func (d *Database) GetClub(clubID int) (*Club, error) {
-	if _, ok := d.Players[clubID]; !ok {
+	if _, ok := d.Clubs[clubID]; !ok {
 		return nil, fmt.Errorf("clubID %v does not exist", clubID)
 	}
 	return d.Clubs[clubID], nil
