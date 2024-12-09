@@ -12,8 +12,10 @@ func NewClub(clubName string, db *mt.Database) (*mt.Club, error) {
 	}
 
 	c := &mt.Club{
-		ID:   len(db.Clubs),
-		Name: clubName,
+		ID:        len(db.Clubs),
+		Name:      clubName,
+		PlayerIDs: map[int]string{},
+		TeamIDs:   map[int]string{},
 	}
 
 	db.AddClub(c)

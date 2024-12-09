@@ -12,11 +12,17 @@ func main() {
 
 	c1, _ := mf.NewClub("TSG Heilbronn", db)
 
-	m2, _ := mf.NewTeam("Mannschaft 2", c1, db)
-	m3, _ := mf.NewTeam("Mannschaft 3", c1, db)
-	m5, _ := mf.NewTeam("Mannschaft 5", c1, db)
-	m7, _ := mf.NewTeam("Mannschaft 7", c1, db)
-	m8, _ := mf.NewTeam("Mannschaft 8", c1, db)
+	m2, _ := mf.NewTeam("Mannschaft 2", db)
+	m3, _ := mf.NewTeam("Mannschaft 3", db)
+	m5, _ := mf.NewTeam("Mannschaft 5", db)
+	m7, _ := mf.NewTeam("Mannschaft 7", db)
+	m8, _ := mf.NewTeam("Mannschaft 8", db)
+
+	mf.AddTeamToClub(m2, c1)
+	mf.AddTeamToClub(m3, c1)
+	mf.AddTeamToClub(m5, c1)
+	mf.AddTeamToClub(m7, c1)
+	mf.AddTeamToClub(m8, c1)
 
 	fmt.Println("")
 	fmt.Println("####################### club show")
@@ -43,12 +49,22 @@ func main() {
 	sumi, _ := mf.NewPlayer("Sumi", db)
 	martin, _ := mf.NewPlayer("Martin", db)
 
+	mf.AddPlayerToClub(julien, c1)
+	mf.AddPlayerToClub(lasse, c1)
+	mf.AddPlayerToClub(robin, c1)
+	mf.AddPlayerToClub(leon, c1)
+	mf.AddPlayerToClub(patrick, c1)
+	mf.AddPlayerToClub(jonathan, c1)
+	mf.AddPlayerToClub(sumi, c1)
+	mf.AddPlayerToClub(martin, c1)
+
 	mf.AddPlayerToTeam(robin, m2)
 	mf.AddPlayerToTeam(leon, m2)
 	mf.AddPlayerToTeam(patrick, m2)
 	mf.AddPlayerToTeam(jonathan, m2)
 	mf.AddPlayerToTeam(sumi, m2)
 	mf.AddPlayerToTeam(martin, m2)
+
 	fmt.Println("")
 	fmt.Println("####################### team.Show()")
 	m2.Show()

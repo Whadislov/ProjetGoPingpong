@@ -6,29 +6,29 @@ import (
 	"testing"
 )
 
-func TestDeletePlayer(t *testing.T) {
+func TestDeleteClub(t *testing.T) {
 
-	p1 := mt.Player{
+	c1 := mt.Club{
 		ID:   0,
-		Name: "p1",
+		Name: "c1",
 	}
 
-	p2 := mt.Player{
+	c2 := mt.Club{
 		ID:   1,
-		Name: "p2",
+		Name: "c2",
 	}
 
 	d := mt.Database{
-		Players: map[int]*mt.Player{0: &p1},
+		Clubs: map[int]*mt.Club{0: &c1},
 	}
 
 	expectedLen1 := 0
-	expectedError2 := "error when deleting player p2: playerID 1 does not exist"
+	expectedError2 := "error when deleting Club c2: ClubID 1 does not exist"
 
-	t.Run("Delete Player", func(t *testing.T) {
-		err := mf.DeletePlayer(&p1, &d)
-		err2 := mf.DeletePlayer(&p2, &d)
-		if err != nil || len(d.Players) != expectedLen1 {
+	t.Run("Delete Club", func(t *testing.T) {
+		err := mf.DeleteClub(&c1, &d)
+		err2 := mf.DeleteClub(&c2, &d)
+		if err != nil || len(d.Clubs) != expectedLen1 {
 			t.Errorf("Expected error %v, got %v", nil, err)
 		}
 		if err2 == nil {

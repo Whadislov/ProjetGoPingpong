@@ -12,9 +12,8 @@ import (
 
 func main() {
 	filename := "database.json"
-	fmt.Println("ok")
 
-	// Charger ou créer une nouvelle base de données
+	// Charger la base de données
 	db, err := md.LoadDb(filename)
 	if err != nil {
 		fmt.Println("Error while loading database:", err)
@@ -23,11 +22,11 @@ func main() {
 
 	c1, _ := mf.NewClub("TSG Heilbronn", db)
 
-	m2, _ := mf.NewTeam("Mannschaft 2", c1, db)
-	mf.NewTeam("Mannschaft 3", c1, db)
-	m5, _ := mf.NewTeam("Mannschaft 5", c1, db)
-	mf.NewTeam("Mannschaft 7", c1, db)
-	mf.NewTeam("Mannschaft 8", c1, db)
+	m2, _ := mf.NewTeam("Mannschaft 2", db)
+	m5, _ := mf.NewTeam("Mannschaft 5", db)
+
+	mf.AddTeamToClub(m2, c1)
+	mf.AddTeamToClub(m5, c1)
 
 	lasse, _ := mf.NewPlayer("Lasse", db)
 	lasse.SetPlayerAge(20)
@@ -47,6 +46,15 @@ func main() {
 	jonathan, _ := mf.NewPlayer("Jonathan", db)
 	sumi, _ := mf.NewPlayer("Sumi", db)
 	martin, _ := mf.NewPlayer("Martin", db)
+
+	mf.AddPlayerToClub(julien, c1)
+	mf.AddPlayerToClub(lasse, c1)
+	mf.AddPlayerToClub(robin, c1)
+	mf.AddPlayerToClub(leon, c1)
+	mf.AddPlayerToClub(patrick, c1)
+	mf.AddPlayerToClub(jonathan, c1)
+	mf.AddPlayerToClub(sumi, c1)
+	mf.AddPlayerToClub(martin, c1)
 
 	mf.AddPlayerToTeam(robin, m2)
 	mf.AddPlayerToTeam(leon, m2)

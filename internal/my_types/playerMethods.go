@@ -10,7 +10,7 @@ type Player struct {
 	Ranking  int            `json:"ranking"`
 	Material []string       `json:"material"`
 	TeamIDs  map[int]string `json:"team_id_list"`
-	ClubID   int            `json:"club_id"`
+	ClubID   map[int]string            `json:"club_id_list"`
 	// map[team.ID] = team.Name, nil per default
 	// ClubID == -1 per default
 }

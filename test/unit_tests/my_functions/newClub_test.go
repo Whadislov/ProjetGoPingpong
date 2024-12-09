@@ -1,43 +1,28 @@
-package my_functions_test
+package myfunctions_test
 
 import (
-	"fmt"
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	"testing"
 )
 
 func TestNewClub(t *testing.T) {
-	db := mt.Database{}
-
-	expectedClub := mt.Club{
-		Name:       "club",
-		PlayerList: []*mt.Player{},
-		TeamList:   []*mt.Team{},
+	d := mt.Database{
+		Clubs: map[int]*mt.Club{},
 	}
 
-	expectedLen := 0
+	expectedLen := 1
+	expectedError1 := "Club name cannot be empty"
 
-	club := mt.Club{
-		Name: "club",
-	}
+	t.Run("Delete Club", func(t *testing.T) {
+		_, err1 := mf.NewClub("", &d)
+		_, err2 := mf.NewClub("p2", &d)
 
-	c, _ := mf.NewClub("club", &db)
-	_, err := mf.NewClub("", &db)
-
-	t.Run(fmt.Sprintf("Create club %s", club.Name), func(t *testing.T) {
-		if c.Name != expectedClub.Name {
-			t.Errorf("Name issue: got %v, expected %v", c.Name, expectedClub.Name)
+		if err1 == nil {
+			t.Errorf("Expected error %v, got %v", expectedError1, err1)
 		}
-		if len(c.PlayerList) != expectedLen {
-			t.Errorf("Playerlist len issue: got %v, expected %v", len(c.PlayerList), expectedLen)
-		}
-
-		if len(c.TeamList) != expectedLen {
-			t.Errorf("TeamList len issue: got %v, expected %v", len(c.TeamList), expectedLen)
-		}
-		if err == nil {
-			t.Errorf("Club name issue: got %v, expected %v", err, fmt.Errorf("team name cannot be empty"))
+		if err2 != nil || len(d.Clubs) != expectedLen {
+			t.Errorf("Expected error %v, got %v", nil, err2)
 		}
 	})
 }

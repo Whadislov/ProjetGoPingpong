@@ -1,0 +1,188 @@
+{
+  "club_map": {
+    "0": {
+      "id": 0,
+      "name": "TSG Heilbronn",
+      "player_id_map": {
+        "0": "Lasse",
+        "1": "Julien",
+        "2": "Robin",
+        "3": "Leon",
+        "4": "Patrick",
+        "5": "Jonathan",
+        "6": "Sumi",
+        "7": "Martin"
+      },
+      "team_id_map": {
+        "0": "Mannschaft 2",
+        "1": "Mannschaft 5"
+      }
+    }
+  },
+  "team_map": {
+    "0": {
+      "id": 0,
+      "name": "Mannschaft 2",
+      "player_id_map": {
+        "1": "Julien",
+        "2": "Robin",
+        "3": "Leon",
+        "4": "Patrick",
+        "5": "Jonathan",
+        "6": "Sumi",
+        "7": "Martin"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "Mannschaft 5",
+      "player_id_map": {
+        "0": "Lasse"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    }
+  },
+  "player_map": {
+    "0": {
+      "id": 0,
+      "name": "Lasse",
+      "age": 20,
+      "ranking": 1300,
+      "material": [
+        "Victas V22 double Extra",
+        "Victas V20 double Extra",
+        "Koki Niwa Wood"
+      ],
+      "team_id_map": {
+        "1": "Mannschaft 5"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "Julien",
+      "age": 27,
+      "ranking": 1585,
+      "material": [
+        "Victas V20 double Extra",
+        "Victas V20 double Extra",
+        "Koki Niwa Wood"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "Robin",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "Leon",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "Patrick",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "Jonathan",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "6": {
+      "id": 6,
+      "name": "Sumi",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "7": {
+      "id": 7,
+      "name": "Martin",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "team_id_map": {
+        "0": "Mannschaft 2"
+      },
+      "club_id_map": {
+        "0": "TSG Heilbronn"
+      }
+    }
+  }
+}

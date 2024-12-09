@@ -5,7 +5,7 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-func RemovePlayerFromClub(p *mt.Player, c *mt.Club, db *mt.Database) error {
+func RemovePlayerFromClub(p *mt.Player, c *mt.Club) error {
 
 	err := c.RemovePlayer(p)
 	if err != nil {
