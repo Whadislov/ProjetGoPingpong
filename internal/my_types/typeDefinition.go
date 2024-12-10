@@ -3,8 +3,8 @@ package my_types
 type Club struct {
 	ID        int            `json:"id"`
 	Name      string         `json:"name"`
-	PlayerIDs map[int]string `json:"player_id_map"`
-	TeamIDs   map[int]string `json:"team_id_map"`
+	PlayerIDs map[int]string `json:"players"`
+	TeamIDs   map[int]string `json:"teams"`
 }
 
 type Player struct {
@@ -13,21 +13,21 @@ type Player struct {
 	Age      int            `json:"age"`
 	Ranking  int            `json:"ranking"`
 	Material []string       `json:"material"`
-	TeamIDs  map[int]string `json:"team_id_map"`
-	ClubIDs  map[int]string `json:"club_id_map"`
+	TeamIDs  map[int]string `json:"teams"`
+	ClubIDs  map[int]string `json:"clubs"`
 }
 
 type Team struct {
 	ID        int            `json:"id"`
 	Name      string         `json:"name"`
-	PlayerIDs map[int]string `json:"player_id_map"`
-	ClubID    map[int]string `json:"club_id_map"`
+	PlayerIDs map[int]string `json:"players"`
+	ClubID    map[int]string `json:"clubs"`
 }
 
 type Database struct {
-	Clubs   map[int]*Club   `json:"club_map"`
-	Teams   map[int]*Team   `json:"team_map"`
-	Players map[int]*Player `json:"player_map"`
+	Clubs   map[int]*Club   `json:"clubs"`
+	Teams   map[int]*Team   `json:"teams"`
+	Players map[int]*Player `json:"players"`
 }
 
 /*

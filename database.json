@@ -1,9 +1,9 @@
 {
-  "club_map": {
+  "clubs": {
     "0": {
       "id": 0,
       "name": "TSG Heilbronn",
-      "player_id_map": {
+      "players": {
         "0": "Lasse",
         "1": "Julien",
         "2": "Robin",
@@ -13,17 +13,17 @@
         "6": "Sumi",
         "7": "Martin"
       },
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2",
         "1": "Mannschaft 5"
       }
     }
   },
-  "team_map": {
+  "teams": {
     "0": {
       "id": 0,
       "name": "Mannschaft 2",
-      "player_id_map": {
+      "players": {
         "1": "Julien",
         "2": "Robin",
         "3": "Leon",
@@ -32,22 +32,22 @@
         "6": "Sumi",
         "7": "Martin"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
     "1": {
       "id": 1,
       "name": "Mannschaft 5",
-      "player_id_map": {
+      "players": {
         "0": "Lasse"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     }
   },
-  "player_map": {
+  "players": {
     "0": {
       "id": 0,
       "name": "Lasse",
@@ -58,10 +58,10 @@
         "Victas V20 double Extra",
         "Koki Niwa Wood"
       ],
-      "team_id_map": {
+      "teams": {
         "1": "Mannschaft 5"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -75,10 +75,10 @@
         "Victas V20 double Extra",
         "Koki Niwa Wood"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -92,10 +92,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -109,10 +109,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -126,10 +126,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -143,10 +143,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -160,10 +160,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     },
@@ -177,10 +177,10 @@
         "Unknown",
         "Unknown"
       ],
-      "team_id_map": {
+      "teams": {
         "0": "Mannschaft 2"
       },
-      "club_id_map": {
+      "clubs": {
         "0": "TSG Heilbronn"
       }
     }
