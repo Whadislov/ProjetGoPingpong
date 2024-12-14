@@ -1,4 +1,4 @@
-package my_functions_test
+package myfunctions_test
 
 import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
@@ -7,61 +7,53 @@ import (
 )
 
 func TestAddPlayerToTeam(t *testing.T) {
-	p1 := mt.Player{
-		Name:     "p1",
-		TeamList: []*mt.Team{},
-	}
-
 	t1 := mt.Team{
-		Name:       "t1",
-		PlayerList: []*mt.Player{},
+		ID:        0,
+		Name:      "t1",
+		PlayerIDs: map[int]string{},
 	}
 
-	c1 := mt.Club{
-		Name:       "c1",
-		PlayerList: []*mt.Player{&p1},
-		TeamList:   []*mt.Team{&t1},
+	p1 := mt.Player{
+		ID:      0,
+		Name:    "p1",
+		TeamIDs: map[int]string{},
 	}
-	NonExistantTeam := mt.Team{}
 
-	err := mf.AddPlayerToTeam(&p1, &t1, &c1)
-	err2 := mf.AddPlayerToTeam(&p1, &NonExistantTeam, &c1)
+	p2 := mt.Player{
+		ID:      1,
+		Name:    "p2",
+		TeamIDs: map[int]string{0: "t1"},
+	}
 
-	t.Run("Add a player to a team", func(t *testing.T) {
-		if p1.TeamList[0] != &t1 {
-			t.Errorf("Player's team list issue: got %v, expected %v", p1.TeamList[0], &t1)
-		}
-		if t1.PlayerList[0] != &p1 {
-			t.Errorf("Team's player list issue: got %v, expected %v", t1.PlayerList[0], &p1)
-		}
-		if err != nil {
-			t.Errorf("Error issue: got %v, expected %v", err, nil)
+	y2 := mt.Team{
+		ID:        1,
+		Name:      "y2",
+		PlayerIDs: map[int]string{2: "p3"},
+	}
+
+	p3 := mt.Player{
+		ID:      2,
+		Name:    "p3",
+		TeamIDs: map[int]string{},
+	}
+
+	expectedLen1 := 1
+	expectedError2 := "error when adding Player p2 to Team t1: Player p2 is already in Team t1"
+	expectedError3 := "error when adding Player p3 to Team y2: Player p3 is already in Team y2"
+
+	t.Run("Add Player to Team", func(t *testing.T) {
+		err := mf.AddPlayerToTeam(&p1, &t1)
+		err2 := mf.AddPlayerToTeam(&p2, &t1)
+		if err != nil || len(t1.PlayerIDs) != expectedLen1 {
+			t.Errorf("Expected error %v, got %v", nil, err)
 		}
 		if err2 == nil {
-			t.Errorf("Error issue: got %v, expected error", err2)
+			t.Errorf("Expected error %v, got %v", expectedError2, err2)
+		}
+
+		err3 := mf.AddPlayerToTeam(&p3, &y2)
+		if err3 == nil {
+			t.Errorf("Expected error %v, got %v", expectedError3, err3)
 		}
 	})
-
 }
-
-/*
-func AddPlayerToTeam(p *mt.Player, teamName string, c *mt.Club) (error) {
-	if p == nil {
-		return fmt.Errorf("player is nil")
-	}
-
-	_, err := c.FindTeam(teamName)
-	if err != nil {
-		return fmt.Errorf("team %s not found: %w", teamName, err)
-	}
-
-	err = c.AddPlayerToTeam(p, teamName)
-	if  err == nil {
-		log.Printf("%s has been successfully added in %s", p.Name, teamName)
-	} else {
-		return fmt.Errorf("%s has not been successfully added in %s : %w", p.Name, teamName, err)
-	}
-	return nil
-}
-
-*/

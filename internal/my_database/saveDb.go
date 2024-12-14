@@ -16,7 +16,7 @@ func SaveDb(filename string, db *mt.Database) error {
 	defer file.Close()
 
 	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ") // make JSON prettier
+	encoder.SetIndent("", "  ") // make JSON readable
 	err = encoder.Encode(db)
 	if err != nil {
 		return fmt.Errorf("error during JSON encoding : %w", err)

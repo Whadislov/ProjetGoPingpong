@@ -6,23 +6,22 @@ import (
 	"log"
 )
 
-func NewPlayer(playerName string, club *mt.Club, db *mt.Database) (*mt.Player, error) {
+func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 	if playerName == "" {
 		return nil, fmt.Errorf("player name cannot be empty")
 	}
 
 	p := &mt.Player{
-		Id:       len(club.PlayerList),
+		ID:       len(db.Players),
 		Name:     playerName,
-		Age:      0,
-		Ranking:  0,
+		Age:      -1,
+		Ranking:  -1,
 		Material: DefaultPlayerMaterial(),
-		TeamList: []*mt.Team{},
+		TeamIDs:  map[int]string{},
+		ClubIDs:  map[int]string{},
 	}
-	// Add player on player list
-	club.AddPlayer(p)
-	db.AddPlayer(p)
 
+	db.AddPlayer(p)
 	log.Printf("Player %v sucessfully created.", playerName)
 	return p, nil
 }

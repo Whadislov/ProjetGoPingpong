@@ -1,32 +1,36 @@
 package my_types
 
 type Club struct {
-	Name       string    `json:"name"`
-	PlayerList []*Player `json:"player_list"`
-	TeamList   []*Team   `json:"team_list"`
+	ID        int            `json:"id"`
+	Name      string         `json:"name"`
+	PlayerIDs map[int]string `json:"players"`
+	TeamIDs   map[int]string `json:"teams"`
 }
 
 type Player struct {
-	Id       int      `json:"id"`
-	Name     string   `json:"name"`
-	Age      int      `json:"age"`
-	Ranking  int      `json:"ranking"`
-	Material []string `json:"material"`
-	TeamList []*Team  `json:"team_list"`
+	ID       int            `json:"id"`
+	Name     string         `json:"name"`
+	Age      int            `json:"age"`
+	Ranking  int            `json:"ranking"`
+	Material []string       `json:"material"`
+	TeamIDs  map[int]string `json:"teams"`
+	ClubIDs  map[int]string `json:"clubs"`
 }
 
 type Team struct {
-	Name       string    `json:"name"`
-	PlayerList []*Player `json:"player_list"`
-	Club       *Club     `json:"club"`
+	ID        int            `json:"id"`
+	Name      string         `json:"name"`
+	PlayerIDs map[int]string `json:"players"`
+	ClubID    map[int]string `json:"clubs"`
 }
 
 type Database struct {
-	ClubList   []*Club   `json:"club_list"`
-	TeamList   []*Team   `json:"team_list"`
-	PlayerList []*Player `json:"player_list"`
+	Clubs   map[int]*Club   `json:"clubs"`
+	Teams   map[int]*Team   `json:"teams"`
+	Players map[int]*Player `json:"players"`
 }
 
+/*
 type PlayerMatch struct {
 	League             string
 	Player             string
@@ -51,7 +55,8 @@ type Match struct {
 	TeamMatchOutcome Outcome
 }
 
-// ajouter erreur si la value de la clé (joueur) ne fait pas partie de la liste des joueurs
+// ajouter erreur si la value de la clé (joueur) ne fait pas partie de la mape des joueurs
 func (t *TeamMatch) SetTeamComposition(teamComposition map[int]string) {
 	t.TeamComposition = teamComposition
 }
+*/
