@@ -27,12 +27,14 @@ func DeleteTeam(t *mt.Team, db *mt.Database) error {
 	var playerIDs []int
 	if len(t.PlayerIDs) > 0 {
 		for playerID := range t.PlayerIDs {
+			fmt.Println("PlayerID quand on supprime une team: ", playerID)
 			playerIDs = append(playerIDs, playerID)
 			err := db.Players[playerID].RemoveTeam(t)
 			if err != nil {
 				return fmt.Errorf("error when deleting team %s: %w", t.Name, err)
 			}
 		}
+		fmt.Println("Affichage des playerIDS: ", playerIDs)
 		for playerID := range playerIDs {
 			err := t.RemovePlayer(db.Players[playerID])
 			if err != nil {
@@ -42,6 +44,9 @@ func DeleteTeam(t *mt.Team, db *mt.Database) error {
 	}
 
 	// Delete team
+	fmt.Println("#######################################")
+	fmt.Println("Team ID : ", t.ID)
+
 	err := db.DeleteTeam(t.ID)
 	if err != nil {
 		return fmt.Errorf("error when deleting team %s: %w", t.Name, err)

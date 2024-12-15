@@ -11,33 +11,37 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func TeamMenu(w fyne.Window, teams map[int]*mt.Team) {
+func TeamInfos(team *mt.Team) *fyne.Container {
+	wp := []fyne.CanvasObject{}
+	for _, player := range team.PlayerIDs {
+		wp = append(wp, widget.NewLabel(player))
+	}
+	itemp := widget.NewAccordionItem("Show players",
+		container.NewVBox(wp...),
+	)
+	playerAc := widget.NewAccordion(itemp)
+	clubs := []string{}
+	for _, club := range team.ClubID {
+		clubs = append(clubs, club)
+	}
+	clubStr := "Club: " + strHelper(clubs)
 
-	label := canvas.NewText("List of teams :", color.Black)
+	item := container.NewVBox(
+		widget.NewLabel(clubStr),
+		playerAc,
+	)
+
+	return item
+}
+
+func TeamMenu(w fyne.Window, teams map[int]*mt.Team) {
+	label := canvas.NewText("Teams:", color.Black)
 	ac := widget.NewAccordion()
 
 	for _, team := range teams {
-		wp := []fyne.CanvasObject{}
-		for _, player := range team.PlayerIDs {
-			wp = append(wp, widget.NewLabel(player))
-		}
-		itemp := widget.NewAccordionItem("Show players",
-			container.NewVBox(wp...),
-		)
-		playerAc := widget.NewAccordion(itemp)
-		clubs := []string{}
-		for _, club := range team.ClubID {
-			clubs = append(clubs, club)
-		}
-		clubStr := "Club: " + strHelper(clubs)
-
 		item := widget.NewAccordionItem(team.Name,
-			container.NewVBox(
-				widget.NewLabel(clubStr),
-				playerAc,
-			),
+			TeamInfos(team),
 		)
-
 		ac.Append(item)
 	}
 
