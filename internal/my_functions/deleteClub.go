@@ -16,7 +16,7 @@ func DeleteClub(c *mt.Club, db *mt.Database) error {
 				return fmt.Errorf("error when deleting club %s: %w", c.Name, err)
 			}
 		}
-		for playerID := range playerIDs {
+		for _, playerID := range playerIDs {
 			err := c.RemovePlayer(db.Players[playerID])
 			if err != nil {
 				return fmt.Errorf("error when deleting club %s: %w", c.Name, err)
@@ -34,7 +34,7 @@ func DeleteClub(c *mt.Club, db *mt.Database) error {
 				return fmt.Errorf("error when deleting club %s: %w", c.Name, err)
 			}
 		}
-		for teamID := range teamIDs {
+		for _, teamID := range teamIDs {
 			err := c.RemoveTeam(db.Teams[teamID])
 			if err != nil {
 				return fmt.Errorf("error when deleting club %s: %w", c.Name, err)

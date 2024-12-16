@@ -11,46 +11,57 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func CreateDeleteWindow(a fyne.App, label string, onConfirm func()) fyne.Window {
-	ynw := a.NewWindow("Confirmation")
-	ynw.SetContent(container.NewVBox(
-		widget.NewLabel(label),
-		container.NewHBox(
-			widget.NewButton("Yes", func() {
-				onConfirm()
-				ynw.Close()
-			}),
-			widget.NewButton("No", func() {
-				ynw.Close()
-			}),
-		),
-	))
-	ynw.Resize(fyne.NewSize(300, 150))
-	return ynw
-}
-
-func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
-	d := dialog.NewConfirm("Confirm deletion", message, func(confirm bool) {
-		if confirm {
-			onConfirm()
-		}
-	}, w)
-	d.Show()
-}
-
-func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
+func CreateDeleteMenu(w fyne.Window, db *mt.Database, a fyne.App) {
 	var rebuildUI func()
 
 	// Rebuild UI on modifications
 	rebuildUI = func() {
 
+		pLabel := widget.NewLabel("Players")
+		tLabel := widget.NewLabel("Teams")
+		cLabel := widget.NewLabel("Clubs")
+
+		labelContainer := container.NewVBox(
+			pLabel,
+			tLabel,
+			cLabel,
+		)
+
+		// Nothing to delete, go back to main menu
+		if len(db.Players) == 0 && len(db.Teams) == 0 && len(db.Clubs) == 0 {
+			fmt.Println("Tout est vide")
+
+			backToMainMenuLabel := widget.NewLabel("There is nothing to delete")
+			backToMainMenuButton := widget.NewButton("Return to main menu", func() { MainMenu(w) })
+
+			w2 := a.NewWindow("There is nothing to delete")
+			backToMainMenuContainer := container.NewVBox(
+				backToMainMenuLabel,
+				backToMainMenuButton)
+
+			w2.SetContent(backToMainMenuContainer)
+
+			w.SetContent(container.NewVBox(
+				labelContainer,
+				backToMainMenuContainer,
+			),
+			)
+		}
+
+		// "Sort" maps
+		sortedPlayers := SortMap(db.Players)
+		sortedTeams := SortMap(db.Teams)
+		sortedClubs := SortMap(db.Clubs)
+
 		// Players
 		acp := widget.NewAccordion()
 
-		for _, player := range db.Players {
-			p := player
+		for _, sortedPlayer := range sortedPlayers {
+			// i is PlayerID
+			i := sortedPlayer.Key
+			p := db.Players[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf("Delete player %v", p.Name),
+				fmt.Sprintf(p.Name),
 				container.NewVBox(
 					PlayerInfos(p),
 					widget.NewButton("Delete", func() {
@@ -59,7 +70,9 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								fmt.Printf("Player %v has been successfully deleted\n", p.Name)
+								successMsg := fmt.Sprintf("%v has been successfully deleted\n", p.Name)
+								fmt.Println(successMsg)
+								dialog.ShowInformation("Succes", successMsg, w)
 								// Reload UI
 								rebuildUI()
 							}
@@ -73,20 +86,21 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
 		// Teams
 		act := widget.NewAccordion()
 
-		for _, team := range db.Teams {
-			t := team
+		for _, sortedTeam := range sortedTeams {
+			// i is TeamID
+			i := sortedTeam.Key
+			t := db.Teams[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf("Delete team %v", t.Name),
+				fmt.Sprintf(t.Name),
 				container.NewVBox(
 					TeamInfos(t),
 					widget.NewButton("Delete", func() {
 						ShowConfirmationDialog(w, fmt.Sprintf("Delete team %v?", t.Name), func() {
 							err := mf.DeleteTeam(t, db)
 							if err != nil {
-								fmt.Printf("UI Error: %v\n", err)
 								dialog.ShowError(err, w)
 							} else {
-								successMsg := fmt.Sprintf("Team %v has been successfully deleted\n", t.Name)
+								successMsg := fmt.Sprintf("%v has been successfully deleted\n", t.Name)
 								fmt.Println(successMsg)
 								dialog.ShowInformation("Succes", successMsg, w)
 								// Reload UI
@@ -102,10 +116,12 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
 		// Clubs
 		acc := widget.NewAccordion()
 
-		for _, club := range db.Clubs {
-			c := club
+		for _, sortedClub := range sortedClubs {
+			// i is ClubID
+			i := sortedClub.Key
+			c := db.Clubs[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf("Delete team %v", c.Name),
+				fmt.Sprintf(c.Name),
 				container.NewVBox(
 					ClubInfos(c),
 					widget.NewButton("Delete", func() {
@@ -114,7 +130,9 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								fmt.Printf("Club %v has been successfully deleted\n", c.Name)
+								successMsg := fmt.Sprintf("%v has been successfully deleted\n", c.Name)
+								fmt.Println(successMsg)
+								dialog.ShowInformation("Succes", successMsg, w)
 								// Reload UI
 								rebuildUI()
 							}
@@ -122,13 +140,25 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database) {
 					}),
 				),
 			)
-			act.Append(item)
+			acc.Append(item)
 		}
 
+		playerVBox := container.NewVBox(
+			pLabel,
+			acp)
+
+		teamVBox := container.NewVBox(
+			tLabel,
+			act)
+
+		clubVBox := container.NewVBox(
+			cLabel,
+			acc)
+
 		w.SetContent(container.NewHBox(
-			acp,
-			act,
-			acc),
+			playerVBox,
+			teamVBox,
+			clubVBox),
 		)
 	}
 

@@ -1,12 +1,9 @@
 package myapp
 
 import (
-	"image/color"
-
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
@@ -35,7 +32,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 }
 
 func TeamMenu(w fyne.Window, teams map[int]*mt.Team) {
-	label := canvas.NewText("Teams:", color.Black)
+	label := widget.NewLabel("Teams")
 	ac := widget.NewAccordion()
 
 	for _, team := range teams {

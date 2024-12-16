@@ -60,3 +60,7 @@ func (t *Team) HasPlayer() bool {
 func (t *Team) HasClub() bool {
 	return len(t.ClubID) > 0
 }
+
+func (t *Team) GetName() string {
+	return t.Name
+}

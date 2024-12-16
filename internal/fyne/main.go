@@ -23,7 +23,7 @@ func Display(db *mt.Database) {
 	menu3Item1 := fyne.NewMenuItem("Create ", func() { CreateMenu(w, db) })
 	menu3Item2 := fyne.NewMenuItem("Add ... to ...", func() {})
 	menu3Item3 := fyne.NewMenuItem("Remove ... from ...", func() {})
-	menu3Item4 := fyne.NewMenuItem("Delete", func() { CreateDeleteMenu(w, db) })
+	menu3Item4 := fyne.NewMenuItem("Delete", func() { CreateDeleteMenu(w, db, a) })
 	newMenu3 := fyne.NewMenu("Functions", menu3Item1, menu3Item2, menu3Item3, menu3Item4)
 
 	menu := fyne.NewMainMenu(newMenu1, newMenu2, newMenu3)

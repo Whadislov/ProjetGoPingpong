@@ -34,7 +34,7 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
 			}
 		}
-		for teamID := range teamIDs {
+		for _, teamID := range teamIDs {
 			err := p.RemoveTeam(db.Teams[teamID])
 			if err != nil {
 				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)

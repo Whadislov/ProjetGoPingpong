@@ -78,3 +78,7 @@ func (p *Player) HasClub() bool {
 	return len(p.ClubIDs) > 0
 
 }
+
+func (p *Player) GetName() string {
+	return p.Name
+}

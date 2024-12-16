@@ -1,0 +1,69 @@
+package myapp
+
+import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"sort"
+)
+
+func strHelper(list []string) string {
+	str := ""
+	for _, word := range list {
+		str += word + ", "
+	}
+	// Remove extra ", "
+	if len(str) > 2 {
+		str = str[:len(str)-2]
+	}
+	return str
+}
+
+func SortMap[T ~map[int]V, V mt.NamedEntity](m T) []struct {
+	Key   int
+	Value V
+} {
+	// This function takes as parameter a variable of type : mt.Player or mt.Team or mt.Club
+	// It returns a struct that contains the keys and the name of player/team/club.
+	// The slices are alphabeticaly sorted
+	// Tip: it does not return a map, because maps can't be sorted
+
+	// Get keys from the map
+	keys := make([]int, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+
+	// Sort keys alphabeticaly per value using m.Name. Keys is the sorted slice
+	sort.Slice(keys, func(i, j int) bool {
+		return m[keys[i]].GetName() < m[keys[j]].GetName()
+	})
+
+	// Build a new slice with the pair key/value
+	sorted := make([]struct {
+		Key   int
+		Value V
+	}, len(keys))
+	// The new slice is sorted thanks to the slice keys
+	for i, k := range keys {
+		sorted[i] = struct {
+			Key   int
+			Value V
+		}{
+			Key:   k,
+			Value: m[k],
+		}
+	}
+
+	return sorted
+}
+
+// Create a confirmation dialog
+func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
+	d := dialog.NewConfirm("Confirm deletion", message, func(confirm bool) {
+		if confirm {
+			onConfirm()
+		}
+	}, w)
+	d.Show()
+}
