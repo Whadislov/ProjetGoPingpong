@@ -12,74 +12,214 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
+func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	ReturnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
+	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
-		w.Show()
 	})
 
-	createPlayerButton := widget.NewButton("Create a new player", func() {
-		playerNameEntry := widget.NewEntry()
-		playerNameEntry.SetPlaceHolder("Enter your player name here...")
+	ReturnToCreatePageButton := widget.NewButton("Return to the creation menu", func() {
+		fonctionalityPage := CreatePage(db, w, a)
+		w.SetContent(fonctionalityPage)
+	})
+
+	// Player
+	playerButton := widget.NewButton("Create a new player", func() {
+
+		// Club Selection
+		selectClubLabel := widget.NewLabel("You must first select a club")
+
+		// clubSelectionPage
+		clubSelectionPageButton := widget.NewButton("Select a club", func() {
+			label := widget.NewLabel("Clubs")
+			listOfClubs := []fyne.CanvasObject{}
+
+			for _, club := range db.Clubs {
+				clubButton := widget.NewButton(club.Name, func() {
+					// After club selection
+					clubLabel := widget.NewLabel(fmt.Sprintf("You have selected %v\n", club.Name))
+
+					// We can now create the player
+					nameEntry := widget.NewEntry()
+					entryHolder := "Enter your player name here..."
+					nameEntry.SetPlaceHolder(entryHolder)
+
+					validatationButton := widget.NewButton("Create", func() {
+						name := nameEntry.Text
+						p, err := mf.NewPlayer(name, db)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						} else {
+							// Link the player to the club
+							err := mf.AddPlayerToClub(p, club)
+							if err != nil {
+								dialog.ShowError(err, w)
+								return
+							} else {
+								// Player creation + link to club success
+								successMsg := fmt.Sprintf("Player %v has been successfully created\n", name)
+								fmt.Println(successMsg)
+								dialog.ShowInformation("Succes", successMsg, w)
+
+								// Reinit the text
+								nameEntry.SetText("")
+								nameEntry.SetPlaceHolder(entryHolder)
+							}
+						}
+					})
+					// Create a player in this club page
+					w.SetContent(container.NewVBox(
+						clubLabel,
+						nameEntry,
+						validatationButton,
+						ReturnToCreatePageButton,
+					))
+				})
+				listOfClubs = append(listOfClubs, clubButton)
+			}
+			// Choose a club page
+			w.SetContent(container.NewVBox(
+				label,
+				container.NewVBox(listOfClubs...),
+			))
+		})
+		// Club selection page
+		w.SetContent(container.NewVBox(
+			selectClubLabel,
+			clubSelectionPageButton,
+			ReturnToCreatePageButton,
+		))
+
+	})
+
+	// Team
+	teamButton := widget.NewButton("Create a new team", func() {
+
+		// Club Selection
+		selectClubLabel := widget.NewLabel("You must first select a club")
+
+		// clubSelectionPage
+		clubSelectionPageButton := widget.NewButton("Select a club", func() {
+			label := widget.NewLabel("Clubs")
+			listOfClubs := []fyne.CanvasObject{}
+
+			for _, club := range db.Clubs {
+				clubButton := widget.NewButton(club.Name, func() {
+					// After club selection
+					clubLabel := widget.NewLabel(fmt.Sprintf("You have selected %v\n", club.Name))
+
+					// We can now create the team
+					nameEntry := widget.NewEntry()
+					entryHolder := "Enter your team name here..."
+					nameEntry.SetPlaceHolder(entryHolder)
+
+					validatationButton := widget.NewButton("Create", func() {
+						name := nameEntry.Text
+						t, err := mf.NewTeam(name, db)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						} else {
+							// Link the team to the club
+							err := mf.AddTeamToClub(t, club)
+							if err != nil {
+								dialog.ShowError(err, w)
+								return
+							} else {
+								// team creation + link to club success
+								successMsg := fmt.Sprintf("Team %v has been successfully created\n", name)
+								fmt.Println(successMsg)
+								dialog.ShowInformation("Succes", successMsg, w)
+
+								// Reinit the text
+								nameEntry.SetText("")
+								nameEntry.SetPlaceHolder(entryHolder)
+							}
+						}
+					})
+					// Create a team in this club page
+					w.SetContent(container.NewVBox(
+						clubLabel,
+						nameEntry,
+						validatationButton,
+						ReturnToCreatePageButton,
+					))
+				})
+				listOfClubs = append(listOfClubs, clubButton)
+			}
+			// Choose a club page
+			w.SetContent(container.NewVBox(
+				label,
+				container.NewVBox(listOfClubs...),
+			))
+		})
+		// Club selection page
+		w.SetContent(container.NewVBox(
+			selectClubLabel,
+			clubSelectionPageButton,
+			ReturnToCreatePageButton,
+		))
+
+	})
+	// Club
+	clubButton := widget.NewButton("Create a new club", func() {
+		nameEntry := widget.NewEntry()
+		entryHolder := "Enter your club name here..."
+		nameEntry.SetPlaceHolder(entryHolder)
 
 		validatationButton := widget.NewButton("Create", func() {
-			playerName := playerNameEntry.Text
-			_, err := mf.NewPlayer(playerName, db)
+			name := nameEntry.Text
+			_, err := mf.NewClub(name, db)
+
 			if err != nil {
 				dialog.ShowError(err, w)
 				return
 			} else {
-				successMsg := fmt.Sprintf("Player %v has been successfully created\n", playerName)
+				successMsg := fmt.Sprintf("Club %v has been successfully created\n", name)
 				fmt.Println(successMsg)
 				dialog.ShowInformation("Succes", successMsg, w)
+
+				// Reinit the text
+				nameEntry.SetText("")
+				nameEntry.SetPlaceHolder(entryHolder)
 			}
 		})
-
+		// Create a club page
 		w.SetContent(container.NewVBox(
-			playerNameEntry,
+			nameEntry,
 			validatationButton,
+			ReturnToCreatePageButton,
 		))
-	},
-	)
-	createTeamButton := widget.NewButton("Create a new team", func() {
-		teamNameEntry := widget.NewEntry()
-		teamNameEntry.SetPlaceHolder("Enter your team name here...")
-		w.SetContent(teamNameEntry)
-		teamName := teamNameEntry.SelectedText()
-		_, err := mf.NewTeam(teamName, db)
-		if err != nil {
-			dialog.ShowError(err, w)
-		} else {
-			successMsg := fmt.Sprintf("Team %v has been successfully created\n", teamName)
-			fmt.Println(successMsg)
-			dialog.ShowInformation("Succes", successMsg, w)
-		}
-	},
-	)
-	createClubButton := widget.NewButton("Create a new club", func() {
-		clubNameEntry := widget.NewEntry()
-		clubNameEntry.SetPlaceHolder("Enter your club name here...")
-		w.SetContent(clubNameEntry)
-		clubName := clubNameEntry.SelectedText()
-		_, err := mf.NewClub(clubName, db)
-		if err != nil {
-			dialog.ShowError(err, w)
-		} else {
-			successMsg := fmt.Sprintf("Club %v has been successfully created\n", clubName)
-			fmt.Println(successMsg)
-			dialog.ShowInformation("Succes", successMsg, w)
-		}
-	},
-	)
+	})
 
-	w.SetContent(
-		container.NewVBox(
+	// Page definition
+
+	// If there is no club, a club must first be created
+
+	if len(db.Clubs) < 1 {
+		label := widget.NewLabel("In order to create new players and teams, you need first to create a new club")
+
+		createPage := container.NewVBox(
+			label,
+			clubButton,
 			ReturnToFonctionalityPageButton,
-			createPlayerButton,
-			createTeamButton,
-			createClubButton,
-		),
-	)
+		)
+		// Create menu page
+		w.SetContent(createPage)
+		return createPage
+	} else {
+		createPage := container.NewVBox(
+			playerButton,
+			teamButton,
+			clubButton,
+			ReturnToFonctionalityPageButton,
+		)
+		// Create menu page
+		w.SetContent(createPage)
+		return createPage
+	}
 }

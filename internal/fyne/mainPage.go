@@ -26,11 +26,9 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		mainText,
 		widget.NewButton("Show database", func() {
 			w.SetContent(databasePage)
-			w.Show()
 		}),
 		widget.NewButton("Show functionalities", func() {
 			w.SetContent(functionalityPage)
-			w.Show()
 		}),
 		widget.NewButton("Quit", func() {
 			a.Quit()

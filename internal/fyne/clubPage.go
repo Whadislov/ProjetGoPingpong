@@ -52,7 +52,6 @@ func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
 		databasePage := DatabasePage(db, w, a)
 		w.SetContent(databasePage)
-		w.Show()
 	})
 
 	w.SetContent(container.NewVBox(

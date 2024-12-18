@@ -11,10 +11,9 @@ import (
 
 func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	backToMainMenuButton := widget.NewButton("Back to main page", func() {
+	returnToMainMenuButton := widget.NewButton("Return main page", func() {
 		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
-		w.Show()
 	})
 
 	createMenuButton := widget.NewButton("Create", func() { CreatePage(db, w, a) })
@@ -32,7 +31,7 @@ func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 		createAddMenuButton,
 		createRemoveMenuButton,
 		createDeleteMenuButton,
-		backToMainMenuButton,
+		returnToMainMenuButton,
 	)
 
 	return functionalityPage

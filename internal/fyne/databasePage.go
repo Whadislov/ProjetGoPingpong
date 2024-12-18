@@ -11,10 +11,9 @@ import (
 
 func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	backToMainMenuButton := widget.NewButton("Back to main page", func() {
+	returnToMainMenuButton := widget.NewButton("Return to main page", func() {
 		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
-		w.Show()
 	})
 
 	playerButton := widget.NewButton("Show players", func() { PlayerPage(db, w, a) })
@@ -30,7 +29,7 @@ func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		playerButton,
 		teamButton,
 		clubButton,
-		backToMainMenuButton,
+		returnToMainMenuButton,
 	)
 
 	return databasePage

@@ -24,21 +24,7 @@ func CreateDeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		ReturnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
 			fonctionalityPage := FunctionalityPage(db, w, a)
 			w.SetContent(fonctionalityPage)
-			w.Show()
 		})
-
-		/*
-			// Nothing to delete, go back to main menu
-			if len(db.Players) == 0 && len(db.Teams) == 0 && len(db.Clubs) == 0 {
-				fmt.Println("Nothing else to delete")
-				w.SetContent(container.NewVBox(
-					widget.NewLabel("There is nothing to delete"),
-					ReturnToFonctionalityPageButton,
-				),
-				)
-				w.Show()
-			}
-		*/
 
 		// "Sort" maps
 		sortedPlayers := SortMap(db.Players)

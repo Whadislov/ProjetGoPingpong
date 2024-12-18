@@ -19,7 +19,7 @@ func strHelper(list []string) string {
 	return str
 }
 
-func SortMap[T ~map[int]V, V mt.NamedEntity](m T) []struct {
+func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 	Key   int
 	Value V
 } {

@@ -11,7 +11,6 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	menu1Item1 := fyne.NewMenuItem("Show Main page", func() {
 		w.SetContent(mainPage)
-		w.Show()
 	})
 	newMenu1 := fyne.NewMenu("Main menu", menu1Item1)
 
