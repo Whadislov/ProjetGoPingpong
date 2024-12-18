@@ -31,18 +31,28 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 	return item
 }
 
-func TeamMenu(w fyne.Window, teams map[int]*mt.Team) {
+func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	label := widget.NewLabel("Teams")
 	ac := widget.NewAccordion()
 
-	for _, team := range teams {
-		item := widget.NewAccordionItem(team.Name,
-			TeamInfos(team),
+	// "Sort the map"
+	sortedTeams := SortMap(db.Teams)
+
+	for _, team := range sortedTeams {
+		item := widget.NewAccordionItem(team.Value.Name,
+			TeamInfos(team.Value),
 		)
 		ac.Append(item)
 	}
 
+	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+		databasePage := DatabasePage(db, w, a)
+		w.SetContent(databasePage)
+		w.Show()
+	})
+
 	w.SetContent(container.NewVBox(
+		returnToDatabasePageButton,
 		label,
 		ac),
 	)

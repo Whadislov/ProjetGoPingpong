@@ -11,7 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func CreateDeleteMenu(w fyne.Window, db *mt.Database, a fyne.App) {
+func CreateDeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	var rebuildUI func()
 
 	// Rebuild UI on modifications
@@ -21,32 +21,24 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database, a fyne.App) {
 		tLabel := widget.NewLabel("Teams")
 		cLabel := widget.NewLabel("Clubs")
 
-		labelContainer := container.NewVBox(
-			pLabel,
-			tLabel,
-			cLabel,
-		)
+		ReturnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
+			fonctionalityPage := FunctionalityPage(db, w, a)
+			w.SetContent(fonctionalityPage)
+			w.Show()
+		})
 
-		// Nothing to delete, go back to main menu
-		if len(db.Players) == 0 && len(db.Teams) == 0 && len(db.Clubs) == 0 {
-			fmt.Println("Tout est vide")
-
-			backToMainMenuLabel := widget.NewLabel("There is nothing to delete")
-			backToMainMenuButton := widget.NewButton("Return to main menu", func() { MainMenu(w) })
-
-			w2 := a.NewWindow("There is nothing to delete")
-			backToMainMenuContainer := container.NewVBox(
-				backToMainMenuLabel,
-				backToMainMenuButton)
-
-			w2.SetContent(backToMainMenuContainer)
-
-			w.SetContent(container.NewVBox(
-				labelContainer,
-				backToMainMenuContainer,
-			),
-			)
-		}
+		/*
+			// Nothing to delete, go back to main menu
+			if len(db.Players) == 0 && len(db.Teams) == 0 && len(db.Clubs) == 0 {
+				fmt.Println("Nothing else to delete")
+				w.SetContent(container.NewVBox(
+					widget.NewLabel("There is nothing to delete"),
+					ReturnToFonctionalityPageButton,
+				),
+				)
+				w.Show()
+			}
+		*/
 
 		// "Sort" maps
 		sortedPlayers := SortMap(db.Players)
@@ -155,10 +147,13 @@ func CreateDeleteMenu(w fyne.Window, db *mt.Database, a fyne.App) {
 			cLabel,
 			acc)
 
-		w.SetContent(container.NewHBox(
-			playerVBox,
-			teamVBox,
-			clubVBox),
+		w.SetContent(container.NewVBox(
+			ReturnToFonctionalityPageButton,
+			container.NewHBox(
+				playerVBox,
+				teamVBox,
+				clubVBox),
+		),
 		)
 	}
 

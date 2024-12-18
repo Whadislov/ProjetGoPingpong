@@ -9,7 +9,9 @@ import (
 )
 
 func ClubInfos(club *mt.Club) *fyne.Container {
+	// team list
 	wt := []fyne.CanvasObject{}
+	// player list
 	wp := []fyne.CanvasObject{}
 	for _, player := range club.PlayerIDs {
 		wp = append(wp, widget.NewLabel(player))
@@ -33,18 +35,28 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	return item
 }
 
-func ClubMenu(w fyne.Window, clubs map[int]*mt.Club) {
+func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	label := widget.NewLabel("Clubs")
 	ac := widget.NewAccordion()
 
-	for _, club := range clubs {
-		item := widget.NewAccordionItem(club.Name,
-			ClubInfos(club),
+	// "Sort the map"
+	sortedClubs := SortMap(db.Clubs)
+
+	for _, club := range sortedClubs {
+		item := widget.NewAccordionItem(club.Value.Name,
+			ClubInfos(club.Value),
 		)
 		ac.Append(item)
 	}
 
+	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+		databasePage := DatabasePage(db, w, a)
+		w.SetContent(databasePage)
+		w.Show()
+	})
+
 	w.SetContent(container.NewVBox(
+		returnToDatabasePageButton,
 		label,
 		ac),
 	)

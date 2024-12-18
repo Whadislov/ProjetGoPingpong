@@ -36,21 +36,31 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	return item
 }
 
-func PlayerMenu(w fyne.Window, players map[int]*mt.Player) {
+func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	label := widget.NewLabel("Players")
 	ac := widget.NewAccordion()
 
-	for _, player := range players {
+	// "Sort the map"
+	sortedPlayers := SortMap(db.Players)
+
+	for _, player := range sortedPlayers {
 		item := widget.NewAccordionItem(
-			player.Name,
-			PlayerInfos(player),
+			player.Value.Name,
+			PlayerInfos(player.Value),
 		)
 
 		ac.Append(item)
 	}
 
+	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+		databasePage := DatabasePage(db, w, a)
+		w.SetContent(databasePage)
+		w.Show()
+	})
+
 	w.SetContent(container.NewVBox(
+		returnToDatabasePageButton,
 		label,
 		ac),
 	)

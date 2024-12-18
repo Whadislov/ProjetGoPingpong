@@ -67,3 +67,9 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 	}, w)
 	d.Show()
 }
+
+func CreateNewWindow(sizex float32, sizey float32, windowLabel string, a fyne.App) fyne.Window {
+	w := a.NewWindow(windowLabel)
+	w.Resize(fyne.NewSize(sizex, sizey))
+	return w
+}
