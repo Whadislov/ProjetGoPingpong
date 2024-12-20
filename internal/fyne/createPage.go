@@ -118,6 +118,19 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 					validatationButton := widget.NewButton("Create", func() {
 						name := nameEntry.Text
+
+						// If team name already exists, do not create the team
+						for _, value := range db.Teams {
+							if value.Name == name {
+								err := fmt.Errorf(fmt.Sprintf("Team %v already exists in %v", name, club.Name))
+								dialog.ShowError(err, w)
+								// Reinit the text
+								nameEntry.SetText("")
+								nameEntry.SetPlaceHolder(entryHolder)
+								return
+							}
+						}
+
 						t, err := mf.NewTeam(name, db)
 
 						if err != nil {

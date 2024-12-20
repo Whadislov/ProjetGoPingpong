@@ -43,16 +43,16 @@ func selectPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Containe
 	})
 
 	pLabel := widget.NewLabel("Players 🏓")
-	listOfPlayers := []fyne.CanvasObject{}
+	playerButtons := []fyne.CanvasObject{}
 
 	for _, player := range db.Players {
 		playerButton := widget.NewButton(player.Name, func() { w.SetContent(selectedPlayerPage(player, db, w, a)) })
-		listOfPlayers = append(listOfPlayers, playerButton)
+		playerButtons = append(playerButtons, playerButton)
 	}
 	content := container.NewVBox(
 		returnToPlayerSelectionPageButton,
 		pLabel,
-		container.NewVBox(listOfPlayers...),
+		container.NewVBox(playerButtons...),
 	)
 
 	return content
@@ -61,7 +61,7 @@ func selectPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Containe
 func selectedPlayerPage(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
-	tLabel := widget.NewLabel("Current selection of team(s) 🤝")
+	tLabel := widget.NewLabel("Team current selection 🤝")
 
 	// User can click on the selected player to return the list of player
 	selectedPlayerButton := widget.NewButton(player.Name, func() {
@@ -118,42 +118,97 @@ func selectTeamPage(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.Ap
 	})
 
 	tLabel := widget.NewLabel("Teams 🤝")
-	listOfTeams := []fyne.CanvasObject{}
+	teamButtons := []fyne.CanvasObject{}
+	selectedTeams := make(map[int]*mt.Team)
 
 	for _, team := range db.Teams {
 		// Check if the team from the database is already in the player's team map. If not we want a button of this team
 		if _, ok := player.TeamIDs[team.ID]; !ok {
-			teamButton := widget.NewButton(team.Name, func() { w.SetContent(selectedTeamPage(player, team, db, w, a)) })
-			listOfTeams = append(listOfTeams, teamButton)
+
+			teamButton := widget.NewButton(team.Name, func() {
+				selectedTeams[team.ID] = team
+				w.SetContent(selectedTeamPage(player, selectedTeams, db, w, a))
+			})
+			teamButtons = append(teamButtons, teamButton)
 		}
 	}
 	content := container.NewVBox(
 		returnToTeamSelectionPageButton,
 		tLabel,
-		container.NewVBox(listOfTeams...),
+		container.NewVBox(teamButtons...),
 	)
 
 	return content
 }
 
-func selectedTeamPage(player *mt.Player, team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func createTeamButtons(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+
+	// Remove the selected team from the team list
+
+	// User can click on the selected team to return the list of teams
+	selectedTeamButton := widget.NewButton(team.Name, func() {
+		w.SetContent(selectTeamPage(player, db, w, a))
+	})
+
+	selectedTeamButtons = append(selectedTeamButtons, selectedTeamButton)
+	return selectedTeamButtons
+
+}
+
+func addAnotherTeamPage(player *mt.Player, alreadySelectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	returnToTeamSelectionPageButton := widget.NewButton("Return to team selection", func() {
+		w.SetContent(selectedPlayerPage(player, db, w, a))
+	})
+
+	tLabel := widget.NewLabel("Teams 🤝")
+	teamButtons := []fyne.CanvasObject{}
+
+	for _, team := range db.Teams {
+		// Check if the team from the database is already in the player's team map. If not we want a button of this team
+		if _, ok := player.TeamIDs[team.ID]; !ok {
+			if _, ok := alreadySelectedTeams[team.ID]; !ok {
+				// Check if the team from player's team map is already in selected teams. If not we want a button of this team
+				teamButton := widget.NewButton(team.Name, func() {
+					alreadySelectedTeams[team.ID] = team
+					w.SetContent(selectedTeamPage(player, alreadySelectedTeams, db, w, a))
+				})
+				teamButtons = append(teamButtons, teamButton)
+			}
+		}
+	}
+
+	content := container.NewVBox(
+		returnToTeamSelectionPageButton,
+		tLabel,
+		container.NewVBox(teamButtons...),
+	)
+
+	return content
+}
+
+func selectedTeamPage(player *mt.Player, teams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	returnToAddRemovePageButton := widget.NewButton("Return to add... remove...", func() {
 		AddPage(db, w, a)
 	})
 
 	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
-	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
+	//tLabel := widget.NewLabel("Team current selection 🤝")
 
 	confirmButton := widget.NewButton("Confirm", func() {
-		// Do the link
-		err := mf.AddPlayerToTeam(player, team)
-		if err != nil {
-			dialog.ShowError(err, w)
-		} else {
-			successMsg := fmt.Sprintf("Player %v now plays in team %v", player.Name, team.Name)
-			fmt.Println(successMsg)
-			dialog.ShowInformation("Succes", successMsg, w)
+		var err error
+		teamNames := []string{}
+		for _, team := range teams {
+			// Do the link
+			err = mf.AddPlayerToTeam(player, team)
+			teamNames = append(teamNames, team.Name)
+			if err != nil {
+				dialog.ShowError(err, w)
+			}
 		}
+
+		successMsg := fmt.Sprintf("Player %v now plays in team %v", player.Name, strHelper(teamNames))
+		fmt.Println(successMsg)
+		dialog.ShowInformation("Succes", successMsg, w)
 
 		// Return to empty page
 		w.SetContent(
@@ -163,9 +218,17 @@ func selectedTeamPage(player *mt.Player, team *mt.Team, db *mt.Database, w fyne.
 		)
 	})
 
-	// User can click on the selected team to return the list of teams
-	selectedTeamButton := widget.NewButton(team.Name, func() {
-		w.SetContent(selectTeamPage(player, db, w, a))
+	// Init
+	selectedTeamButtons := []fyne.CanvasObject{}
+	for _, team := range teams {
+		selectedTeamButtons = createTeamButtons(player, team, db, selectedTeamButtons, w, a)
+	}
+
+	fmt.Println("Team buttons: ", selectedTeamButtons)
+
+	addAnotherTeamButton := widget.NewButton("Add another team", func() {
+		// Remove the selected team from the team list
+		w.SetContent(addAnotherTeamPage(player, teams, db, w, a))
 	})
 
 	// User can click on the selected player to return the list of players
@@ -179,8 +242,8 @@ func selectedTeamPage(player *mt.Player, team *mt.Team, db *mt.Database, w fyne.
 	)
 
 	teamContent := container.NewVBox(
-		tLabel,
-		selectedTeamButton,
+		addAnotherTeamButton,
+		container.NewVBox(selectedTeamButtons...),
 	)
 
 	// Now display the whole finished page, with chosen teams
@@ -232,159 +295,3 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	w.SetContent(addPage)
 }
-
-/*
-
-			teamButton := widget.NewButton(team.Name, func() {
-
-				playerSelectionPageButton := widget.NewButton("Select player", func() { selectPlayerPage(db, w, a) })
-				teamSelectionPageButton := widget.NewButton("Select team", func() { selectTeamForPlayerPage(player, db, w, a) })
-
-				selectedTeamButton := widget.NewButton(team.Name, func() {
-					w.SetContent(selectTeamForPlayerPage(player, db, w, a))
-				})
-
-				selectedPlayerButton := widget.NewButton(player.Name, func() {
-					w.SetContent(selectPlayerPage(db, w, a))
-				})
-
-				confirmButton := widget.NewButton("Confirm", func() {
-					err := mf.AddPlayerToTeam(player, team)
-					if err != nil {
-						dialog.ShowError(err, w)
-					} else {
-						successMsg := fmt.Sprintf("%v has been successfully added to %v\n", player.Name, team.Name)
-						fmt.Println(successMsg)
-						dialog.ShowInformation("Succes", successMsg, w)
-					}
-					content := container.NewVBox(
-						container.NewGridWithColumns(
-							2,
-							container.NewVBox(
-								pLabel,
-								playerSelectionPageButton,
-							),
-							container.NewVBox(
-								tLabel,
-								teamSelectionPageButton,
-							),
-						),
-						returnToAddRemovePageButton,
-					)
-					w.SetContent(content)
-
-				})
-
-				content := container.NewVBox(
-					container.NewGridWithColumns(
-						2,
-						container.NewVBox(
-							pLabel,
-							playerSelectionPageButton,
-							selectedPlayerButton,
-						),
-						container.NewVBox(
-							tLabel,
-							teamSelectionPageButton,
-							selectedTeamButton,
-						),
-					),
-					confirmButton,
-					returnToAddRemovePageButton,
-				)
-
-				w.SetContent(content)
-
-				//selectedTeamID = team.ID
-			})
-
-			if len(player.TeamIDs) == 0 {
-				listOfTeams = append(listOfTeams, teamButton)
-			} else {
-				for teamID := range player.TeamIDs {
-					if team.ID != teamID {
-						listOfTeams = append(listOfTeams, teamButton)
-					}
-				}
-			}
-
-		}
-		// Team buttons
-		w.SetContent(
-			container.NewVBox(
-				tLabel,
-				container.NewVBox(listOfTeams...),
-			),
-		)
-
-	})
-
-	//selectedTeam := db.Teams[selectedTeamID]
-	return teamSelectionPageButton
-}
-
-*/
-
-// Team function
-
-/*
-
-func selectedTeamPage(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	returnToAddRemovePageButton := widget.NewButton("Return to add... remove...", func() {
-		AddPage(db, w, a)
-	})
-
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
-	tLabel := widget.NewLabel("Add player 🏓")
-
-	selectedTeamButton := widget.NewButton(team.Name, func() {
-		w.SetContent(selectTeamPage(db, w, a))
-	})
-
-	playerSelectionPageButton := selectPlayer(team, db, w, a)
-	teamSelectionPageButton := selectTeamPage(db, w, a)
-
-	content := container.NewVBox(
-		container.NewGridWithColumns(
-			2,
-			container.NewVBox(
-				pLabel,
-				playerSelectionPageButton,
-			),
-			container.NewVBox(
-				tLabel,
-				teamSelectionPageButton,
-				selectedTeamButton,
-			),
-		),
-		returnToAddRemovePageButton)
-
-	w.SetContent(content)
-
-	return content
-
-}
-
-func selectTeamPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	returnToTeamSelectionButton := widget.NewButton("Return to team selection", func() {
-		w.SetContent(selectionPage(db, w, a))
-	})
-
-	tLabel := widget.NewLabel("Players 🏓")
-	listOfTeams := []fyne.CanvasObject{}
-
-	for _, team := range db.Teams {
-		teamButton := widget.NewButton(team.Name, func() { selectedTeamPage(team, db, w, a) })
-		listOfTeams = append(listOfTeams, teamButton)
-	}
-	content := container.NewVBox(
-		returnToTeamSelectionButton,
-		tLabel,
-		container.NewVBox(listOfTeams...),
-	)
-	w.SetContent(content)
-
-	return content
-}
-
-*/

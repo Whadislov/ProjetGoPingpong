@@ -24,6 +24,15 @@ func main() {
 	f.Display(db)
 
 	/*
+		// Sauvegarder les modifications
+		err = md.SaveDb(filename, db)
+		if err != nil {
+			fmt.Println("Error while saving database:", err)
+			return
+		}
+	*/
+
+	/*
 		m2, _ := db.GetTeam(0)
 		mf.DeleteTeam(m2, db)
 
