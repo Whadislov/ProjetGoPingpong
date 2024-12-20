@@ -29,7 +29,7 @@ func StarterPage(db *mt.Database) fyne.App {
 
 	// Fade
 	go func() {
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 		for alpha := 255; alpha >= 0; alpha -= 5 {
 			welcomeText.Color = color.RGBA{R: 0, G: 0, B: 0, A: uint8(alpha)} // Opacity
 			time.Sleep(20 * time.Millisecond)                                 // Pause to simulate fade

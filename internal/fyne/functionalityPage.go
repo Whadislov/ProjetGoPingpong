@@ -17,7 +17,7 @@ func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 	})
 
 	createMenuButton := widget.NewButton("Create", func() { CreatePage(db, w, a) })
-	createAddMenuButton := widget.NewButton("Add ... to ...", func() {})
+	createAddMenuButton := widget.NewButton("Add ... to ...", func() { AddPage(db, w, a) })
 	createRemoveMenuButton := widget.NewButton("Remove ... from ...", func() {})
 	createDeleteMenuButton := widget.NewButton("Delete", func() { CreateDeletePage(db, w, a) })
 

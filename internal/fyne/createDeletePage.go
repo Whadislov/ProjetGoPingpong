@@ -21,7 +21,7 @@ func CreateDeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		tLabel := widget.NewLabel("Teams")
 		cLabel := widget.NewLabel("Clubs")
 
-		ReturnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
+		returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
 			fonctionalityPage := FunctionalityPage(db, w, a)
 			w.SetContent(fonctionalityPage)
 		})
@@ -134,7 +134,7 @@ func CreateDeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			acc)
 
 		w.SetContent(container.NewVBox(
-			ReturnToFonctionalityPageButton,
+			returnToFonctionalityPageButton,
 			container.NewHBox(
 				playerVBox,
 				teamVBox,
