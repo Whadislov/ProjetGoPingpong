@@ -7,6 +7,7 @@ import (
 	"sort"
 )
 
+// strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
 func strHelper(list []string) string {
 	str := ""
 	for _, word := range list {
@@ -66,10 +67,4 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 		}
 	}, w)
 	d.Show()
-}
-
-func CreateNewWindow(sizex float32, sizey float32, windowLabel string, a fyne.App) fyne.Window {
-	w := a.NewWindow(windowLabel)
-	w.Resize(fyne.NewSize(sizex, sizey))
-	return w
 }

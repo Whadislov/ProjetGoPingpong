@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// NewTeam creates a new team with the given name and adds it to the database.
+// Returns the created team and an error if the team name is empty or if there is an issue with the operation.
 func NewTeam(teamName string, db *mt.Database) (*mt.Team, error) {
 	if teamName == "" {
 		return nil, fmt.Errorf("team name cannot be empty")

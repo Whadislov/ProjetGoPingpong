@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+// TeamInfos returns a container that displays all the infos of a team.
 func TeamInfos(team *mt.Team) *fyne.Container {
 	wp := []fyne.CanvasObject{}
 	for _, player := range team.PlayerIDs {
@@ -31,6 +32,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 	return item
 }
 
+// TeamPage sets up the page for displaying team info.
 func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	label := widget.NewLabel("Teams")
 	ac := widget.NewAccordion()

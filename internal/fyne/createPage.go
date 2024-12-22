@@ -12,7 +12,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+// CreatePage sets up the page for creating players, teams, and clubs.
+func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
@@ -20,8 +21,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	ReturnToCreatePageButton := widget.NewButton("Return to the creation menu", func() {
-		fonctionalityPage := CreatePage(db, w, a)
-		w.SetContent(fonctionalityPage)
+		CreatePage(db, w, a)
 	})
 
 	// Player
@@ -223,7 +223,6 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		)
 		// Create menu page
 		w.SetContent(createPage)
-		return createPage
 	} else {
 		createPage := container.NewVBox(
 			playerButton,
@@ -233,6 +232,5 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		)
 		// Create menu page
 		w.SetContent(createPage)
-		return createPage
 	}
 }

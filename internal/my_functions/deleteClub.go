@@ -5,6 +5,8 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// DeleteClub removes a club from the database and updates all related player and team records.
+// Returns an error if there is an issue with the operation.
 func DeleteClub(c *mt.Club, db *mt.Database) error {
 	// Remove player depedences
 	var playerIDs []int

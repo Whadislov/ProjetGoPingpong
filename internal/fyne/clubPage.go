@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+// ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
 	// team list
 	wt := []fyne.CanvasObject{}
@@ -28,13 +29,14 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	)
 	teamAc := widget.NewAccordion(itemt)
 
-	item := container.NewVBox(
+	content := container.NewVBox(
 		teamAc,
 		playerAc,
 	)
-	return item
+	return content
 }
 
+// ClubPage sets up the page for displaying players and teams of a club.
 func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	label := widget.NewLabel("Clubs")
 	ac := widget.NewAccordion()

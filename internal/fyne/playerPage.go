@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+// PlayerInfos returns a container that displays all the infos of a player.
 func PlayerInfos(player *mt.Player) *fyne.Container {
 	nameStr := "Name: " + player.Name
 	ageStr := "Age: " + strconv.Itoa(player.Age)
@@ -36,6 +37,7 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	return item
 }
 
+// PlayerPage sets up the page for displaying player info.
 func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	label := widget.NewLabel("Players")

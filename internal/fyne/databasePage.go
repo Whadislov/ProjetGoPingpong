@@ -9,6 +9,7 @@ import (
 	"image/color"
 )
 
+// DatabasePage sets up the page for showing players, teams, and clubs.
 func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToMainMenuButton := widget.NewButton("Return to main page", func() {

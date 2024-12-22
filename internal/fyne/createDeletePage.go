@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+// CreateDeletePage sets up the page for deleting players, teams, and clubs.
 func CreateDeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	var rebuildUI func()
 

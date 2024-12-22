@@ -9,6 +9,7 @@ import (
 	"image/color"
 )
 
+// MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	// Database page

@@ -5,6 +5,7 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// MainMenu creates the menus
 func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	mainPage := MainPage(db, w, a)

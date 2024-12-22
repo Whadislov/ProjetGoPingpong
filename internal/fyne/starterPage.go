@@ -12,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/container"
 )
 
+// StarterPage creates the introduction page to the UI and the starter page
 func StarterPage(db *mt.Database) fyne.App {
 	a := app.New()
 	mainWindow := a.NewWindow("TTapp")

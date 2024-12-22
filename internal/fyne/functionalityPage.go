@@ -9,6 +9,7 @@ import (
 	"image/color"
 )
 
+// FunctionalityPage creates the functionality page
 func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToMainMenuButton := widget.NewButton("Return main page", func() {

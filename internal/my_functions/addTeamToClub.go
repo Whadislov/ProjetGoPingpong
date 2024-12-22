@@ -5,6 +5,8 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// AddTeamToClub adds a team to a club by updating both the team's and the club's records.
+// Returns an error if the team is already in the club or if there is an issue with the operation.
 func AddTeamToClub(t *mt.Team, c *mt.Club) error {
 
 	err := t.AddClub(c)

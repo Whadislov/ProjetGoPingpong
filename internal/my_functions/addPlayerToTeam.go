@@ -5,6 +5,8 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// AddPlayerToTeam adds a player to a team by updating both the player's and the team's records.
+// Returns an error if the player is already in the team or if there is an issue with the operation.
 func AddPlayerToTeam(p *mt.Player, t *mt.Team) error {
 
 	err := p.AddTeam(t)

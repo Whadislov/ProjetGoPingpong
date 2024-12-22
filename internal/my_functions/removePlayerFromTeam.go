@@ -5,6 +5,8 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// RemovePlayerFromTeam removes a player from a team by updating both the player's and the team's records.
+// Returns an error if there is an issue with the operation.
 func RemovePlayerFromTeam(p *mt.Player, t *mt.Team) error {
 
 	err := t.RemovePlayer(p)
