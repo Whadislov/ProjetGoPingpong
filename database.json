@@ -11,7 +11,8 @@
         "4": "Patrick",
         "5": "Jonathan",
         "6": "Sumi",
-        "7": "Martin"
+        "7": "Martin",
+        "8": "Marco"
       },
       "teams": {
         "0": "Mannschaft 2",
@@ -180,6 +181,21 @@
       "teams": {
         "0": "Mannschaft 2"
       },
+      "clubs": {
+        "0": "TSG Heilbronn"
+      }
+    },
+    "8": {
+      "id": 8,
+      "name": "Marco",
+      "age": -1,
+      "ranking": -1,
+      "material": [
+        "Unknown",
+        "Unknown",
+        "Unknown"
+      ],
+      "teams": {},
       "clubs": {
         "0": "TSG Heilbronn"
       }

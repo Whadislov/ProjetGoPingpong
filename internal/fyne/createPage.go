@@ -38,7 +38,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			for _, club := range db.Clubs {
 				clubButton := widget.NewButton(club.Name, func() {
 					// After club selection
-					clubLabel := widget.NewLabel(fmt.Sprintf("You have selected %v\n", club.Name))
+					clubLabel := widget.NewLabel(fmt.Sprintf("You are going to create a player for %v\n", club.Name))
 
 					// We can now create the player
 					nameEntry := widget.NewEntry()
@@ -109,7 +109,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			for _, club := range db.Clubs {
 				clubButton := widget.NewButton(club.Name, func() {
 					// After club selection
-					clubLabel := widget.NewLabel(fmt.Sprintf("You have selected %v\n", club.Name))
+					clubLabel := widget.NewLabel(fmt.Sprintf("You are going to create a team for %v\n", club.Name))
 
 					// We can now create the team
 					nameEntry := widget.NewEntry()

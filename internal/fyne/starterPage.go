@@ -13,10 +13,13 @@ import (
 )
 
 // StarterPage creates the introduction page to the UI and the starter page
-func StarterPage(db *mt.Database) fyne.App {
+func StarterPage(db *mt.Database, filename string) fyne.App {
 	a := app.New()
 	mainWindow := a.NewWindow("TTapp")
 	mainWindow.Resize(fyne.NewSize(600, 400))
+
+	// Center the window on the monitor
+	mainWindow.CenterOnScreen()
 
 	// Welcome page
 	welcomeText := canvas.NewText("Welcome to TTapp 🏓", color.RGBA{R: 0, G: 0, B: 0, A: 255})
@@ -39,7 +42,7 @@ func StarterPage(db *mt.Database) fyne.App {
 
 		// go to main page with delay so that the menu is not directly shown
 		mainWindow.SetContent(mainMenuCanvasObject)
-		mainMenu := MainMenu(db, mainWindow, a)
+		mainMenu := MainMenu(db, filename, mainWindow, a)
 		mainWindow.SetMainMenu(mainMenu)
 	}()
 	mainWindow.SetContent(welcomePage)

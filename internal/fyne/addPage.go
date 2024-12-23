@@ -16,15 +16,11 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		w.SetContent(fonctionalityPage)
 	})
 
-	// Remove a player from a team
-	// Add a player to a club
-	// Remove a player from a club
-
 	addTtoPButton := widget.NewButton("Add team(s) to a player", func() {
 		w.SetContent(
 			currentSelectionPageTtoP(
 				SelectionPageTtoP(db, w, a),
-				waitForPlayerSelectionPageTtoP(),
+				nil,
 				db, w, a,
 			),
 		)
@@ -34,7 +30,18 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		w.SetContent(
 			currentSelectionPagePtoT(
 				SelectionPagePtoT(db, w, a),
-				waitForTeamSelectionPagePtoT(),
+				nil,
+				db, w, a,
+			),
+		)
+
+	})
+
+	addCtoPButton := widget.NewButton("Add club(s) to a player", func() {
+		w.SetContent(
+			currentSelectionPagePtoT(
+				SelectionPageCtoP(db, w, a),
+				nil,
 				db, w, a,
 			),
 		)
@@ -44,6 +51,7 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	addPage := container.NewVBox(
 		addTtoPButton,
 		addPtoTButton,
+		addCtoPButton,
 		ReturnToFonctionalityPageButton,
 	)
 

@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 
-	f.Display(db)
+	f.Display(db, filename)
 
 	/*
 		// Sauvegarder les modifications

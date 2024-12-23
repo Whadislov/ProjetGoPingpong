@@ -6,6 +6,6 @@ import (
 )
 
 // Display launches the UI
-func Display(db *mt.Database) {
-	StarterPage(db)
+func Display(db *mt.Database, filename string) {
+	StarterPage(db, filename)
 }
