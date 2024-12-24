@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	f "github.com/Whadislov/ProjetGoPingPong/internal/fyne"
 	md "github.com/Whadislov/ProjetGoPingPong/internal/my_database"
+	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	//mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 	//"io"
 	//"qt"
@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 
-	f.Display(db, filename)
+	mu.Display(db, filename)
 
 	/*
 		// Sauvegarder les modifications

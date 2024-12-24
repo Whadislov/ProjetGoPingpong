@@ -23,7 +23,7 @@ func MainMenu(db *mt.Database, filename string, w fyne.Window, a fyne.App) *fyne
 	menu3Item1 := fyne.NewMenuItem("Create ", func() { CreatePage(db, w, a) })
 	menu3Item2 := fyne.NewMenuItem("Add ... to ...", func() { AddPage(db, w, a) })
 	menu3Item3 := fyne.NewMenuItem("Remove ... from ...", func() { RemovePage(db, w, a) })
-	menu3Item4 := fyne.NewMenuItem("Delete", func() { CreateDeletePage(db, w, a) })
+	menu3Item4 := fyne.NewMenuItem("Delete", func() { DeletePage(db, w, a) })
 	newMenu3 := fyne.NewMenu("Functions", menu3Item1, menu3Item2, menu3Item3, menu3Item4)
 
 	menu := fyne.NewMainMenu(newMenu1, newMenu2, newMenu3)
