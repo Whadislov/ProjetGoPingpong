@@ -2,20 +2,6 @@ package my_types
 
 import "fmt"
 
-/*
-type Player struct {
-	ID       int            `json:"id"`
-	Name     string         `json:"name"`
-	Age      int            `json:"age"`
-	Ranking  int            `json:"ranking"`
-	Material []string       `json:"material"`
-	TeamIDs  map[int]string `json:"team_id_list"`
-	ClubID   map[int]string            `json:"club_id_list"`
-	// map[team.ID] = team.Name, nil per default
-	// ClubID == -1 per default
-}
-*/
-
 // SetPlayerID sets the ID of the player.
 func (p *Player) SetPlayerID(id int) {
 	p.ID = id

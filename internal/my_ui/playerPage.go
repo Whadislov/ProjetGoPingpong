@@ -3,6 +3,7 @@ package myapp
 import (
 	"strconv"
 
+	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -38,7 +39,7 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 }
 
 // PlayerPage sets up the page for displaying player info.
-func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
+func PlayerPage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) {
 
 	label := widget.NewLabel("Players")
 	ac := widget.NewAccordion()
@@ -56,7 +57,7 @@ func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	}
 
 	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
-		databasePage := DatabasePage(db, w, a)
+		databasePage := DatabasePage(sqlDB, db, w, a)
 		w.SetContent(databasePage)
 	})
 

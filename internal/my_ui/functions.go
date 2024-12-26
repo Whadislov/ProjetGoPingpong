@@ -1,10 +1,12 @@
 package myapp
 
 import (
+	"sort"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-	"sort"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
