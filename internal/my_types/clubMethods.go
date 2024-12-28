@@ -4,17 +4,6 @@ import (
 	"fmt"
 )
 
-/*
-type Club struct {
-	ID        int            `json:"id"`
-	Name      string         `json:"name"`
-	PlayerIDs map[int]string `json:"player_id_list"`
-	TeamIDs   map[int]string `json:"team_id_list"`
-	// map[player.ID] = player.Name, nil per default
-	// map[team.ID] = team.Name, nil per default
-}
-*/
-
 // SetClubID sets the ID of the club.
 func (c *Club) SetClubID(id int) {
 	c.ID = id

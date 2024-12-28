@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -33,7 +34,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 }
 
 // TeamPage sets up the page for displaying team info.
-func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
+func TeamPage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) {
 	label := widget.NewLabel("Teams")
 	ac := widget.NewAccordion()
 
@@ -48,7 +49,7 @@ func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	}
 
 	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
-		databasePage := DatabasePage(db, w, a)
+		databasePage := DatabasePage(sqlDB, db, w, a)
 		w.SetContent(databasePage)
 	})
 

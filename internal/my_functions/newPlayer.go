@@ -2,8 +2,9 @@ package my_functions
 
 import (
 	"fmt"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	"log"
+
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // NewPlayer creates a new player with the given name and adds it to the database.
