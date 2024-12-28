@@ -1,27 +1,28 @@
 package myapp
 
 import (
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-
 	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
+	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // CreatePage sets up the page for creating players, teams, and clubs.
-func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
+func CreatePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) {
 
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
-		fonctionalityPage := FunctionalityPage(db, w, a)
+		fonctionalityPage := FunctionalityPage(sqlDB, db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
 
 	ReturnToCreatePageButton := widget.NewButton("Return to the creation menu", func() {
-		CreatePage(db, w, a)
+		CreatePage(sqlDB, db, w, a)
 	})
 
 	// Player
@@ -63,6 +64,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 								successMsg := fmt.Sprintf("Player %v has been successfully created\n", name)
 								fmt.Println(successMsg)
 								dialog.ShowInformation("Succes", successMsg, w)
+
+								// Set the flag to true to indicate that the database has changed
+								HasChanged = true
 
 								// Reinit the text
 								nameEntry.SetText("")
@@ -148,6 +152,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 								fmt.Println(successMsg)
 								dialog.ShowInformation("Succes", successMsg, w)
 
+								// Set the flag to true to indicate that the database has changed
+								HasChanged = true
+
 								// Reinit the text
 								nameEntry.SetText("")
 								nameEntry.SetPlaceHolder(entryHolder)
@@ -195,6 +202,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				successMsg := fmt.Sprintf("Club %v has been successfully created\n", name)
 				fmt.Println(successMsg)
 				dialog.ShowInformation("Succes", successMsg, w)
+
+				// Set the flag to true to indicate that the database has changed
+				HasChanged = true
 
 				// Reinit the text
 				nameEntry.SetText("")
