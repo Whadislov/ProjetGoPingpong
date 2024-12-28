@@ -2,9 +2,8 @@ package my_functions
 
 import (
 	"fmt"
-	"log"
-
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"log"
 )
 
 // NewClub creates a new club with the given name and adds it to the database.

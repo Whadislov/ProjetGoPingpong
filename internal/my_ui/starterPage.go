@@ -4,7 +4,6 @@ import (
 	"image/color"
 	"time"
 
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -14,7 +13,7 @@ import (
 )
 
 // StarterPage creates the introduction page to the UI and the starter page
-func StarterPage(sqlDB *msql.Database, golangDB *mt.Database) fyne.App {
+func StarterPage(db *mt.Database, filename string) fyne.App {
 	a := app.New()
 	mainWindow := a.NewWindow("TTapp")
 	mainWindow.Resize(fyne.NewSize(600, 400))
@@ -30,7 +29,7 @@ func StarterPage(sqlDB *msql.Database, golangDB *mt.Database) fyne.App {
 
 	// Main page
 
-	mainPage := MainPage(sqlDB, golangDB, mainWindow, a)
+	mainMenuCanvasObject := MainPage(db, mainWindow, a)
 
 	// Fade
 	go func() {
@@ -42,8 +41,8 @@ func StarterPage(sqlDB *msql.Database, golangDB *mt.Database) fyne.App {
 		}
 
 		// go to main page with delay so that the menu is not directly shown
-		mainWindow.SetContent(mainPage)
-		mainMenu := MainMenu(sqlDB, golangDB, mainWindow, a)
+		mainWindow.SetContent(mainMenuCanvasObject)
+		mainMenu := MainMenu(db, filename, mainWindow, a)
 		mainWindow.SetMainMenu(mainMenu)
 	}()
 	mainWindow.SetContent(welcomePage)

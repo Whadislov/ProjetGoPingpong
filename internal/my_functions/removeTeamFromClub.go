@@ -2,7 +2,6 @@ package my_functions
 
 import (
 	"fmt"
-
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 

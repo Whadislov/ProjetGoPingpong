@@ -1,28 +1,22 @@
 package myapp
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"image/color"
 )
 
-// Tracks if the database has changed
-var HasChanged bool
-
 // MainPage creates the main page
-func MainPage(sqlDB *msql.Database, golangDB *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	// Database page
-	databasePage := DatabasePage(sqlDB, golangDB, w, a)
+	databasePage := DatabasePage(db, w, a)
 
 	// Functionality page
-	functionalityPage := FunctionalityPage(sqlDB, golangDB, w, a)
+	functionalityPage := FunctionalityPage(db, w, a)
 
 	// Main page design
 	mainText := canvas.NewText("TTapp 🏓", color.RGBA{R: 0, G: 0, B: 0, A: 255})
@@ -38,14 +32,9 @@ func MainPage(sqlDB *msql.Database, golangDB *mt.Database, w fyne.Window, a fyne
 			w.SetContent(functionalityPage)
 		}),
 		widget.NewButton("Quit", func() {
-			Quit(sqlDB, golangDB, w, a, HasChanged)
+			a.Quit()
 		}),
 	)
-
-	// Check for unsaved changes before quitting
-	w.SetCloseIntercept(func() {
-		Quit(sqlDB, golangDB, w, a, HasChanged)
-	})
 
 	return mainPage
 

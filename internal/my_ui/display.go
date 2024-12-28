@@ -1,11 +1,11 @@
 package myapp
 
 import (
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	//"fyne.io/fyne/v2"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // Display launches the UI
-func Display(sqlDB *msql.Database, golangDB *mt.Database) {
-	StarterPage(sqlDB, golangDB)
+func Display(db *mt.Database, filename string) {
+	StarterPage(db, filename)
 }

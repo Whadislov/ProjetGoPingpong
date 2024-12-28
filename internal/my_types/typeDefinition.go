@@ -29,3 +29,34 @@ type Database struct {
 	Teams   map[int]*Team   `json:"teams"`
 	Players map[int]*Player `json:"players"`
 }
+
+/*
+type PlayerMatch struct {
+	League             string
+	Player             string
+	Adversary          string
+	PlayerMatchOutcome Outcome
+}
+
+type Outcome struct {
+	Victory string
+	Defeat  string
+	Draw    string
+}
+
+type TeamMatch struct {
+	League          string
+	TeamComposition map[int]string
+}
+
+type Match struct {
+	HomeTeam         Team
+	GuestTeam        Team
+	TeamMatchOutcome Outcome
+}
+
+// ajouter erreur si la value de la clé (joueur) ne fait pas partie de la mape des joueurs
+func (t *TeamMatch) SetTeamComposition(teamComposition map[int]string) {
+	t.TeamComposition = teamComposition
+}
+*/
