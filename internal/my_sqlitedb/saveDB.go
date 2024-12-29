@@ -115,9 +115,20 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 }
 
 // SaveDB saves the database. (serialize)
-func SaveDB(sqlDB *Database, golangDB *mt.Database) error {
+func SaveDB(golangDB *mt.Database) error {
+	var err error
 
-	err := sqlDB.SavePlayers(golangDB.Players)
+	// We can save multiple times, but we want this part of code to be executed only once. This bloc sets up a new database
+	initOnce.Do(func() {
+		log.Println("Database will be cleared and reloaded.")
+		DeleteDB(DbPath)
+		sqlDB, err = ConnectToDB(DbPath)
+		if err != nil {
+			fmt.Println("Error while connecting to sql database:", err)
+		}
+	})
+
+	err = sqlDB.SavePlayers(golangDB.Players)
 	if err != nil {
 		return err
 	}

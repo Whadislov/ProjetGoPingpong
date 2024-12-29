@@ -1,7 +1,6 @@
 package myapp
 
 import (
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -10,19 +9,19 @@ import (
 )
 
 // RemovePage sets up the main page for removing players from teams and vice versa.
-func RemovePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) {
+func RemovePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
-		fonctionalityPage := FunctionalityPage(sqlDB, db, w, a)
+		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
 
 	removeTfromPButton := widget.NewButton("Remove team(s) from a player", func() {
 		w.SetContent(
 			currentSelectionPageTfromP(
-				SelectionPageTfromP(sqlDB, db, w, a),
+				SelectionPageTfromP(db, w, a),
 				nil,
-				sqlDB, db, w, a,
+				db, w, a,
 			),
 		)
 	})
@@ -30,9 +29,9 @@ func RemovePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App
 	removePfromTButton := widget.NewButton("Remove player(s) from a team", func() {
 		w.SetContent(
 			currentSelectionPagePfromT(
-				SelectionPagePfromT(sqlDB, db, w, a),
+				SelectionPagePfromT(db, w, a),
 				nil,
-				sqlDB, db, w, a,
+				db, w, a,
 			),
 		)
 
@@ -41,9 +40,9 @@ func RemovePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App
 	removeCfromPButton := widget.NewButton("Remove club(s) from a player", func() {
 		w.SetContent(
 			currentSelectionPagePfromT(
-				SelectionPageCfromP(sqlDB, db, w, a),
+				SelectionPageCfromP(db, w, a),
 				nil,
-				sqlDB, db, w, a,
+				db, w, a,
 			),
 		)
 

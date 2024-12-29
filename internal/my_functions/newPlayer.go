@@ -20,8 +20,8 @@ func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 		Age:      -1,
 		Ranking:  -1,
 		Material: DefaultPlayerMaterial(),
-		TeamIDs:  map[int]string{},
-		ClubIDs:  map[int]string{},
+		TeamIDs:  make(map[int]string),
+		ClubIDs:  make(map[int]string),
 	}
 
 	db.AddPlayer(p)
