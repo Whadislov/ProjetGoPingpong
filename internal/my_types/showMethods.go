@@ -5,12 +5,15 @@ import (
 	"log"
 )
 
-func (p Player) String() string {
-	return fmt.Sprintf("%s (Age: %d, Ranking: %d, Material: %v)",
+func (p *Player) String() string {
+	return fmt.Sprintf("Id: %v, Name: %s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v",
+		p.ID,
 		p.Name,
 		p.Age,
 		p.Ranking,
 		p.Material,
+		p.TeamIDs,
+		p.ClubIDs,
 	)
 }
 

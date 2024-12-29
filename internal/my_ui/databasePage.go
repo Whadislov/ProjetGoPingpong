@@ -8,21 +8,20 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // DatabasePage sets up the page for showing players, teams, and clubs.
-func DatabasePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToMainMenuButton := widget.NewButton("Return to main page", func() {
-		mainPage := MainPage(sqlDB, db, w, a)
+		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
 	})
 
-	playerButton := widget.NewButton("Show players", func() { PlayerPage(sqlDB, db, w, a) })
-	teamButton := widget.NewButton("Show teams", func() { TeamPage(sqlDB, db, w, a) })
-	clubButton := widget.NewButton("Show clubs", func() { ClubPage(sqlDB, db, w, a) })
+	playerButton := widget.NewButton("Show players", func() { PlayerPage(db, w, a) })
+	teamButton := widget.NewButton("Show teams", func() { TeamPage(db, w, a) })
+	clubButton := widget.NewButton("Show clubs", func() { ClubPage(db, w, a) })
 
 	databaseText := canvas.NewText("Database", color.RGBA{R: 0, G: 0, B: 0, A: 255})
 	databaseText.Alignment = fyne.TextAlignCenter

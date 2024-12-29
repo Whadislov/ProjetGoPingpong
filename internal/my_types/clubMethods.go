@@ -20,6 +20,11 @@ func (c *Club) AddPlayer(player *Player) error {
 	if _, ok := c.PlayerIDs[player.ID]; ok {
 		return fmt.Errorf("player %v is already in club %v", player.Name, c.Name)
 	}
+
+	if c.PlayerIDs == nil {
+		c.PlayerIDs = make(map[int]string)
+	}
+
 	c.PlayerIDs[player.ID] = player.Name
 	return nil
 }
@@ -30,6 +35,11 @@ func (c *Club) AddTeam(team *Team) error {
 	if _, ok := c.TeamIDs[team.ID]; ok {
 		return fmt.Errorf("team %v is already in club %v", team.Name, c.Name)
 	}
+
+	if c.TeamIDs == nil {
+		c.TeamIDs = make(map[int]string)
+	}
+
 	c.TeamIDs[team.ID] = team.Name
 	return nil
 }
