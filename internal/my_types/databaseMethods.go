@@ -4,7 +4,6 @@ import "fmt"
 
 // AddPlayer adds a new player to the database.
 func (d *Database) AddPlayer(player *Player) {
-	player.ID = len(d.Players)
 	d.Players[player.ID] = player
 }
 
@@ -29,7 +28,6 @@ func (d *Database) GetPlayer(playerID int) (*Player, error) {
 
 // AddTeam adds a new team to the database.
 func (d *Database) AddTeam(team *Team) {
-	team.ID = len(d.Teams)
 	d.Teams[team.ID] = team
 }
 
@@ -54,7 +52,6 @@ func (d *Database) GetTeam(teamID int) (*Team, error) {
 
 // AddClub adds a new club to the database.
 func (d *Database) AddClub(club *Club) {
-	club.ID = len(d.Clubs)
 	d.Clubs[club.ID] = club
 }
 

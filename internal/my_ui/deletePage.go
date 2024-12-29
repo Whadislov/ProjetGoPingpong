@@ -9,12 +9,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // DeletePage sets up the page for deleting players, teams, and clubs.
-func DeletePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) {
+func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	var rebuildUI func()
 
 	// Rebuild UI on modifications
@@ -25,7 +24,7 @@ func DeletePage(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App
 		cLabel := widget.NewLabel("Clubs")
 
 		returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
-			fonctionalityPage := FunctionalityPage(sqlDB, db, w, a)
+			fonctionalityPage := FunctionalityPage(db, w, a)
 			w.SetContent(fonctionalityPage)
 		})
 

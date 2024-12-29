@@ -9,15 +9,14 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // currentSelectionPagePtoT sets up the page for selecting teams and players.
-func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.Container, sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToAddPageButton := widget.NewButton("Return to the add menu", func() {
-		AddPage(sqlDB, db, w, a)
+		AddPage(db, w, a)
 	})
 
 	if playerContent == nil {
@@ -37,21 +36,21 @@ func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.C
 }
 
 // selectionPagePtoT sets up the initial selection page for teams.
-func SelectionPagePtoT(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func SelectionPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePtoT(sqlDB, db, w, a)) })
+	teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePtoT(db, w, a)) })
 	content := container.NewVBox(teamSelectionPageButton)
 
 	return content
 }
 
 // selectTeamPagePtoT sets up the page for selecting a team from the database.
-func selectTeamPagePtoT(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
 		w.SetContent(
 			currentSelectionPagePtoT(
-				SelectionPagePtoT(sqlDB, db, w, a), nil, sqlDB, db, w, a,
+				SelectionPagePtoT(db, w, a), nil, db, w, a,
 			),
 		)
 	})
@@ -64,7 +63,7 @@ func selectTeamPagePtoT(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a 
 
 	for _, t := range sortedTeams {
 		team := t.Value
-		teamButton := widget.NewButton(team.Name, func() { w.SetContent(selectedTeamPagePtoT(team, sqlDB, db, w, a)) })
+		teamButton := widget.NewButton(team.Name, func() { w.SetContent(selectedTeamPagePtoT(team, db, w, a)) })
 		teamButtons = append(teamButtons, teamButton)
 	}
 	content := container.NewVBox(
@@ -77,14 +76,14 @@ func selectTeamPagePtoT(sqlDB *msql.Database, db *mt.Database, w fyne.Window, a 
 }
 
 // selectedTeamPagePtoT sets up the page for a selected team and allows player selection.
-func selectedTeamPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedTeamPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
 	pLabel := widget.NewLabel("Player current selection 🏓")
 
 	// User can click on the selected team to return the list of teams
 	selectedTeamButton := widget.NewButton(team.Name, func() {
-		w.SetContent(selectTeamPagePtoT(sqlDB, db, w, a))
+		w.SetContent(selectTeamPagePtoT(db, w, a))
 	})
 
 	teamContent := container.NewVBox(
@@ -94,7 +93,7 @@ func selectedTeamPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, 
 
 	// Now select a player
 	selectPlayerButton := widget.NewButton("Select a player", func() {
-		w.SetContent(selectPlayerPagePtoT(team, sqlDB, db, w, a))
+		w.SetContent(selectPlayerPagePtoT(team, db, w, a))
 	})
 
 	playerContent := container.NewVBox(
@@ -106,17 +105,17 @@ func selectedTeamPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, 
 	content := currentSelectionPagePtoT(
 		teamContent,
 		playerContent,
-		sqlDB, db, w, a,
+		db, w, a,
 	)
 
 	return content
 }
 
 // selectPlayerPagePtoT sets up the page for selecting a player for a given team.
-func selectPlayerPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToPlayerSelectionPageButton := widget.NewButton("Return to player selection", func() {
-		w.SetContent(selectedTeamPagePtoT(team, sqlDB, db, w, a))
+		w.SetContent(selectedTeamPagePtoT(team, db, w, a))
 	})
 
 	pLabel := widget.NewLabel("Players 🏓")
@@ -126,10 +125,10 @@ func selectPlayerPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, 
 	// We should create a player first
 	if len(db.Players) == 0 {
 		yesButton := widget.NewButton("Yes", func() {
-			CreatePage(sqlDB, db, w, a)
+			CreatePage(db, w, a)
 		})
 		noButton := widget.NewButton("No", func() {
-			w.SetContent(FunctionalityPage(sqlDB, db, w, a))
+			w.SetContent(FunctionalityPage(db, w, a))
 		})
 
 		buttons := container.NewHBox(
@@ -146,19 +145,34 @@ func selectPlayerPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, 
 		w.SetContent(content)
 	}
 
+	// We do not want to have a button for all the players in the database. They have to meet some criterias : same club as the team, not already in the team
+	screenedPlayers := make(map[int]*mt.Player)
+
+	for _, player := range db.Players {
+		for playerClubID := range player.ClubIDs {
+			// Check if the player is in the same club as the team. If yes, continue checking if the player is not already in the team
+			_, ok := team.ClubID[playerClubID]
+			if ok {
+				// Check if the player is not already in the team. If not, we want a button of this player
+				_, ok := player.TeamIDs[team.ID]
+				if !ok {
+					screenedPlayers[player.ID] = player
+				}
+			}
+		}
+	}
+
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := SortMap(screenedPlayers)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		// Check if the player from the database is already in the team's player map. If not we want a button of this player
-		if _, ok := team.PlayerIDs[player.ID]; !ok {
-			playerButton := widget.NewButton(player.Name, func() {
-				selectedPlayers[player.ID] = player
-				w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, sqlDB, db, w, a))
-			})
-			playerButtons = append(playerButtons, playerButton)
-		}
+		playerButton := widget.NewButton(player.Name, func() {
+			selectedPlayers[player.ID] = player
+			w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, db, w, a))
+		})
+		playerButtons = append(playerButtons, playerButton)
+
 	}
 	content := container.NewVBox(
 		returnToPlayerSelectionPageButton,
@@ -170,16 +184,16 @@ func selectPlayerPagePtoT(team *mt.Team, sqlDB *msql.Database, db *mt.Database, 
 }
 
 // createPlayerButtonsPtoT creates buttons for each selected player.
-func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, sqlDB *msql.Database, db *mt.Database, selectedPlayers map[int]*mt.Player, selectedPlayerButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, db *mt.Database, selectedPlayers map[int]*mt.Player, selectedPlayerButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected player to remove the player from the selected player list
 	selectedPlayerButton := widget.NewButton(player.Name, func() {
 		delete(selectedPlayers, player.ID)
 
 		// If there is 0 selected player, we should return to the player selection page
 		if len(selectedPlayers) == 0 {
-			w.SetContent(selectPlayerPagePtoT(team, sqlDB, db, w, a))
+			w.SetContent(selectPlayerPagePtoT(team, db, w, a))
 		} else {
-			w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, sqlDB, db, w, a))
+			w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, db, w, a))
 		}
 	})
 
@@ -189,36 +203,53 @@ func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, sqlDB *msql.Datab
 }
 
 // addAnotherPlayerPagePtoT sets up the page for adding another player to the selected team.
-func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.Player, sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToPlayerSelectionPageButton := widget.NewButton("Cancel", func() {
-		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, sqlDB, db, w, a))
+		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	})
 
 	pLabel := widget.NewLabel("Players 🏓")
 	playerButtons := []fyne.CanvasObject{}
 
-	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	// We do not want to have a button for all the players in the database. They have to meet some criterias : same club as the team, not already in the team, not already given a button
+	screenedPlayers := make(map[int]*mt.Player)
 
-	for _, p := range sortedPlayers {
-		player := p.Value
-		// Check if the player from the database is already in the team's player map. If not we want a button of this player
-		if _, ok := team.PlayerIDs[player.ID]; !ok {
-			if _, ok := alreadySelectedPlayers[player.ID]; !ok {
-				// Check if the player from team's player map is already in selected players. If not we want a button of this player
-				playerButton := widget.NewButton(player.Name, func() {
-					alreadySelectedPlayers[player.ID] = player
-					w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, sqlDB, db, w, a))
-				})
-				playerButtons = append(playerButtons, playerButton)
+	for _, player := range db.Players {
+		for playerClubID := range player.ClubIDs {
+			// Check if the player is in the same club as the team. If yes, continue checking if the player is not already in the team
+			_, ok := team.ClubID[playerClubID]
+			if ok {
+				// Check if the player is not already in the team. If not, continue checking if the player is not already in selected players
+				_, ok := player.TeamIDs[team.ID]
+				if !ok {
+					// Check if the player is not already in selected players. If not, keep this player
+					_, ok := alreadySelectedPlayers[player.ID]
+					if !ok {
+						screenedPlayers[player.ID] = player
+					}
+				}
 			}
 		}
 	}
 
+	// "Sort the map of players" for a better button display
+	sortedPlayers := SortMap(screenedPlayers)
+
+	for _, p := range sortedPlayers {
+		player := p.Value
+
+		playerButton := widget.NewButton(player.Name, func() {
+			alreadySelectedPlayers[player.ID] = player
+			w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
+		})
+		playerButtons = append(playerButtons, playerButton)
+
+	}
+
 	if len(playerButtons) == 0 {
 		dialog.ShowInformation("Information", "There is no more players to add", w)
-		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, sqlDB, db, w, a))
+		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	}
 
 	content := container.NewVBox(
@@ -231,14 +262,13 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.
 }
 
 // selectedPlayerPagePtoT sets up the page for confirming the selected players for a team.
-func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, sqlDB *msql.Database, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToAddRemovePageButton := widget.NewButton("Return to the add menu", func() {
-		AddPage(sqlDB, db, w, a)
+		AddPage(db, w, a)
 	})
 
 	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
-	//pLabel := widget.NewLabel("Player current selection 🏓")
 
 	// "Sort the map of selected players" for a better button display
 	sortedSelectedPlayers := SortMap(selectedPlayers)
@@ -265,7 +295,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, s
 		// Return to empty page
 		w.SetContent(
 			currentSelectionPagePtoT(
-				SelectionPagePtoT(sqlDB, db, w, a), nil, sqlDB, db, w, a,
+				SelectionPagePtoT(db, w, a), nil, db, w, a,
 			),
 		)
 	})
@@ -274,17 +304,17 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, s
 	selectedPlayerButtons := []fyne.CanvasObject{}
 	for _, p := range sortedSelectedPlayers {
 		player := p.Value
-		selectedPlayerButtons = createPlayerButtonsPtoT(team, player, sqlDB, db, selectedPlayers, selectedPlayerButtons, w, a)
+		selectedPlayerButtons = createPlayerButtonsPtoT(team, player, db, selectedPlayers, selectedPlayerButtons, w, a)
 	}
 
 	// Add another player in the player selection
 	addAnotherPlayerButton := widget.NewButton("Add another player", func() {
-		w.SetContent(addAnotherPlayerPagePtoT(team, selectedPlayers, sqlDB, db, w, a))
+		w.SetContent(addAnotherPlayerPagePtoT(team, selectedPlayers, db, w, a))
 	})
 
 	// User can click on the selected team to return the list of teams
 	selectedTeamButton := widget.NewButton(team.Name, func() {
-		w.SetContent(selectTeamPagePtoT(sqlDB, db, w, a))
+		w.SetContent(selectTeamPagePtoT(db, w, a))
 	})
 
 	teamContent := container.NewVBox(

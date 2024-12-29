@@ -17,6 +17,10 @@ func (db *Database) LoadPlayers() (map[int]*mt.Player, error) {
 	var players = make(map[int]*mt.Player)
 	for rows.Next() {
 		var player mt.Player
+		player.Material = []string{"", "", ""}
+		player.TeamIDs = make(map[int]string)
+		player.ClubIDs = make(map[int]string)
+
 		err := rows.Scan(&player.ID, &player.Name, &player.Age, &player.Ranking, &player.Material[0], &player.Material[1], &player.Material[2])
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan player: %w", err)
@@ -38,13 +42,14 @@ func (db *Database) LoadTeams() (map[int]*mt.Team, error) {
 	var teams = make(map[int]*mt.Team)
 	for rows.Next() {
 		var team mt.Team
+		team.PlayerIDs = make(map[int]string)
+		team.ClubID = make(map[int]string)
 		err := rows.Scan(&team.ID, &team.Name)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan team: %w", err)
 		}
 		teams[team.ID] = &team
 	}
-
 	return teams, rows.Err()
 }
 
@@ -59,6 +64,8 @@ func (db *Database) LoadClubs() (map[int]*mt.Club, error) {
 	var clubs = make(map[int]*mt.Club)
 	for rows.Next() {
 		var club mt.Club
+		club.PlayerIDs = make(map[int]string)
+		club.TeamIDs = make(map[int]string)
 		err := rows.Scan(&club.ID, &club.Name)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan club: %w", err)
@@ -90,7 +97,6 @@ func (db *Database) LoadPlayerClubs(players map[int]*mt.Player, clubs map[int]*m
 			club.PlayerIDs[playerID] = players[playerID].Name
 		}
 	}
-
 	return rows.Err()
 }
 
@@ -145,7 +151,13 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 }
 
 // LoadDB loads the database.
-func LoadDB(db *Database) (*mt.Database, error) {
+func LoadDB() (*mt.Database, error) {
+
+	db, err := ConnectToDB(DbPath)
+	if err != nil {
+		fmt.Println("Error while connecting to sql database:", err)
+		return nil, err
+	}
 
 	players, err := db.LoadPlayers()
 	if err != nil {
@@ -171,10 +183,11 @@ func LoadDB(db *Database) (*mt.Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	database := &mt.Database{
+	golangDB := &mt.Database{
 		Players: players,
 		Teams:   teams,
 		Clubs:   clubs,
 	}
-	return database, nil
+	db.Close()
+	return golangDB, nil
 }
