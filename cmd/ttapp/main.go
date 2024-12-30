@@ -8,21 +8,13 @@ import (
 )
 
 func main() {
-	dbPath := "database.db"
 
-	// Connect to the sqlite database
-	sqlDB, err := msql.ConnectToDB(dbPath)
-	if err != nil {
-		fmt.Println("Error while loading sql database:", err)
-		return
-	}
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB(sqlDB)
+	golangDB, err := msql.LoadDB()
 	if err != nil {
 		fmt.Println("Error while loading golang database:", err)
 		return
 	}
-
-	mu.Display(sqlDB, golangDB)
+	mu.Display(golangDB)
 
 }
