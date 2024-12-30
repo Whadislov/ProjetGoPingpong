@@ -1,16 +1,19 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-func RunApi(db *mt.Database) {
+func RunApi(db *mt.Database, config *Config) {
 	http.HandleFunc("/players", GetPlayers(db))
 	http.HandleFunc("/teams", GetTeams(db))
 	http.HandleFunc("/clubs", GetClubs(db))
-	log.Println("Server started on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	address := fmt.Sprintf("%s:%s", config.ServerAddress, config.ServerPort)
+	log.Printf("Server started on %s", address)
+	log.Fatal(http.ListenAndServe(address, nil))
 }
