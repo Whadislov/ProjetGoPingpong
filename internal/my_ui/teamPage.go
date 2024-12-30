@@ -1,6 +1,8 @@
 package myapp
 
 import (
+	"slices"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -11,9 +13,17 @@ import (
 // TeamInfos returns a container that displays all the infos of a team.
 func TeamInfos(team *mt.Team) *fyne.Container {
 	wp := []fyne.CanvasObject{}
+	// Sort players alphabetically
+	players := []string{}
 	for _, player := range team.PlayerIDs {
+		players = append(players, player)
+	}
+	slices.Sort(players)
+
+	for _, player := range players {
 		wp = append(wp, widget.NewLabel(player))
 	}
+
 	itemp := widget.NewAccordionItem("Show players",
 		container.NewVBox(wp...),
 	)

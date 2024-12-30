@@ -1,6 +1,8 @@
 package myapp
 
 import (
+	"slices"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -10,18 +12,34 @@ import (
 
 // ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
-	// team list
+	// team label list
 	wt := []fyne.CanvasObject{}
-	// player list
+	// player label list
 	wp := []fyne.CanvasObject{}
+
+	// Sort players alphabetically
+	players := []string{}
 	for _, player := range club.PlayerIDs {
+		players = append(players, player)
+	}
+	slices.Sort(players)
+
+	for _, player := range players {
 		wp = append(wp, widget.NewLabel(player))
 	}
 	itemp := widget.NewAccordionItem("Show players",
 		container.NewVBox(wp...),
 	)
 	playerAc := widget.NewAccordion(itemp)
+
+	// Sort teams alphabetically
+	teams := []string{}
 	for _, team := range club.TeamIDs {
+		teams = append(teams, team)
+	}
+	slices.Sort(teams)
+
+	for _, team := range teams {
 		wt = append(wt, widget.NewLabel(team))
 	}
 	itemt := widget.NewAccordionItem("Show teams",

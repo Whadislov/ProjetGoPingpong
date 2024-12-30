@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"slices"
 	"strconv"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
@@ -21,9 +22,13 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	for _, team := range player.TeamIDs {
 		teams = append(teams, team)
 	}
+	// Sort teams alphabetically
+	slices.Sort(teams)
 	for _, club := range player.ClubIDs {
 		clubs = append(clubs, club)
 	}
+	// Sort clubs alphabetically
+	slices.Sort(clubs)
 	teamsStr := "Teams: " + strHelper(teams)
 	clubsStr := "Clubs: " + strHelper(clubs)
 	item := container.NewVBox(
