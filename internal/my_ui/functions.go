@@ -5,6 +5,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -69,4 +70,10 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 		}
 	}, w)
 	d.Show()
+}
+
+// Reinit the text of a widget entry
+func ReinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
+	entry.SetText("")
+	entry.SetPlaceHolder(entryHolder)
 }
