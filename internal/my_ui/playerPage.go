@@ -14,10 +14,10 @@ import (
 
 // PlayerInfos returns a container that displays all the infos of a player.
 func PlayerInfos(player *mt.Player) *fyne.Container {
-	nameStr := "Name: " + player.Name
-	ageStr := "Age: " + strconv.Itoa(player.Age)
-	materialStr := "Material (forehand, backhand, blade): " + strHelper(player.Material)
-	rankingStr := "Ranking: " + strconv.Itoa(player.Ranking)
+	nameStr := "Name: 	" + player.Name
+	ageStr := "Age: 		" + strconv.Itoa(player.Age)
+	materialStr := "Material (forehand, backhand, blade): 	" + strHelper(player.Material)
+	rankingStr := "Ranking: 	" + strconv.Itoa(player.Ranking)
 	teams := []string{}
 	clubs := []string{}
 	for _, team := range player.TeamIDs {
@@ -30,10 +30,11 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	}
 	// Sort clubs alphabetically
 	slices.Sort(clubs)
-	teamsStr := "Teams: " + strHelper(teams)
-	clubsStr := "Clubs: " + strHelper(clubs)
+	teamsStr := "Teams: 	" + strHelper(teams)
+	clubsStr := "Clubs: 	" + strHelper(clubs)
 
-	text := fmt.Sprintln(nameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(materialStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr)
+	text := fmt.Sprintln(nameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr) + fmt.Sprintln(materialStr)
+	text = text[:len(text)-1] // remove the last \n
 	textLabel := widget.NewLabel(text)
 	item := container.NewVBox(textLabel)
 	return item

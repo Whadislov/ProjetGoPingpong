@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"fmt"
 	"slices"
 
 	"fyne.io/fyne/v2"
@@ -12,11 +13,6 @@ import (
 
 // ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
-	// team label list
-	wt := []fyne.CanvasObject{}
-	// player label list
-	wp := []fyne.CanvasObject{}
-
 	// Sort players alphabetically
 	players := []string{}
 	for _, player := range club.PlayerIDs {
@@ -24,11 +20,14 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	}
 	slices.Sort(players)
 
+	// string that contains player names to display
+	pText := ""
 	for _, player := range players {
-		wp = append(wp, widget.NewLabel(player))
+		pText += fmt.Sprintln(player)
 	}
+	pText = pText[:len(pText)-1] // remove the last \n
 	itemp := widget.NewAccordionItem("Show players",
-		container.NewVBox(wp...),
+		container.NewVBox(widget.NewLabel(pText)),
 	)
 	playerAc := widget.NewAccordion(itemp)
 
@@ -39,15 +38,19 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	}
 	slices.Sort(teams)
 
+	// string that contains team names to display
+	tText := ""
 	for _, team := range teams {
-		wt = append(wt, widget.NewLabel(team))
+		tText += fmt.Sprintln(team)
 	}
+	tText = tText[:len(tText)-1] // remove the last \n
 	itemt := widget.NewAccordionItem("Show teams",
-		container.NewVBox(wt...),
+		container.NewVBox(widget.NewLabel(tText)),
 	)
 	teamAc := widget.NewAccordion(itemt)
 
-	content := container.NewVBox(
+	content := container.NewGridWithColumns(
+		2,
 		teamAc,
 		playerAc,
 	)
