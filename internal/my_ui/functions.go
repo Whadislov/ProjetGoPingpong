@@ -77,3 +77,23 @@ func ReinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
 	entry.SetText("")
 	entry.SetPlaceHolder(entryHolder)
 }
+
+// Verify if the string is letters only
+func IsLettersOnly(s string) bool {
+	for _, r := range s {
+		if r < 'A' || r > 'z' {
+			return false
+		}
+	}
+	return true
+}
+
+// Verify if the string is numbers only
+func IsNumbersOnly(s string) bool {
+	for _, r := range s {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return true
+}

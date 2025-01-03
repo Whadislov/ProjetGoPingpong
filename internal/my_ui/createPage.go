@@ -3,6 +3,9 @@ package myapp
 import (
 	"fmt"
 	"strconv"
+	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -72,14 +75,51 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 					bladeEntry.SetPlaceHolder(entryBladeHolder)
 
 					validatationButton := widget.NewButton("Create", func() {
-						name := nameEntry.Text
-						p, errName := mf.NewPlayer(name, db)
+						age := -1
+						ranking := -1
+
+						// Check player name
+						if nameEntry.Text == "" {
+							dialog.ShowError(fmt.Errorf("name must not be empty"), w)
+							return
+						} else if !IsLettersOnly(nameEntry.Text) {
+							dialog.ShowError(fmt.Errorf("name must be letters only"), w)
+							return
+						}
 						// Set player age
-						age, errAge := strconv.Atoi(ageEntry.Text)
-						p.SetPlayerAge(age)
+						if ageEntry.Text != "" {
+							a, errAge := strconv.Atoi(ageEntry.Text)
+							if errAge != nil {
+								// Check if the age is a number
+								if !IsNumbersOnly(ageEntry.Text) {
+									dialog.ShowError(fmt.Errorf("age must be a number"), w)
+									return
+								} else {
+									dialog.ShowError(errAge, w)
+									return
+								}
+							} else {
+								age = a
+							}
+						}
+
 						// Set player ranking
-						ranking, errRanking := strconv.Atoi(rankingEntry.Text)
-						p.SetPlayerRanking(ranking)
+						if rankingEntry.Text != "" {
+							r, errRanking := strconv.Atoi(rankingEntry.Text)
+							if errRanking != nil {
+								// Check if the ranking is a number
+								if !IsNumbersOnly(rankingEntry.Text) {
+									dialog.ShowError(fmt.Errorf("ranking must be a number"), w)
+									return
+								} else {
+									dialog.ShowError(errRanking, w)
+									return
+								}
+							} else {
+								ranking = r
+							}
+						}
+
 						// Set player material
 						if forehandEntry.Text == "" {
 							forehandEntry.SetText("Unknown")
@@ -90,41 +130,48 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						if bladeEntry.Text == "" {
 							bladeEntry.SetText("Unknown")
 						}
-						p.SetPlayerMaterial(forehandEntry.Text, backhandEntry.Text, bladeEntry.Text)
 
+						// Create the player
+						name := nameEntry.Text
+						name = strings.ToLower(name)
+						firstRune, size := utf8.DecodeRuneInString(name)
+						if firstRune != utf8.RuneError {
+							name = string(unicode.ToUpper(firstRune)) + name[size:]
+						}
+
+						p, errName := mf.NewPlayer(name, db)
 						if errName != nil {
 							dialog.ShowError(errName, w)
 							return
-						} else if errAge != nil {
-							dialog.ShowError(errAge, w)
-							return
-						} else if errRanking != nil {
-							dialog.ShowError(errRanking, w)
+						} else {
+							p.SetPlayerAge(age)
+							p.SetPlayerRanking(ranking)
+							p.SetPlayerMaterial(forehandEntry.Text, backhandEntry.Text, bladeEntry.Text)
+						}
+
+						// Link the player to the club
+						err := mf.AddPlayerToClub(p, club)
+						if err != nil {
+							dialog.ShowError(err, w)
 							return
 						} else {
-							// Link the player to the club
-							err := mf.AddPlayerToClub(p, club)
-							if err != nil {
-								dialog.ShowError(err, w)
-								return
-							} else {
-								// Player creation + link to club success
-								successMsg := fmt.Sprintf("Player %v has been successfully created\n", name)
-								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+							// Player creation + link to club success
+							successMsg := fmt.Sprintf("Player %v has been successfully created\n", name)
+							fmt.Println(successMsg)
+							dialog.ShowInformation("Succes", successMsg, w)
 
-								// Set the flag to true to indicate that the database has changed
-								HasChanged = true
+							// Set the flag to true to indicate that the database has changed
+							HasChanged = true
 
-								// Reinit the entry text
-								ReinitWidgetEntryText(nameEntry, entryNameHolder)
-								ReinitWidgetEntryText(ageEntry, entryAgeHolder)
-								ReinitWidgetEntryText(rankingEntry, entryRankingHolder)
-								ReinitWidgetEntryText(forehandEntry, entryForehandHolder)
-								ReinitWidgetEntryText(backhandEntry, entryBackhandHolder)
-								ReinitWidgetEntryText(bladeEntry, entryBladeHolder)
-							}
+							// Reinit the entry text
+							ReinitWidgetEntryText(nameEntry, entryNameHolder)
+							ReinitWidgetEntryText(ageEntry, entryAgeHolder)
+							ReinitWidgetEntryText(rankingEntry, entryRankingHolder)
+							ReinitWidgetEntryText(forehandEntry, entryForehandHolder)
+							ReinitWidgetEntryText(backhandEntry, entryBackhandHolder)
+							ReinitWidgetEntryText(bladeEntry, entryBladeHolder)
 						}
+
 					})
 					// Create a player in this club page
 					w.SetContent(container.NewVBox(

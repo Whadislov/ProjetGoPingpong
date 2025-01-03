@@ -3,6 +3,9 @@ package my_functions
 import (
 	"fmt"
 	"log"
+	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -12,6 +15,18 @@ import (
 func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 	if playerName == "" {
 		return nil, fmt.Errorf("player name cannot be empty")
+	}
+
+	for _, r := range playerName {
+		if r < 'A' || r > 'z' {
+			return nil, fmt.Errorf("player name can only contain letters")
+		}
+	}
+
+	playerName = strings.ToLower(playerName)
+	firstRune, size := utf8.DecodeRuneInString(playerName)
+	if firstRune != utf8.RuneError {
+		playerName = string(unicode.ToUpper(firstRune)) + playerName[size:]
 	}
 
 	p := &mt.Player{
