@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"fmt"
 	"slices"
 	"strconv"
 
@@ -15,7 +16,7 @@ import (
 func PlayerInfos(player *mt.Player) *fyne.Container {
 	nameStr := "Name: " + player.Name
 	ageStr := "Age: " + strconv.Itoa(player.Age)
-	materialStr := "Material: " + strHelper(player.Material)
+	materialStr := "Material (forehand, backhand, blade): " + strHelper(player.Material)
 	rankingStr := "Ranking: " + strconv.Itoa(player.Ranking)
 	teams := []string{}
 	clubs := []string{}
@@ -31,14 +32,10 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	slices.Sort(clubs)
 	teamsStr := "Teams: " + strHelper(teams)
 	clubsStr := "Clubs: " + strHelper(clubs)
-	item := container.NewVBox(
-		widget.NewLabel(nameStr),
-		widget.NewLabel(ageStr),
-		widget.NewLabel(materialStr),
-		widget.NewLabel(rankingStr),
-		widget.NewLabel(teamsStr),
-		widget.NewLabel(clubsStr),
-	)
+
+	text := fmt.Sprintln(nameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(materialStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr)
+	textLabel := widget.NewLabel(text)
+	item := container.NewVBox(textLabel)
 	return item
 }
 
