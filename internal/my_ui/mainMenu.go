@@ -36,7 +36,8 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 	menu3Item2 := fyne.NewMenuItem("Add ... to ...", func() { AddPage(db, w, a) })
 	menu3Item3 := fyne.NewMenuItem("Remove ... from ...", func() { RemovePage(db, w, a) })
 	menu3Item4 := fyne.NewMenuItem("Delete", func() { DeletePage(db, w, a) })
-	newMenu3 := fyne.NewMenu("Functions", menu3Item1, menu3Item2, menu3Item3, menu3Item4)
+	menu3Item5 := fyne.NewMenuItem("Add information to a player", func() { AddInfoToPlayerPage(db, w, a) })
+	newMenu3 := fyne.NewMenu("Functions", menu3Item1, menu3Item2, menu3Item3, menu3Item4, menu3Item5)
 
 	menu := fyne.NewMainMenu(newMenu1, newMenu2, newMenu3)
 
