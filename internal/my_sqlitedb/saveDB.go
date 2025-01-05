@@ -153,5 +153,6 @@ func SaveDB(golangDB *mt.Database) error {
 		return err
 	}
 	log.Println("Database successfully saved.")
+	sqlDB.Close()
 	return nil
 }
