@@ -228,7 +228,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						// If team name already exists, do not create the team
 						for _, value := range db.Teams {
 							if value.Name == name {
-								err := fmt.Errorf(fmt.Sprintf("Team %v already exists in %v", name, club.Name))
+								err := fmt.Errorf("team %v already exists in %v", name, club.Name)
 								dialog.ShowError(err, w)
 								// Reinit the text
 								nameEntry.SetText("")

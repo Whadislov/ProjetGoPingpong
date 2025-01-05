@@ -41,7 +41,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			i := sortedPlayer.Key
 			p := db.Players[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf(p.Name),
+				p.Name,
 				container.NewVBox(
 					PlayerInfos(p),
 					widget.NewButton("Delete", func() {
@@ -75,7 +75,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			i := sortedTeam.Key
 			t := db.Teams[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf(t.Name),
+				t.Name,
 				container.NewVBox(
 					TeamInfos(t),
 					widget.NewButton("Delete", func() {
@@ -109,7 +109,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			i := sortedClub.Key
 			c := db.Clubs[i]
 			item := widget.NewAccordionItem(
-				fmt.Sprintf(c.Name),
+				c.Name,
 				container.NewVBox(
 					ClubInfos(c),
 					widget.NewButton("Delete", func() {
