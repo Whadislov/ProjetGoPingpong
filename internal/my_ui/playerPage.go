@@ -16,7 +16,12 @@ import (
 func PlayerInfos(player *mt.Player) *fyne.Container {
 	nameStr := "Name: 	" + player.Name
 	ageStr := "Age: 		" + strconv.Itoa(player.Age)
-	materialStr := "Material (forehand, backhand, blade): 	" + strHelper(player.Material)
+	materialStr := fmt.Sprintf(
+		`Forehand:	%v
+Backhand:	%v
+Blade:	%v`,
+		player.Material[0], player.Material[1], player.Material[2])
+
 	rankingStr := "Ranking: 	" + strconv.Itoa(player.Ranking)
 	teams := []string{}
 	clubs := []string{}

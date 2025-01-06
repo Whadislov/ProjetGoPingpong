@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
@@ -152,14 +153,17 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	leftContent := container.NewVBox(playerButtons...)
 
-	rightContent := container.NewGridWithRows(
-		7,
+	formLayout := container.New(layout.NewFormLayout(),
+		widget.NewLabel("Age:"), ageEntry,
+		widget.NewLabel("Ranking:"), rankingEntry,
+		widget.NewLabel("Forehand:"), forehandEntry,
+		widget.NewLabel("Backhand:"), backhandEntry,
+		widget.NewLabel("Blade:"), bladeEntry,
+	)
+
+	rightContent := container.NewVBox(
 		playerLabel,
-		container.NewGridWithColumns(2, widget.NewLabel("Age"), ageEntry),
-		container.NewGridWithColumns(2, widget.NewLabel("Ranking"), rankingEntry),
-		container.NewGridWithColumns(2, widget.NewLabel("Forehand"), forehandEntry),
-		container.NewGridWithColumns(2, widget.NewLabel("Backhand"), backhandEntry),
-		container.NewGridWithColumns(2, widget.NewLabel("Blade"), bladeEntry),
+		formLayout,
 		container.NewGridWithColumns(2, confirmButton, cancelButton),
 	)
 

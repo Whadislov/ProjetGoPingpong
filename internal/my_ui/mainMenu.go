@@ -17,15 +17,8 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 		msql.SaveDB(db)
 		HasChanged = false
 	})
-	menu1Item3 := fyne.NewMenuItem("Quit", func() { Quit(db, w, a, HasChanged) })
 
-	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3)
-
-	for _, item := range newMenu1.Items {
-		if item.Label == "Quitter" {
-			item.Label = "Quit"
-		}
-	}
+	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2)
 
 	menu2Item1 := fyne.NewMenuItem("Players", func() { PlayerPage(db, w, a) })
 	menu2Item2 := fyne.NewMenuItem("Teams", func() { TeamPage(db, w, a) })
