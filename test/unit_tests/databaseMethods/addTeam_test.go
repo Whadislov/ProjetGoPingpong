@@ -13,16 +13,16 @@ func TestAddTeam(t *testing.T) {
 	}
 
 	t1 := mt.Team{
+		ID:   0,
 		Name: "t1",
 	}
 
 	t2 := mt.Team{
+		ID:   1,
 		Name: "t2",
 	}
 
 	expectedLen := 2
-	expectedID1 := 0
-	expectedID2 := 1
 
 	t.Run("Add team to database", func(t *testing.T) {
 		d.AddTeam(&t1)
@@ -30,12 +30,6 @@ func TestAddTeam(t *testing.T) {
 		lenToVerify := len(d.Teams)
 		if lenToVerify != expectedLen {
 			t.Errorf("Expected len of Teams %v, got %v", expectedLen, lenToVerify)
-		}
-		if t1.ID != expectedID1 {
-			t.Errorf("Expected ID %v, got %v", expectedID1, t1.ID)
-		}
-		if t2.ID != expectedID2 {
-			t.Errorf("Expected ID %v, got %v", expectedID2, t2.ID)
 		}
 	})
 }

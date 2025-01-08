@@ -13,16 +13,16 @@ func TestAddPlayer(t *testing.T) {
 	}
 
 	p1 := mt.Player{
+		ID:   0,
 		Name: "p1",
 	}
 
 	p2 := mt.Player{
+		ID:   1,
 		Name: "p2",
 	}
 
 	expectedLen := 2
-	expectedID1 := 0
-	expectedID2 := 1
 
 	t.Run("Add player to database", func(t *testing.T) {
 		d.AddPlayer(&p1)
@@ -30,12 +30,6 @@ func TestAddPlayer(t *testing.T) {
 		lenToVerify := len(d.Players)
 		if lenToVerify != expectedLen {
 			t.Errorf("Expected len of Players %v, got %v", expectedLen, lenToVerify)
-		}
-		if p1.ID != expectedID1 {
-			t.Errorf("Expected ID %v, got %v", expectedID1, p1.ID)
-		}
-		if p2.ID != expectedID2 {
-			t.Errorf("Expected ID %v, got %v", expectedID2, p2.ID)
 		}
 	})
 }

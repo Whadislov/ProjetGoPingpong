@@ -1,4 +1,4 @@
-package integrationtests_test
+package myfunctions_test
 
 import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDeleteTeam(t *testing.T) {
+func TestDeleteTeamComplexCase(t *testing.T) {
 
 	p1 := mt.Player{
 		ID:      0,
