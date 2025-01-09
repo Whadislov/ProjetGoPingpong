@@ -29,7 +29,7 @@ func setupMockDB() *mt.Database {
 func setupMockConfig() *api.Config {
 	return &api.Config{
 		ServerAddress: "localhost",
-		ServerPort:    "8000",
+		ServerPort:    "7000",
 	}
 }
 
