@@ -2,8 +2,9 @@ package my_functions
 
 import (
 	"fmt"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	"log"
+
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // NewTeam creates a new team with the given name and adds it to the database.
@@ -16,8 +17,8 @@ func NewTeam(teamName string, db *mt.Database) (*mt.Team, error) {
 	t := &mt.Team{
 		ID:        len(db.Teams),
 		Name:      teamName,
-		PlayerIDs: map[int]string{},
-		ClubID:    map[int]string{},
+		PlayerIDs: make(map[int]string),
+		ClubID:    make(map[int]string, 1), // Capacity 1
 	}
 
 	db.AddTeam(t)

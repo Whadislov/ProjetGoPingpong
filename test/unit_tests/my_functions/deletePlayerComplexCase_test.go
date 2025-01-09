@@ -1,4 +1,4 @@
-package integrationtests_test
+package myfunctions_test
 
 import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDeleteClub(t *testing.T) {
+func TestDeletePlayerComplexCase(t *testing.T) {
 
 	p1 := mt.Player{
 		ID:      0,
@@ -35,23 +35,23 @@ func TestDeleteClub(t *testing.T) {
 		Players: map[int]*mt.Player{0: &p1},
 	}
 
-	expectedLenDClubs := 0
-	expectedLenPlayerClubIDs := 0
-	expectedLenTeamClubID := 0
+	expectedLenDPlayers := 0
+	expectedLenClubPlayerIDs := 0
+	expectedLenTeamPlayerIDs := 0
 
 	t.Run("Delete Club", func(t *testing.T) {
-		err := mf.DeleteClub(&c1, &d)
+		err := mf.DeletePlayer(&p1, &d)
 		if err != nil {
 			t.Errorf("Expected error %v, got %v", nil, err)
 		}
-		if len(d.Clubs) != expectedLenDClubs {
-			t.Errorf("Expected LenDClubs %v, got %v", expectedLenDClubs, len(d.Clubs))
+		if len(d.Players) != expectedLenDPlayers {
+			t.Errorf("Expected LenDClubs %v, got %v", expectedLenDPlayers, len(d.Players))
 		}
-		if len(p1.ClubIDs) != expectedLenPlayerClubIDs {
-			t.Errorf("Expected LenPlayerClubIDs %v, got %v", expectedLenPlayerClubIDs, len(p1.ClubIDs))
+		if len(c1.PlayerIDs) != expectedLenClubPlayerIDs {
+			t.Errorf("Expected LenPlayerClubIDs %v, got %v", expectedLenClubPlayerIDs, len(c1.PlayerIDs))
 		}
-		if len(t1.ClubID) != expectedLenTeamClubID {
-			t.Errorf("Expected LenPlayerClubIDs %v, got %v", expectedLenTeamClubID, len(t1.ClubID))
+		if len(t1.PlayerIDs) != expectedLenTeamPlayerIDs {
+			t.Errorf("Expected LenPlayerClubIDs %v, got %v", expectedLenTeamPlayerIDs, len(t1.PlayerIDs))
 		}
 	})
 }

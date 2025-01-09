@@ -1,15 +1,15 @@
 package myapp
 
 import (
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-
 	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // currentSelectionPagePtoT sets up the page for selecting teams and players.
@@ -145,19 +145,34 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 		w.SetContent(content)
 	}
 
+	// We do not want to have a button for all the players in the database. They have to meet some criterias : same club as the team, not already in the team
+	screenedPlayers := make(map[int]*mt.Player)
+
+	for _, player := range db.Players {
+		for playerClubID := range player.ClubIDs {
+			// Check if the player is in the same club as the team. If yes, continue checking if the player is not already in the team
+			_, ok := team.ClubID[playerClubID]
+			if ok {
+				// Check if the player is not already in the team. If not, we want a button of this player
+				_, ok := player.TeamIDs[team.ID]
+				if !ok {
+					screenedPlayers[player.ID] = player
+				}
+			}
+		}
+	}
+
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := SortMap(screenedPlayers)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		// Check if the player from the database is already in the team's player map. If not we want a button of this player
-		if _, ok := team.PlayerIDs[player.ID]; !ok {
-			playerButton := widget.NewButton(player.Name, func() {
-				selectedPlayers[player.ID] = player
-				w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, db, w, a))
-			})
-			playerButtons = append(playerButtons, playerButton)
-		}
+		playerButton := widget.NewButton(player.Name, func() {
+			selectedPlayers[player.ID] = player
+			w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, db, w, a))
+		})
+		playerButtons = append(playerButtons, playerButton)
+
 	}
 	content := container.NewVBox(
 		returnToPlayerSelectionPageButton,
@@ -197,22 +212,39 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.
 	pLabel := widget.NewLabel("Players 🏓")
 	playerButtons := []fyne.CanvasObject{}
 
+	// We do not want to have a button for all the players in the database. They have to meet some criterias : same club as the team, not already in the team, not already given a button
+	screenedPlayers := make(map[int]*mt.Player)
+
+	for _, player := range db.Players {
+		for playerClubID := range player.ClubIDs {
+			// Check if the player is in the same club as the team. If yes, continue checking if the player is not already in the team
+			_, ok := team.ClubID[playerClubID]
+			if ok {
+				// Check if the player is not already in the team. If not, continue checking if the player is not already in selected players
+				_, ok := player.TeamIDs[team.ID]
+				if !ok {
+					// Check if the player is not already in selected players. If not, keep this player
+					_, ok := alreadySelectedPlayers[player.ID]
+					if !ok {
+						screenedPlayers[player.ID] = player
+					}
+				}
+			}
+		}
+	}
+
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := SortMap(screenedPlayers)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		// Check if the player from the database is already in the team's player map. If not we want a button of this player
-		if _, ok := team.PlayerIDs[player.ID]; !ok {
-			if _, ok := alreadySelectedPlayers[player.ID]; !ok {
-				// Check if the player from team's player map is already in selected players. If not we want a button of this player
-				playerButton := widget.NewButton(player.Name, func() {
-					alreadySelectedPlayers[player.ID] = player
-					w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
-				})
-				playerButtons = append(playerButtons, playerButton)
-			}
-		}
+
+		playerButton := widget.NewButton(player.Name, func() {
+			alreadySelectedPlayers[player.ID] = player
+			w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
+		})
+		playerButtons = append(playerButtons, playerButton)
+
 	}
 
 	if len(playerButtons) == 0 {
@@ -237,7 +269,6 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, d
 	})
 
 	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
-	//pLabel := widget.NewLabel("Player current selection 🏓")
 
 	// "Sort the map of selected players" for a better button display
 	sortedSelectedPlayers := SortMap(selectedPlayers)
@@ -257,6 +288,9 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, d
 		successMsg := fmt.Sprintf("Team %v now has player(s) %v", team.Name, strHelper(playerNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Success", successMsg, w)
+
+		// Set the flag to true to indicate that the database has changed
+		HasChanged = true
 
 		// Return to empty page
 		w.SetContent(

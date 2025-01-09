@@ -2,20 +2,6 @@ package my_types
 
 import "fmt"
 
-/*
-type Player struct {
-	ID       int            `json:"id"`
-	Name     string         `json:"name"`
-	Age      int            `json:"age"`
-	Ranking  int            `json:"ranking"`
-	Material []string       `json:"material"`
-	TeamIDs  map[int]string `json:"team_id_list"`
-	ClubID   map[int]string            `json:"club_id_list"`
-	// map[team.ID] = team.Name, nil per default
-	// ClubID == -1 per default
-}
-*/
-
 // SetPlayerID sets the ID of the player.
 func (p *Player) SetPlayerID(id int) {
 	p.ID = id
@@ -48,6 +34,11 @@ func (p *Player) AddTeam(team *Team) error {
 	if _, ok := p.TeamIDs[team.ID]; ok {
 		return fmt.Errorf("player %v is already in team %v", p.Name, team.Name)
 	}
+
+	if p.TeamIDs == nil {
+		p.TeamIDs = make(map[int]string)
+	}
+
 	p.TeamIDs[team.ID] = team.Name
 	return nil
 }
@@ -58,6 +49,11 @@ func (p *Player) AddClub(club *Club) error {
 	if _, ok := p.ClubIDs[club.ID]; ok {
 		return fmt.Errorf("player %v is already in club %v", p.Name, club.Name)
 	}
+
+	if p.ClubIDs == nil {
+		p.ClubIDs = make(map[int]string)
+	}
+
 	p.ClubIDs[club.ID] = club.Name
 	return nil
 }

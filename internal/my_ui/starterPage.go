@@ -13,7 +13,7 @@ import (
 )
 
 // StarterPage creates the introduction page to the UI and the starter page
-func StarterPage(db *mt.Database, filename string) fyne.App {
+func StarterPage(db *mt.Database) fyne.App {
 	a := app.New()
 	mainWindow := a.NewWindow("TTapp")
 	mainWindow.Resize(fyne.NewSize(600, 400))
@@ -29,7 +29,7 @@ func StarterPage(db *mt.Database, filename string) fyne.App {
 
 	// Main page
 
-	mainMenuCanvasObject := MainPage(db, mainWindow, a)
+	mainPage := MainPage(db, mainWindow, a)
 
 	// Fade
 	go func() {
@@ -41,8 +41,8 @@ func StarterPage(db *mt.Database, filename string) fyne.App {
 		}
 
 		// go to main page with delay so that the menu is not directly shown
-		mainWindow.SetContent(mainMenuCanvasObject)
-		mainMenu := MainMenu(db, filename, mainWindow, a)
+		mainWindow.SetContent(mainPage)
+		mainMenu := MainMenu(db, mainWindow, a)
 		mainWindow.SetMainMenu(mainMenu)
 	}()
 	mainWindow.SetContent(welcomePage)

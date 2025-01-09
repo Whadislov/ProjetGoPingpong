@@ -48,7 +48,7 @@ func SelectionPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 		teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePfromT(db, w, a)) })
 		return container.NewVBox(teamSelectionPageButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently no player in any team"))
+		return container.NewVBox(widget.NewLabel("There is currently no players in any team"))
 	}
 }
 
@@ -273,6 +273,9 @@ func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[int]*mt.Player,
 			fmt.Println(successMsg)
 			dialog.ShowInformation("Success", successMsg, w)
 		}
+
+		// Set the flag to true to indicate that the database has changed
+		HasChanged = true
 
 		// Return to empty page
 		w.SetContent(

@@ -1,12 +1,14 @@
 package myapp
 
 import (
+	"image/color"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-	"image/color"
 )
 
 // DatabasePage sets up the page for showing players, teams, and clubs.

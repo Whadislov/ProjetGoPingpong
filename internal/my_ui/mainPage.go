@@ -1,13 +1,18 @@
 package myapp
 
 import (
+	"image/color"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-	"image/color"
 )
+
+// Tracks if the database has changed
+var HasChanged bool
 
 // MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
@@ -32,9 +37,14 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			w.SetContent(functionalityPage)
 		}),
 		widget.NewButton("Quit", func() {
-			a.Quit()
+			Quit(db, w, a, HasChanged)
 		}),
 	)
+
+	// Check for unsaved changes before quitting
+	w.SetCloseIntercept(func() {
+		Quit(db, w, a, HasChanged)
+	})
 
 	return mainPage
 

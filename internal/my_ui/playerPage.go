@@ -1,6 +1,8 @@
 package myapp
 
 import (
+	"fmt"
+	"slices"
 	"strconv"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
@@ -12,28 +14,34 @@ import (
 
 // PlayerInfos returns a container that displays all the infos of a player.
 func PlayerInfos(player *mt.Player) *fyne.Container {
-	nameStr := "Name: " + player.Name
-	ageStr := "Age: " + strconv.Itoa(player.Age)
-	materialStr := "Material: " + strHelper(player.Material)
-	rankingStr := "Ranking: " + strconv.Itoa(player.Ranking)
+	nameStr := "Name: 	" + player.Name
+	ageStr := "Age: 		" + strconv.Itoa(player.Age)
+	materialStr := fmt.Sprintf(
+		`Forehand:	%v
+Backhand:	%v
+Blade:	%v`,
+		player.Material[0], player.Material[1], player.Material[2])
+
+	rankingStr := "Ranking: 	" + strconv.Itoa(player.Ranking)
 	teams := []string{}
 	clubs := []string{}
 	for _, team := range player.TeamIDs {
 		teams = append(teams, team)
 	}
+	// Sort teams alphabetically
+	slices.Sort(teams)
 	for _, club := range player.ClubIDs {
 		clubs = append(clubs, club)
 	}
-	teamsStr := "Teams: " + strHelper(teams)
-	clubsStr := "Clubs: " + strHelper(clubs)
-	item := container.NewVBox(
-		widget.NewLabel(nameStr),
-		widget.NewLabel(ageStr),
-		widget.NewLabel(materialStr),
-		widget.NewLabel(rankingStr),
-		widget.NewLabel(teamsStr),
-		widget.NewLabel(clubsStr),
-	)
+	// Sort clubs alphabetically
+	slices.Sort(clubs)
+	teamsStr := "Teams: 	" + strHelper(teams)
+	clubsStr := "Clubs: 	" + strHelper(clubs)
+
+	text := fmt.Sprintln(nameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr) + fmt.Sprintln(materialStr)
+	text = text[:len(text)-1] // remove the last \n
+	textLabel := widget.NewLabel(text)
+	item := container.NewVBox(textLabel)
 	return item
 }
 

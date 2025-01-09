@@ -1,6 +1,9 @@
 package myapp
 
 import (
+	"fmt"
+	"slices"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
@@ -10,23 +13,30 @@ import (
 
 // TeamInfos returns a container that displays all the infos of a team.
 func TeamInfos(team *mt.Team) *fyne.Container {
-	wp := []fyne.CanvasObject{}
-	for _, player := range team.PlayerIDs {
-		wp = append(wp, widget.NewLabel(player))
-	}
-	itemp := widget.NewAccordionItem("Show players",
-		container.NewVBox(wp...),
-	)
-	playerAc := widget.NewAccordion(itemp)
 	clubs := []string{}
 	for _, club := range team.ClubID {
 		clubs = append(clubs, club)
 	}
-	clubStr := "Club: " + strHelper(clubs)
+	textC := fmt.Sprintln("Club:		" + strHelper(clubs))
+
+	// Sort players alphabetically
+	players := []string{}
+	for _, player := range team.PlayerIDs {
+		players = append(players, player)
+	}
+	slices.Sort(players)
+
+	// string that contains player names to display
+	textP := "Players:	"
+	for _, player := range players {
+		textP += fmt.Sprintln(player)
+		textP += "		"
+	}
+	text := textC + textP
+	text = text[:len(text)-1] // remove the last \n
 
 	item := container.NewVBox(
-		widget.NewLabel(clubStr),
-		playerAc,
+		widget.NewLabel(text),
 	)
 
 	return item

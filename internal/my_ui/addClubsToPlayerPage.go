@@ -1,15 +1,15 @@
 package myapp
 
 import (
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-
 	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // currentSelectionPageCtoP sets up the page for selecting players and clubs.
@@ -256,6 +256,9 @@ func selectedClubPageCtoP(player *mt.Player, selectedClub map[int]*mt.Club, db *
 		successMsg := fmt.Sprintf("Player %v now plays in club(s) %v", player.Name, strHelper(clubNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Succes", successMsg, w)
+
+		// Set the flag to true to indicate that the database has changed
+		HasChanged = true
 
 		// Return to empty page
 		w.SetContent(

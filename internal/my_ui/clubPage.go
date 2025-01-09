@@ -1,35 +1,56 @@
 package myapp
 
 import (
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"fmt"
+	"slices"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
-	// team list
-	wt := []fyne.CanvasObject{}
-	// player list
-	wp := []fyne.CanvasObject{}
+	// Sort players alphabetically
+	players := []string{}
 	for _, player := range club.PlayerIDs {
-		wp = append(wp, widget.NewLabel(player))
+		players = append(players, player)
 	}
+	slices.Sort(players)
+
+	// string that contains player names to display
+	pText := ""
+	for _, player := range players {
+		pText += fmt.Sprintln(player)
+	}
+	pText = pText[:len(pText)-1] // remove the last \n
 	itemp := widget.NewAccordionItem("Show players",
-		container.NewVBox(wp...),
+		container.NewVBox(widget.NewLabel(pText)),
 	)
 	playerAc := widget.NewAccordion(itemp)
+
+	// Sort teams alphabetically
+	teams := []string{}
 	for _, team := range club.TeamIDs {
-		wt = append(wt, widget.NewLabel(team))
+		teams = append(teams, team)
 	}
+	slices.Sort(teams)
+
+	// string that contains team names to display
+	tText := ""
+	for _, team := range teams {
+		tText += fmt.Sprintln(team)
+	}
+	tText = tText[:len(tText)-1] // remove the last \n
 	itemt := widget.NewAccordionItem("Show teams",
-		container.NewVBox(wt...),
+		container.NewVBox(widget.NewLabel(tText)),
 	)
 	teamAc := widget.NewAccordion(itemt)
 
-	content := container.NewVBox(
+	content := container.NewGridWithColumns(
+		2,
 		teamAc,
 		playerAc,
 	)

@@ -2,8 +2,12 @@ package my_functions
 
 import (
 	"fmt"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	"log"
+	"strings"
+	"unicode"
+	"unicode/utf8"
+
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // NewPlayer creates a new player with the given name and adds it to the database.
@@ -13,14 +17,26 @@ func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 		return nil, fmt.Errorf("player name cannot be empty")
 	}
 
+	for _, r := range playerName {
+		if r < 'A' || r > 'z' {
+			return nil, fmt.Errorf("player name can only contain letters")
+		}
+	}
+
+	playerName = strings.ToLower(playerName)
+	firstRune, size := utf8.DecodeRuneInString(playerName)
+	if firstRune != utf8.RuneError {
+		playerName = string(unicode.ToUpper(firstRune)) + playerName[size:]
+	}
+
 	p := &mt.Player{
 		ID:       len(db.Players),
 		Name:     playerName,
 		Age:      -1,
 		Ranking:  -1,
 		Material: DefaultPlayerMaterial(),
-		TeamIDs:  map[int]string{},
-		ClubIDs:  map[int]string{},
+		TeamIDs:  make(map[int]string),
+		ClubIDs:  make(map[int]string),
 	}
 
 	db.AddPlayer(p)

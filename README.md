@@ -1,13 +1,13 @@
 # ProjetGoPingpong
 
 ## Description
-ProjetGoPingpong is a table tennis score tracking application built with Go. It allows users to keep track of scores, manage players, and view match history.
+ProjetGoPingpong is a table tennis application built with Go. It allows users to manage players, teams and clubs.
 
 ## Features
 - Create a database of players, teams and clubs
 - Manage relationship between players, teams and clubs
 - User-friendly interface
-- More to come
+- More to come (match history, player performance)
 
 ## Installation
 1. Clone the repository:

@@ -1,10 +1,13 @@
 package myapp
 
 import (
+	"sort"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
+
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
-	"sort"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
@@ -67,4 +70,30 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 		}
 	}, w)
 	d.Show()
+}
+
+// Reinit the text of a widget entry
+func ReinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
+	entry.SetText("")
+	entry.SetPlaceHolder(entryHolder)
+}
+
+// Verify if the string is letters only
+func IsLettersOnly(s string) bool {
+	for _, r := range s {
+		if r < 'A' || r > 'z' {
+			return false
+		}
+	}
+	return true
+}
+
+// Verify if the string is numbers only
+func IsNumbersOnly(s string) bool {
+	for _, r := range s {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return true
 }

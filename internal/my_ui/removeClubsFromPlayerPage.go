@@ -48,7 +48,7 @@ func SelectionPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 		playerSelectionPageButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageCfromP(db, w, a)) })
 		return container.NewVBox(playerSelectionPageButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently no available club"))
+		return container.NewVBox(widget.NewLabel("There is currently no players in any club"))
 	}
 }
 
@@ -267,6 +267,9 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 		successMsg := fmt.Sprintf("%v is no longer playing in %v", player.Name, strHelper(clubNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Success", successMsg, w)
+
+		// Set the flag to true to indicate that the database has changed
+		HasChanged = true
 
 		// Return to empty page
 		w.SetContent(
