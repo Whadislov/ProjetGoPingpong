@@ -1,4 +1,4 @@
-package mysqlitedb
+package mydb
 
 import (
 	"database/sql"

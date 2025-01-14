@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -20,7 +20,7 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB()
+	golangDB, err := mdb.LoadDB()
 	if err != nil {
 		t.Fatalf("Error while loading golang database: %v", err)
 	}
