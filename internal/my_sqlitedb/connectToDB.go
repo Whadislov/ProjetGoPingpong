@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 // Database represents the SQLite database connection.
@@ -13,22 +15,35 @@ type Database struct {
 }
 
 // ConnectToDB initializes a connection to the SQLite database and creates it if it does not exist.
-func ConnectToDB(dbPath string) (*Database, error) {
+func ConnectToDB(dbType string) (*Database, error) {
+	var conn *sql.DB
+	var err error
 
-	// Check if the database file exists
-	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
-		// Create the database file
-		file, err := os.Create(dbPath)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create database file: %w", err)
+	if dbType == "sqlite" {
+
+		// Check if the database file exists
+		if _, err := os.Stat(sqliteDbPath); os.IsNotExist(err) {
+			// Create the database file
+			file, err := os.Create(sqliteDbPath)
+			if err != nil {
+				return nil, fmt.Errorf("failed to create database file: %w", err)
+			}
+			file.Close()
+			log.Println("Database file created successfully.")
 		}
-		file.Close()
-		log.Println("Database file created successfully.")
-	}
 
-	conn, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %w", err)
+		// Connect to sqlite DB
+		conn, err = sql.Open("sqlite3", sqliteDbPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to sqlite database: %w", err)
+		}
+
+	} else if dbType == "postgres" {
+		// Connect to postgres DB
+		conn, err = sql.Open("postgres", psqlInfo)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to postgres database: %w", err)
+		}
 	}
 
 	// Verify the connection
@@ -37,16 +52,16 @@ func ConnectToDB(dbPath string) (*Database, error) {
 		return nil, fmt.Errorf("failed to verify connection to database: %w", err)
 	}
 
-	log.Println("Connected to SQLite database successfully.")
-	sqldb := &Database{Conn: conn}
+	log.Printf("Connected to %v database successfully.", dbType)
+	db := &Database{Conn: conn}
 
 	// Create tables if they do not exist
-	err = sqldb.CreateTables()
+	err = db.CreateTables()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create tables: %w", err)
 	}
 
-	return sqldb, nil
+	return db, nil
 }
 
 // CreateTables creates the necessary tables in the database.

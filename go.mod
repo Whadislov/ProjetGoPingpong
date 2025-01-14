@@ -30,6 +30,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rymdport/portal v0.2.6 // indirect

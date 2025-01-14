@@ -1,5 +1,6 @@
 package mysqlitedb
 
+/*
 import (
 	"fmt"
 	"log"
@@ -7,19 +8,20 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+
 // SavePlayers saves players in the database.
 func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 	for _, player := range players {
 		query := `
         INSERT INTO players (id, name, age, ranking, forehand, backhand, blade)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-            name=excluded.name,
-            age=excluded.age,
-            ranking=excluded.ranking,
-            forehand=excluded.forehand,
-            backhand=excluded.backhand,
-            blade=excluded.blade;
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name,
+            age = EXCLUDED.age,
+            ranking = EXCLUDED.ranking,
+            forehand = EXCLUDED.forehand,
+            backhand = EXCLUDED.backhand,
+            blade = EXCLUDED.blade;
         `
 		_, err := db.Conn.Exec(query, player.ID, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2])
 		if err != nil {
@@ -34,9 +36,9 @@ func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
 	for _, team := range teams {
 		query := `
         INSERT INTO teams (id, name)
-        VALUES (?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-            name=excluded.name;
+        VALUES ($1, $2)
+        ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name;
         `
 		_, err := db.Conn.Exec(query, team.ID, team.Name)
 		if err != nil {
@@ -51,9 +53,9 @@ func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
 	for _, club := range clubs {
 		query := `
         INSERT INTO clubs (id, name)
-        VALUES (?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-            name=excluded.name;
+        VALUES ($1, $2)
+        ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name;
         `
 		_, err := db.Conn.Exec(query, club.ID, club.Name)
 		if err != nil {
@@ -68,8 +70,9 @@ func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
 	for _, player := range players {
 		for clubID := range player.ClubIDs {
 			query := `
-            INSERT OR REPLACE INTO player_club (player_id, club_id)
-            VALUES (?, ?);
+            INSERT INTO player_club (player_id, club_id)
+            VALUES ($1, $2)
+            ON CONFLICT (player_id, club_id) DO NOTHING;
             `
 			_, err := db.Conn.Exec(query, player.ID, clubID)
 			if err != nil {
@@ -85,8 +88,9 @@ func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
 	for _, player := range players {
 		for teamID := range player.TeamIDs {
 			query := `
-            INSERT OR REPLACE INTO player_team (player_id, team_id)
-            VALUES (?, ?);
+            INSERT INTO player_team (player_id, team_id)
+            VALUES ($1, $2)
+            ON CONFLICT (player_id, team_id) DO NOTHING;
             `
 			_, err := db.Conn.Exec(query, player.ID, teamID)
 			if err != nil {
@@ -102,8 +106,9 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 	for _, team := range teams {
 		for clubID := range team.ClubID {
 			query := `
-            INSERT OR REPLACE INTO team_club (team_id, club_id)
-            VALUES (?, ?);
+            INSERT INTO team_club (team_id, club_id)
+            VALUES ($1, $2)
+            ON CONFLICT (team_id, club_id) DO NOTHING;
             `
 			_, err := db.Conn.Exec(query, team.ID, clubID)
 			if err != nil {
@@ -114,17 +119,17 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 	return nil
 }
 
-// SaveDB saves the database. (serialize)
+// SaveDB saves the database (serialize).
 func SaveDB(golangDB *mt.Database) error {
 	var err error
 
-	// We can save multiple times, but we want this part of code to be executed only once. This bloc sets up a new database
+	// Initialize the database only once.
 	initOnce.Do(func() {
 		log.Println("Database will be cleared and reloaded.")
-		DeleteDB(sqliteDbPath)
-		sqlDB, err = ConnectToDB(sqliteDbPath)
+		DeleteDB(postgresDbPath)
+		sqlDB, err = ConnectToDB(postgresDbPath)
 		if err != nil {
-			fmt.Println("Error while connecting to sql database:", err)
+			fmt.Println("Error while connecting to postgres database:", err)
 		}
 	})
 
@@ -156,3 +161,4 @@ func SaveDB(golangDB *mt.Database) error {
 	sqlDB.Close()
 	return nil
 }
+*/

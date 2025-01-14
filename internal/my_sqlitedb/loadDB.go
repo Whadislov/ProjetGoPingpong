@@ -151,54 +151,44 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 }
 
 // LoadDB loads the database.
-func LoadDB(DBtype string) (*mt.Database, error) {
-
-	if DBtype == "sqlite" {
-
-		db, err := ConnectToDB(DbPath)
-		if err != nil {
-			fmt.Println("Error while connecting to sql database:", err)
-			return nil, err
-		}
-
-		players, err := db.LoadPlayers()
-		if err != nil {
-			return nil, err
-		}
-		teams, err := db.LoadTeams()
-		if err != nil {
-			return nil, err
-		}
-		clubs, err := db.LoadClubs()
-		if err != nil {
-			return nil, err
-		}
-		err = db.LoadPlayerTeams(players, teams)
-		if err != nil {
-			return nil, err
-		}
-		err = db.LoadPlayerClubs(players, clubs)
-		if err != nil {
-			return nil, err
-		}
-		err = db.LoadTeamClubs(teams, clubs)
-		if err != nil {
-			return nil, err
-		}
-		golangDB := &mt.Database{
-			Players: players,
-			Teams:   teams,
-			Clubs:   clubs,
-		}
-		db.Close()
-		return golangDB, nil
-
-	} else if DBtype == "postgres" {
-		return nil, nil
-	} else {
-		err := fmt.Errorf("database type is not recognized")
+func LoadDB(dbType string) (*mt.Database, error) {
+	db, err := ConnectToDB(dbType)
+	if err != nil {
+		fmt.Println("Error while connecting to sql database:", err)
 		return nil, err
 	}
+
+	players, err := db.LoadPlayers()
+	if err != nil {
+		return nil, err
+	}
+	teams, err := db.LoadTeams()
+	if err != nil {
+		return nil, err
+	}
+	clubs, err := db.LoadClubs()
+	if err != nil {
+		return nil, err
+	}
+	err = db.LoadPlayerTeams(players, teams)
+	if err != nil {
+		return nil, err
+	}
+	err = db.LoadPlayerClubs(players, clubs)
+	if err != nil {
+		return nil, err
+	}
+	err = db.LoadTeamClubs(teams, clubs)
+	if err != nil {
+		return nil, err
+	}
+	golangDB := &mt.Database{
+		Players: players,
+		Teams:   teams,
+		Clubs:   clubs,
+	}
+	db.Close()
+	return golangDB, nil
 }
 
 // Choose between Sqlite for local developement or POSTgreSQL for the production
