@@ -1,7 +1,8 @@
-package mysqlitedb
+package mydb
 
 import (
 	"fmt"
+	"log"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -152,10 +153,9 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 
 // LoadDB loads the database.
 func LoadDB() (*mt.Database, error) {
-
-	db, err := ConnectToDB(DbPath)
+	db, err := ConnectToDB()
 	if err != nil {
-		fmt.Println("Error while connecting to sql database:", err)
+		fmt.Println("Error while connecting to postgresql database:", err)
 		return nil, err
 	}
 
@@ -188,6 +188,9 @@ func LoadDB() (*mt.Database, error) {
 		Teams:   teams,
 		Clubs:   clubs,
 	}
+	log.Println("Database loaded successfully")
 	db.Close()
 	return golangDB, nil
 }
+
+// Choose between Sqlite for local developement or POSTgreSQL for the production

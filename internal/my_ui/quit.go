@@ -6,7 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
@@ -17,7 +17,7 @@ func Quit(db *mt.Database, w fyne.Window, a fyne.App, HasChanged bool) {
 	if HasChanged {
 		dialog.ShowConfirm("Unsaved Changes", "You have unsaved changes. Do you want to save them before quitting?", func(confirm bool) {
 			if confirm {
-				err := msql.SaveDB(db)
+				err := mdb.SaveDB(db)
 				if err != nil {
 					dialog.ShowError(err, w)
 				}

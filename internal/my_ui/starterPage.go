@@ -2,6 +2,7 @@ package myapp
 
 import (
 	"image/color"
+	"log"
 	"time"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
@@ -15,6 +16,14 @@ import (
 // StarterPage creates the introduction page to the UI and the starter page
 func StarterPage(db *mt.Database) fyne.App {
 	a := app.New()
+
+	// Set the icon
+	icon, err := fyne.LoadResourceFromPath("cmd/TTapp/Icon.png")
+	if err != nil {
+		log.Printf("Failed to load icon: %v", err)
+	}
+	a.SetIcon(icon)
+
 	mainWindow := a.NewWindow("TTapp")
 	mainWindow.Resize(fyne.NewSize(600, 400))
 
@@ -28,7 +37,6 @@ func StarterPage(db *mt.Database) fyne.App {
 	welcomePage := container.NewCenter(welcomeText)
 
 	// Main page
-
 	mainPage := MainPage(db, mainWindow, a)
 
 	// Fade
@@ -41,10 +49,12 @@ func StarterPage(db *mt.Database) fyne.App {
 		}
 
 		// go to main page with delay so that the menu is not directly shown
+		log.Println("Transitioning to main page")
 		mainWindow.SetContent(mainPage)
 		mainMenu := MainMenu(db, mainWindow, a)
 		mainWindow.SetMainMenu(mainMenu)
 	}()
+	log.Println("Displaying welcome page")
 	mainWindow.SetContent(welcomePage)
 	mainWindow.SetMainMenu(nil)
 	mainWindow.ShowAndRun()

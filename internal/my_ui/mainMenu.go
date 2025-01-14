@@ -3,7 +3,7 @@ package myapp
 import (
 	"fyne.io/fyne/v2"
 
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
@@ -14,7 +14,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	menu1Item1 := fyne.NewMenuItem("Show Main page", func() { w.SetContent(mainPage) })
 	menu1Item2 := fyne.NewMenuItem("Save changes", func() {
-		msql.SaveDB(db)
+		mdb.SaveDB(db)
 		HasChanged = false
 	})
 
