@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	//"log"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
 	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
@@ -13,23 +13,20 @@ import (
 func main() {
 
 	// Load the configuration file
-	config, err := api.LoadConfig("config.json")
-	if err != nil {
-		log.Printf("Error loading config: %v", err)
-	}
+	/*
+		config, err := api.LoadConfig("config.json")
+		if err != nil {
+			log.Printf("Error loading config: %v", err)
+		}
+	*/
 
-	var onProduction bool
-	var dbtype string
-
-	// Choose between postgres or sqlite
-	if onProduction {
-		dbtype = "postgres"
-	} else {
-		dbtype = "sqlite"
+	config := &api.Config{
+		ServerAddress: "localhost",
+		ServerPort:    "7000",
 	}
 
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB(dbtype)
+	golangDB, err := msql.LoadDB()
 	if err != nil {
 		fmt.Println("Error while loading golang database:", err)
 		return
@@ -40,7 +37,7 @@ func main() {
 }
 
 /*
-// Debug for fyne serve --port 7000 --sourceDir cmd/TTapp
+// Debug for fyne serve --port 8000 --sourceDir cmd/TTapp
 
 import (
 	"log"

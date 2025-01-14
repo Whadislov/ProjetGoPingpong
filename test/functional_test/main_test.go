@@ -20,7 +20,7 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB("sqlite")
+	golangDB, err := msql.LoadDB()
 	if err != nil {
 		t.Fatalf("Error while loading golang database: %v", err)
 	}

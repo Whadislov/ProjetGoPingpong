@@ -2,6 +2,7 @@ package mysqlitedb
 
 import (
 	"fmt"
+	"log"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
@@ -151,10 +152,10 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 }
 
 // LoadDB loads the database.
-func LoadDB(dbType string) (*mt.Database, error) {
-	db, err := ConnectToDB(dbType)
+func LoadDB() (*mt.Database, error) {
+	db, err := ConnectToDB()
 	if err != nil {
-		fmt.Println("Error while connecting to sql database:", err)
+		fmt.Println("Error while connecting to postgresql database:", err)
 		return nil, err
 	}
 
@@ -187,6 +188,7 @@ func LoadDB(dbType string) (*mt.Database, error) {
 		Teams:   teams,
 		Clubs:   clubs,
 	}
+	log.Println("Database loaded successfully")
 	db.Close()
 	return golangDB, nil
 }
