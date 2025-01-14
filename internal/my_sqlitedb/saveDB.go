@@ -117,8 +117,8 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 	return nil
 }
 
-func (db *Database) ResetDb() error {
-	_, err := db.Conn.Exec(resetScript)
+func (db *Database) ResetTables() error {
+	_, err := db.Conn.Exec(resetTablesQuery)
 	if err != nil {
 		return fmt.Errorf("failed to reset database: %w", err)
 	}
@@ -133,7 +133,7 @@ func SaveDB(golangDB *mt.Database) error {
 	if err != nil {
 		fmt.Println("Error while connecting to postgres database:", err)
 	}
-	sqlDB.ResetDb()
+	sqlDB.ResetTables()
 
 	err = sqlDB.SavePlayers(golangDB.Players)
 	if err != nil {

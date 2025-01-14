@@ -2,10 +2,8 @@ package mysqlitedb
 
 import (
 	"fmt"
-	//"sync"
 )
 
-// var initOnce sync.Once
 var sqlDB *Database
 
 // Const for PostgreSQL
@@ -22,18 +20,15 @@ var psqlInfo string = fmt.Sprintf("host=%s port=%d user=%s "+
 	"password=%s dbname=%s sslmode=disable",
 	host, port, user, password, dbName)
 
-// Reset script (because we can't delete things from the database)
-var resetScript string = `
+// Query script for table creation
+// player_club = table relation for players and clubs
+// player_team = table relation for players and teams
+// team_club = table relation for teams and clubs
+
+var createTablesQuery string = `
 BEGIN;
 
-DROP TABLE IF EXISTS player_team CASCADE;
-DROP TABLE IF EXISTS player_club CASCADE;
-DROP TABLE IF EXISTS team_club CASCADE;
-DROP TABLE IF EXISTS players CASCADE;
-DROP TABLE IF EXISTS teams CASCADE;
-DROP TABLE IF EXISTS clubs CASCADE;
-
-CREATE TABLE players (
+CREATE TABLE IF NOT EXISTS players (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     age INTEGER,
@@ -43,17 +38,17 @@ CREATE TABLE players (
     blade TEXT
 );
 
-CREATE TABLE teams (
+CREATE TABLE IF NOT EXISTS teams (
 	id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL
 );
 
-CREATE TABLE clubs (
+CREATE TABLE IF NOT EXISTS clubs (
 	id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL
 );
 
-CREATE TABLE player_club (
+CREATE TABLE IF NOT EXISTS player_club (
 	player_id INTEGER NOT NULL,
 	club_id INTEGER NOT NULL,
 	PRIMARY KEY (player_id, club_id),
@@ -78,3 +73,16 @@ CREATE TABLE IF NOT EXISTS team_club (
 );
 
 COMMIT;`
+
+// Query script for table reset because we can't delete elements from the database directly
+// Remove "BEGIN;" from the other script
+var resetTablesQuery string = `
+BEGIN;
+
+DROP TABLE IF EXISTS player_team CASCADE;
+DROP TABLE IF EXISTS player_club CASCADE;
+DROP TABLE IF EXISTS team_club CASCADE;
+DROP TABLE IF EXISTS players CASCADE;
+DROP TABLE IF EXISTS teams CASCADE;
+DROP TABLE IF EXISTS clubs CASCADE;
+` + createTablesQuery[6:]

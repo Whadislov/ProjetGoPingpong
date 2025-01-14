@@ -59,74 +59,9 @@ func ConnectToDB() (*Database, error) {
 
 // CreateTables creates the necessary tables in the database for PostgreSQL.
 func (db *Database) CreateTables() error {
-	createPlayersTable := `
-    CREATE TABLE IF NOT EXISTS players (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        age INTEGER,
-        ranking INTEGER,
-        forehand TEXT,
-        backhand TEXT,
-        blade TEXT
-    );`
-
-	createTeamsTable := `
-    CREATE TABLE IF NOT EXISTS teams (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL
-    );`
-
-	createClubsTable := `
-    CREATE TABLE IF NOT EXISTS clubs (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL
-    );`
-
-	// Table relation for players and clubs
-	createPlayerClubTable := `
-    CREATE TABLE IF NOT EXISTS player_club (
-        player_id INTEGER NOT NULL,
-        club_id INTEGER NOT NULL,
-        PRIMARY KEY (player_id, club_id),
-        FOREIGN KEY (player_id) REFERENCES players(id),
-        FOREIGN KEY (club_id) REFERENCES clubs(id)
-    );`
-
-	// Table relation for players and teams
-	createPlayerTeamTable := `
-    CREATE TABLE IF NOT EXISTS player_team (
-        player_id INTEGER NOT NULL,
-        team_id INTEGER NOT NULL,
-        PRIMARY KEY (player_id, team_id),
-        FOREIGN KEY (player_id) REFERENCES players(id),
-        FOREIGN KEY (team_id) REFERENCES teams(id)
-    );`
-
-	// Table relation for clubs and teams
-	createTeamClubTable := `
-    CREATE TABLE IF NOT EXISTS team_club (
-        team_id INTEGER NOT NULL,
-        club_id INTEGER NOT NULL,
-        PRIMARY KEY (team_id, club_id),
-        FOREIGN KEY (team_id) REFERENCES teams(id),
-        FOREIGN KEY (club_id) REFERENCES clubs(id)
-    );`
-
-	// Execute the table creation queries
-	queries := []string{
-		createPlayersTable,
-		createTeamsTable,
-		createClubsTable,
-		createPlayerClubTable,
-		createPlayerTeamTable,
-		createTeamClubTable,
-	}
-
-	for _, query := range queries {
-		_, err := db.Conn.Exec(query)
-		if err != nil {
-			return fmt.Errorf("failed to execute query: %w", err)
-		}
+	_, err := db.Conn.Exec(createTablesQuery)
+	if err != nil {
+		return fmt.Errorf("failed to reset database: %w", err)
 	}
 	return nil
 }
