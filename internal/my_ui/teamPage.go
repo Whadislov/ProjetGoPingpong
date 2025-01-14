@@ -13,24 +13,36 @@ import (
 
 // TeamInfos returns a container that displays all the infos of a team.
 func TeamInfos(team *mt.Team) *fyne.Container {
-	clubs := []string{}
-	for _, club := range team.ClubID {
-		clubs = append(clubs, club)
-	}
-	textC := fmt.Sprintln("Club:		" + strHelper(clubs))
 
-	// Sort players alphabetically
-	players := []string{}
-	for _, player := range team.PlayerIDs {
-		players = append(players, player)
-	}
-	slices.Sort(players)
+	var textC string
+	var textP string
 
-	// string that contains player names to display
-	textP := "Players:	"
-	for _, player := range players {
-		textP += fmt.Sprintln(player)
-		textP += "		"
+	if len(team.ClubID) == 0 {
+		textC = "This team has no club."
+	} else {
+		clubs := []string{}
+		for _, club := range team.ClubID {
+			clubs = append(clubs, club)
+		}
+		textC = fmt.Sprintln("Club:		" + strHelper(clubs))
+	}
+
+	if len(team.PlayerIDs) == 0 {
+		textP = "This team has no player.\n"
+	} else {
+		// Sort players alphabetically
+		players := []string{}
+		for _, player := range team.PlayerIDs {
+			players = append(players, player)
+		}
+		slices.Sort(players)
+
+		// string that contains player names to display
+		textP = "Players:	"
+		for _, player := range players {
+			textP += fmt.Sprintln(player)
+			textP += "		"
+		}
 	}
 	text := textC + textP
 	text = text[:len(text)-1] // remove the last \n
