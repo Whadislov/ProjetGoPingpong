@@ -13,46 +13,59 @@ import (
 
 // ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
-	// Sort players alphabetically
-	players := []string{}
-	for _, player := range club.PlayerIDs {
-		players = append(players, player)
-	}
-	slices.Sort(players)
 
-	// string that contains player names to display
-	pText := ""
-	for _, player := range players {
-		pText += fmt.Sprintln(player)
-	}
-	pText = pText[:len(pText)-1] // remove the last \n
-	itemp := widget.NewAccordionItem("Show players",
-		container.NewVBox(widget.NewLabel(pText)),
-	)
-	playerAc := widget.NewAccordion(itemp)
+	var pCanvasObjet fyne.CanvasObject
+	var tCanvasObjet fyne.CanvasObject
 
-	// Sort teams alphabetically
-	teams := []string{}
-	for _, team := range club.TeamIDs {
-		teams = append(teams, team)
-	}
-	slices.Sort(teams)
+	if len(club.PlayerIDs) == 0 {
+		pCanvasObjet = widget.NewLabel("There is currently 0 player in this club")
+	} else {
+		// Sort players alphabetically
+		players := []string{}
+		for _, player := range club.PlayerIDs {
+			players = append(players, player)
+		}
+		slices.Sort(players)
 
-	// string that contains team names to display
-	tText := ""
-	for _, team := range teams {
-		tText += fmt.Sprintln(team)
+		// string that contains player names to display
+		pText := ""
+		for _, player := range players {
+			pText += fmt.Sprintln(player)
+		}
+		pText = pText[:len(pText)-1] // remove the last \n
+		itemp := widget.NewAccordionItem("Show players",
+			container.NewVBox(widget.NewLabel(pText)),
+		)
+		pCanvasObjet = widget.NewAccordion(itemp)
 	}
-	tText = tText[:len(tText)-1] // remove the last \n
-	itemt := widget.NewAccordionItem("Show teams",
-		container.NewVBox(widget.NewLabel(tText)),
-	)
-	teamAc := widget.NewAccordion(itemt)
+
+	if len(club.TeamIDs) == 0 {
+		tCanvasObjet = widget.NewLabel("There is currently 0 team in this club")
+	} else {
+
+		// Sort teams alphabetically
+		teams := []string{}
+		for _, team := range club.TeamIDs {
+			teams = append(teams, team)
+		}
+		slices.Sort(teams)
+
+		// string that contains team names to display
+		tText := ""
+		for _, team := range teams {
+			tText += fmt.Sprintln(team)
+		}
+		tText = tText[:len(tText)-1] // remove the last \n
+		itemt := widget.NewAccordionItem("Show teams",
+			container.NewVBox(widget.NewLabel(tText)),
+		)
+		tCanvasObjet = widget.NewAccordion(itemt)
+	}
 
 	content := container.NewGridWithColumns(
 		2,
-		teamAc,
-		playerAc,
+		tCanvasObjet,
+		pCanvasObjet,
 	)
 	return content
 }
