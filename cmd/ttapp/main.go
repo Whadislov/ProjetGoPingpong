@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	//"log"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -26,10 +25,9 @@ func main() {
 	}
 
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB()
+	golangDB, err := mdb.LoadDB()
 	if err != nil {
-		fmt.Println("Error while loading golang database:", err)
-		return
+		panic(err)
 	}
 
 	go api.RunApi(golangDB, config)
