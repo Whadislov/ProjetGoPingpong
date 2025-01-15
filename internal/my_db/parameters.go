@@ -15,10 +15,19 @@ const (
 	dbName   = "ttapp_database"
 )
 
-// PostgreSQL info
-var psqlInfo string = fmt.Sprintf("host=%s port=%d user=%s "+
-	"password=%s dbname=%s sslmode=disable",
-	host, port, user, password, dbName)
+var psqlInfo string
+
+func StartOption(s string) {
+	if s == "local" {
+		// PostgreSQL info
+		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+
+			"password=%s dbname=%s sslmode=disable",
+			host, port, user, password, dbName)
+	} else if s == "browser" {
+		// Neon server
+		psqlInfo = "postgresql://ttapp_database_owner:7MopfqD4SIyh@ep-white-unit-a2ap77if.eu-central-1.aws.neon.tech/ttapp_database?sslmode=require"
+	}
+}
 
 // Query script for table creation
 // player_club = table relation for players and clubs

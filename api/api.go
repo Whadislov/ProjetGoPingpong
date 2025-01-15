@@ -9,9 +9,8 @@ import (
 )
 
 func RunApi(db *mt.Database, config *Config) {
-	http.HandleFunc("/players", GetPlayers(db))
-	http.HandleFunc("/teams", GetTeams(db))
-	http.HandleFunc("/clubs", GetClubs(db))
+	http.Handle("/api/load-database", corsMiddleware(http.HandlerFunc(loadDatabaseHandler)))
+	http.Handle("/api/save-database", corsMiddleware(http.HandlerFunc(saveDatabaseHandler)))
 
 	address := fmt.Sprintf("%s:%s", config.ServerAddress, config.ServerPort)
 	log.Printf("Server started on %s", address)
