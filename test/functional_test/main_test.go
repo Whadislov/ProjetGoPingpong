@@ -27,7 +27,7 @@ func TestMainFunction(t *testing.T) {
 
 	// Start the API server in a separate goroutine
 	go func() {
-		api.RunApi(golangDB, config)
+		api.RunApi(config)
 	}()
 
 	// Allow some time for the server to start

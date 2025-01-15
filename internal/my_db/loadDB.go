@@ -189,7 +189,7 @@ func LoadDB() (*mt.Database, error) {
 		Clubs:   clubs,
 	}
 	log.Println("Database loaded successfully")
-	db.Close()
+	defer db.Close()
 	return golangDB, nil
 }
 
