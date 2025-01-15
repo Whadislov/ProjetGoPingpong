@@ -34,12 +34,11 @@ func setupMockConfig() *api.Config {
 }
 
 func TestRunApi(t *testing.T) {
-	db := setupMockDB()
 	config := setupMockConfig()
 
 	// Start the API server in a separate goroutine
 	go func() {
-		api.RunApi(db, config)
+		api.RunApi(config)
 	}()
 
 	// Allow some time for the server to start

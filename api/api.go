@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-func RunApi(db *mt.Database, config *Config) {
+func RunApi(config *Config) {
 	http.Handle("/api/load-database", corsMiddleware(http.HandlerFunc(loadDatabaseHandler)))
 	http.Handle("/api/save-database", corsMiddleware(http.HandlerFunc(saveDatabaseHandler)))
 
