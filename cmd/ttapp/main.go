@@ -1,13 +1,15 @@
 package main
 
 import (
-	//"sync"
-	//"time"
+	"log"
+	"net/http"
+	"sync"
+	"time"
 
-	//"github.com/Whadislov/ProjetGoPingPong/api"
+	"github.com/Whadislov/ProjetGoPingPong/api"
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	//mf "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	//mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -61,20 +63,53 @@ func main() {
 				panic(err)
 			}
 		*/
+		/*
+			golangDB := mt.Database{
+				Players: map[int]*mt.Player{
+					0: {ID: 0, Name: "Julien", Age: 27, Ranking: 1632, Material: []string{"Forehand", "Backhand", "Blade"}},
+				},
+				Teams: map[int]*mt.Team{
+					0: {ID: 0, Name: "Mannschaft 2"},
+				},
+				Clubs: map[int]*mt.Club{
+					0: {ID: 0, Name: "TSG Heilbronn"},
+				},
+			}
+		*/
 
-		golangDB := mt.Database{
-			Players: map[int]*mt.Player{
-				0: {ID: 0, Name: "Julien", Age: 27, Ranking: 1632, Material: []string{"Forehand", "Backhand", "Blade"}},
-			},
-			Teams: map[int]*mt.Team{
-				0: {ID: 0, Name: "Mannschaft 2"},
-			},
-			Clubs: map[int]*mt.Club{
-				0: {ID: 0, Name: "TSG Heilbronn"},
-			},
-		}
+		var wg sync.WaitGroup
 
-		mu.Display(&golangDB)
+		// API server (8001)
+		apiReady := make(chan struct{})
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			config := api.Config{
+				ServerAddress: "localhost",
+				ServerPort:    "8001",
+			}
+			// Start API
+			go api.RunApi(&config)
+			// Wait for the API to be ready
+			time.Sleep(1 * time.Second)
+			close(apiReady)
+		}()
+
+		// Web App (8000)
+		wg.Add(1)
+
+		go func() {
+			<-apiReady
+			defer wg.Done()
+			log.Println("Starting app server on :8000")
+			err := http.ListenAndServe(":8000", http.FileServer(http.Dir("./wasm")))
+			if err != nil {
+				log.Fatalf("App server error: %v", err)
+			}
+		}()
+
+		wg.Wait()
+
 	}
 
 	// Start app locally
