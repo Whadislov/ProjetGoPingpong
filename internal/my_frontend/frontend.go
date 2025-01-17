@@ -49,3 +49,14 @@ func SaveDB(golangDB *mt.Database) error {
 	log.Println("Database saves successfully")
 	return nil
 }
+
+// Checks if the API is launched
+func IsApiReady() bool {
+	resp, err := http.Get("http://localhost:7000/")
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+
+	return true
+}
