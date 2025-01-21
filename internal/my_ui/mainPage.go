@@ -28,18 +28,37 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	mainText.Alignment = fyne.TextAlignCenter
 	mainText.TextSize = 32
 
-	mainPage := container.NewVBox(
-		mainText,
-		widget.NewButton("Show database", func() {
-			w.SetContent(databasePage)
-		}),
-		widget.NewButton("Show functionalities", func() {
-			w.SetContent(functionalityPage)
-		}),
-		widget.NewButton("Quit", func() {
-			Quit(db, w, a, HasChanged)
-		}),
-	)
+	showDBButton := widget.NewButton("Show database", func() {
+		w.SetContent(databasePage)
+	})
+
+	showFuncButton := widget.NewButton("Show functionalities", func() {
+		w.SetContent(functionalityPage)
+	})
+
+	quitButton := widget.NewButton("Quit", func() {
+		Quit(db, w, a, HasChanged)
+	})
+
+	// Initialize
+	var mainPage *fyne.Container
+
+	if appStartOption == "local" {
+		mainPage = container.NewVBox(
+			mainText,
+			showDBButton,
+			showFuncButton,
+			quitButton,
+		)
+
+	} else if appStartOption == "browser" {
+		// Remove the quit button
+		mainPage = container.NewVBox(
+			mainText,
+			showDBButton,
+			showFuncButton,
+		)
+	}
 
 	// Check for unsaved changes before quitting
 	w.SetCloseIntercept(func() {

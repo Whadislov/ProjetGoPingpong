@@ -46,7 +46,7 @@ func SaveDB(golangDB *mt.Database) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("server error: %s", resp.Status)
 	}
-	log.Println("Database saves successfully")
+	log.Println("Database saved successfully")
 	return nil
 }
 
