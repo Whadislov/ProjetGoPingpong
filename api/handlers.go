@@ -53,3 +53,15 @@ func saveDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Database saved successfully"))
 }
+
+// Handler for saving the local changes to the database
+func isApiReady(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received request to check if API is ready")
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("API is ready !"))
+}

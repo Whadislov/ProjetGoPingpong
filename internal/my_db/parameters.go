@@ -17,7 +17,7 @@ const (
 
 var psqlInfo string
 
-func StartOption(s string) {
+func AppStartOption(s string) {
 	if s == "local" {
 		// PostgreSQL info
 		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+

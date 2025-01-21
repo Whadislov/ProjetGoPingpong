@@ -7,6 +7,7 @@ import (
 )
 
 func RunApi(config *Config) {
+	http.Handle("/api", corsMiddleware(http.HandlerFunc(isApiReady)))
 	http.Handle("/api/load-database", corsMiddleware(http.HandlerFunc(loadDatabaseHandler)))
 	http.Handle("/api/save-database", corsMiddleware(http.HandlerFunc(saveDatabaseHandler)))
 
