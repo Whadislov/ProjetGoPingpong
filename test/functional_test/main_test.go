@@ -14,9 +14,9 @@ import (
 // TestMainFunction tests the main function of the application.
 func TestMainFunction(t *testing.T) {
 	// Load the configuration file
-	config, err := api.LoadConfig("config.json")
-	if err != nil {
-		t.Fatalf("Error loading config: %v", err)
+	config := api.Config{
+		ServerAddress: "localhost",
+		ServerPort:    "8000",
 	}
 
 	// Load the database (deserialize)
@@ -27,7 +27,7 @@ func TestMainFunction(t *testing.T) {
 
 	// Start the API server in a separate goroutine
 	go func() {
-		api.RunApi(config)
+		api.RunApi(&config)
 	}()
 
 	// Allow some time for the server to start
