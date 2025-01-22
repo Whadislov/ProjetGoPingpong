@@ -1,8 +1,6 @@
 package myapp
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -24,7 +22,8 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	functionalityPage := FunctionalityPage(db, w, a)
 
 	// Main page design
-	mainText := canvas.NewText("TTapp 🏓", color.RGBA{R: 0, G: 0, B: 0, A: 255})
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	mainText := canvas.NewText("TTapp", themeColor)
 	mainText.Alignment = fyne.TextAlignCenter
 	mainText.TextSize = 32
 

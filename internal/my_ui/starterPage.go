@@ -18,7 +18,7 @@ func StarterPage(db *mt.Database) fyne.App {
 	a := app.New()
 
 	// Set the icon
-	icon, err := fyne.LoadResourceFromPath("cmd/TTapp/Icon.png")
+	icon, err := fyne.LoadResourceFromPath("cmd/app/Icon.png")
 	if err != nil {
 		log.Printf("Failed to load icon: %v", err)
 	}
@@ -31,7 +31,8 @@ func StarterPage(db *mt.Database) fyne.App {
 	mainWindow.CenterOnScreen()
 
 	// Welcome page
-	welcomeText := canvas.NewText("Welcome to TTapp 🏓", color.RGBA{R: 0, G: 0, B: 0, A: 255})
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	welcomeText := canvas.NewText("Welcome to TTapp", themeColor)
 	welcomeText.Alignment = fyne.TextAlignCenter
 	welcomeText.TextSize = 32
 	welcomePage := container.NewCenter(welcomeText)
@@ -42,12 +43,9 @@ func StarterPage(db *mt.Database) fyne.App {
 	// Fade
 	go func() {
 		time.Sleep(1 * time.Second)
-		for alpha := 255; alpha >= 0; alpha -= 5 {
-			welcomeText.Color = color.RGBA{R: 0, G: 0, B: 0, A: uint8(alpha)} // Opacity
-			time.Sleep(20 * time.Millisecond)                                 // Pause to simulate fade
-			welcomeText.Refresh()
+		if appStartOption == "local" {
+			fadeText(welcomeText, themeColor)
 		}
-
 		// go to main page with delay so that the menu is not directly shown
 		log.Println("Transitioning to main page")
 		mainWindow.SetContent(mainPage)
@@ -59,4 +57,28 @@ func StarterPage(db *mt.Database) fyne.App {
 	mainWindow.SetMainMenu(nil)
 	mainWindow.ShowAndRun()
 	return a
+}
+
+func fadeText(text *canvas.Text, textColor color.Color) {
+	r, g, b, alp := textColor.RGBA()
+	var fadeStep uint8 = 5
+	var threshold uint8 = 120
+
+	// >> 8 because color.RGBA can only use values of 8 bits (textColor is 16 bits)
+	updateUI := func(alpha uint8) {
+		text.Color = color.RGBA{
+			R: uint8(r >> 8),
+			G: uint8(g >> 8),
+			B: uint8(b >> 8),
+			A: alpha,
+		}
+		text.Refresh()
+	}
+
+	for alpha := uint8(alp >> 8); alpha >= threshold; alpha -= fadeStep {
+		updateUI(alpha)
+		text.Refresh()
+		time.Sleep(20 * time.Millisecond) // Pause to simulate fade
+	}
+
 }
