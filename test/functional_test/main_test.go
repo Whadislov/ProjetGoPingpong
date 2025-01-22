@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -14,20 +14,20 @@ import (
 // TestMainFunction tests the main function of the application.
 func TestMainFunction(t *testing.T) {
 	// Load the configuration file
-	config, err := api.LoadConfig("config.json")
-	if err != nil {
-		t.Fatalf("Error loading config: %v", err)
+	config := api.Config{
+		ServerAddress: "localhost",
+		ServerPort:    "8000",
 	}
 
 	// Load the database (deserialize)
-	golangDB, err := msql.LoadDB()
+	golangDB, err := mdb.LoadDB()
 	if err != nil {
 		t.Fatalf("Error while loading golang database: %v", err)
 	}
 
 	// Start the API server in a separate goroutine
 	go func() {
-		api.RunApi(golangDB, config)
+		api.RunApi(&config)
 	}()
 
 	// Allow some time for the server to start

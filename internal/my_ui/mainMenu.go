@@ -2,8 +2,10 @@ package myapp
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 
-	msql "github.com/Whadislov/ProjetGoPingPong/internal/my_sqlitedb"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
+	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
@@ -14,8 +16,17 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	menu1Item1 := fyne.NewMenuItem("Show Main page", func() { w.SetContent(mainPage) })
 	menu1Item2 := fyne.NewMenuItem("Save changes", func() {
-		msql.SaveDB(db)
-		HasChanged = false
+		if !HasChanged {
+			dialog.ShowInformation("Information", "There is nothing to save", w)
+			//w.SetContent(MainPage(db, w, a))
+		} else {
+			if appStartOption == "local" {
+				mdb.SaveDB(db)
+			} else if appStartOption == "browser" {
+				mf.SaveDB(db)
+			}
+			HasChanged = false
+		}
 	})
 
 	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2)
