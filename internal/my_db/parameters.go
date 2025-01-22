@@ -5,13 +5,14 @@ import (
 )
 
 var sqlDB *Database
+var user_id string
 
 // Const for PostgreSQL
 const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "wn7-00407"
+	password = "p1Sw"
 	dbName   = "ttapp_database"
 )
 
@@ -36,6 +37,13 @@ func AppStartOption(s string) {
 
 var createTablesQuery string = `
 BEGIN;
+CREATE TABLE IF NOT users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR UNIQUE NOT NULL,
+    email VARCHAR UNIQUE NOT NULL,
+    password_hash VARCHAR NOT NULL,
+    created_at TIMESTAMPTZ
+);
 
 CREATE TABLE IF NOT EXISTS players (
     id SERIAL PRIMARY KEY,
@@ -44,17 +52,23 @@ CREATE TABLE IF NOT EXISTS players (
     ranking INTEGER,
     forehand TEXT,
     backhand TEXT,
-    blade TEXT
+    blade TEXT,
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS teams (
 	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL
+	name TEXT NOT NULL,
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS clubs (
 	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL
+	name TEXT NOT NULL,
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS player_club (
@@ -62,7 +76,9 @@ CREATE TABLE IF NOT EXISTS player_club (
 	club_id INTEGER NOT NULL,
 	PRIMARY KEY (player_id, club_id),
 	FOREIGN KEY (player_id) REFERENCES players(id),
-	FOREIGN KEY (club_id) REFERENCES clubs(id)
+	FOREIGN KEY (club_id) REFERENCES clubs(id),
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS player_team (
@@ -70,7 +86,9 @@ CREATE TABLE IF NOT EXISTS player_team (
 	team_id INTEGER NOT NULL,
 	PRIMARY KEY (player_id, team_id),
 	FOREIGN KEY (player_id) REFERENCES players(id),
-	FOREIGN KEY (team_id) REFERENCES teams(id)
+	FOREIGN KEY (team_id) REFERENCES teams(id),
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS team_club (
@@ -78,20 +96,23 @@ CREATE TABLE IF NOT EXISTS team_club (
 	club_id INTEGER NOT NULL,
 	PRIMARY KEY (team_id, club_id),
 	FOREIGN KEY (team_id) REFERENCES teams(id),
-	FOREIGN KEY (club_id) REFERENCES clubs(id)
+	FOREIGN KEY (club_id) REFERENCES clubs(id),
+	user_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 COMMIT;`
 
 // Query script for table reset because we can't delete elements from the database directly
-// Remove "BEGIN;" from the other script
+// Replace "BEGIN;" (createTablesQuery[6:]) from the other script with this part
 var resetTablesQuery string = `
 BEGIN;
 
-DROP TABLE IF EXISTS player_team CASCADE;
-DROP TABLE IF EXISTS player_club CASCADE;
-DROP TABLE IF EXISTS team_club CASCADE;
-DROP TABLE IF EXISTS players CASCADE;
-DROP TABLE IF EXISTS teams CASCADE;
-DROP TABLE IF EXISTS clubs CASCADE;
+TRUNCATE TABLE users CASCADE;
+TRUNCATE TABLE player_team CASCADE;
+TRUNCATE TABLE player_club CASCADE;
+TRUNCATE TABLE team_club CASCADE;
+TRUNCATE TABLE players CASCADE;
+TRUNCATE TABLE teams CASCADE;
+TRUNCATE TABLE clubs CASCADE;
 ` + createTablesQuery[6:]
