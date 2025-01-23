@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -19,9 +18,6 @@ func main() {
 
 	// Start app on a browser
 	if appStartOption == "browser" {
-		mdb.AppStartOption(appStartOption)
-		mu.AppStartOption(appStartOption)
-
 		var wg sync.WaitGroup
 
 		// API server (8001)
@@ -59,13 +55,6 @@ func main() {
 
 	// Start app locally
 	if appStartOption == "local" {
-		mdb.AppStartOption(appStartOption)
-		mu.AppStartOption(appStartOption)
-		// Load the database (deserialize)
-		golangDB, err := mdb.LoadDB()
-		if err != nil {
-			panic(err)
-		}
-		mu.Display(golangDB)
+		mu.Display(appStartOption)
 	}
 }

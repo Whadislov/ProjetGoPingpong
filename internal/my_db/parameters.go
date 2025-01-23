@@ -5,7 +5,12 @@ import (
 )
 
 var sqlDB *Database
-var user_id string
+var userIDOfSession int
+var usernameOfSession string
+
+func SetUsernameOfSession(u string) {
+	usernameOfSession = u
+}
 
 // Const for PostgreSQL
 const (

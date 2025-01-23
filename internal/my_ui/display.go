@@ -1,10 +1,13 @@
 package myapp
 
 import (
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 )
 
 // Display launches the UI
-func Display(golangDB *mt.Database) {
-	StarterPage(golangDB)
+func Display(appStartOption string) {
+
+	mdb.AppStartOption(appStartOption)
+	AppStartOption(appStartOption)
+	StarterPage()
 }

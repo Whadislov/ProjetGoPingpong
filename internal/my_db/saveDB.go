@@ -20,7 +20,7 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
             forehand = EXCLUDED.forehand,
             backhand = EXCLUDED.backhand,
             blade = EXCLUDED.blade;
-        `, user_id)
+        `, userIDOfSession)
 		_, err := db.Conn.Exec(query, player.ID, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2])
 		if err != nil {
 			return fmt.Errorf("failed to save player: %w", err)
@@ -37,7 +37,7 @@ func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
         VALUES ($1, $2, %v)
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name;
-        `, user_id)
+        `, userIDOfSession)
 		_, err := db.Conn.Exec(query, team.ID, team.Name)
 		if err != nil {
 			return fmt.Errorf("failed to save team: %w", err)
@@ -54,7 +54,7 @@ func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
         VALUES ($1, $2, %v)
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name;
-        `, user_id)
+        `, userIDOfSession)
 		_, err := db.Conn.Exec(query, club.ID, club.Name)
 		if err != nil {
 			return fmt.Errorf("failed to save club: %w", err)
@@ -71,7 +71,7 @@ func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
             INSERT INTO player_club (player_id, club_id, user_id)
             VALUES ($1, $2, %v)
             ON CONFLICT (player_id, club_id) DO NOTHING;
-            `, user_id)
+            `, userIDOfSession)
 			_, err := db.Conn.Exec(query, player.ID, clubID)
 			if err != nil {
 				return fmt.Errorf("failed to save player_club relationship: %w", err)
@@ -89,7 +89,7 @@ func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
             INSERT INTO player_team (player_id, team_id, user_id)
             VALUES ($1, $2, %v)
             ON CONFLICT (player_id, team_id) DO NOTHING;
-            `, user_id)
+            `, userIDOfSession)
 			_, err := db.Conn.Exec(query, player.ID, teamID)
 			if err != nil {
 				return fmt.Errorf("failed to save player_team relationship: %w", err)
@@ -107,7 +107,7 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
             INSERT INTO team_club (team_id, club_id, user_id)
             VALUES ($1, $2, %v)
             ON CONFLICT (team_id, club_id) DO NOTHING;
-            `, user_id)
+            `, userIDOfSession)
 			_, err := db.Conn.Exec(query, team.ID, clubID)
 			if err != nil {
 				return fmt.Errorf("failed to save team_club relationship: %w", err)
