@@ -73,3 +73,8 @@ func (d *Database) GetClub(clubID int) (*Club, error) {
 	}
 	return d.Clubs[clubID], nil
 }
+
+// AddUser adds a new user to the database.
+func (d *Database) AddUser(user *User) {
+	d.Users[user.ID] = user
+}

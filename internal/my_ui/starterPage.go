@@ -48,7 +48,7 @@ func StarterPage() fyne.App {
 			fadeText(welcomeText, themeColor)
 			// go to main page with delay so that the menu is not directly shown
 			log.Println("Transitioning to identification page")
-			mainWindow.SetContent(IdentificationPage(mainWindow, a))
+			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
 
 			/*
 				log.Println("Transitioning to main page")
@@ -67,7 +67,7 @@ func StarterPage() fyne.App {
 		} else if appStartOption == "browser" {
 			// No fade because it blinks on the browser and the problem is not yet solved
 			log.Println("Transitioning to identification page")
-			mainWindow.SetContent(IdentificationPage(mainWindow, a))
+			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
 		}
 
 	}()

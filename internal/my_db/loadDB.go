@@ -152,7 +152,7 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 
 // LoadUsers loads users from the database into the user map.
 func (db *Database) LoadUsers() (map[int]*mt.User, error) {
-	rows, err := db.Conn.Query("SELECT id, username, email, password_hash FROM user")
+	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users")
 	if err != nil {
 		return nil, fmt.Errorf("failed to load users: %w", err)
 	}
@@ -161,7 +161,7 @@ func (db *Database) LoadUsers() (map[int]*mt.User, error) {
 	var users = make(map[int]*mt.User)
 	for rows.Next() {
 		var user mt.User
-		err := rows.Scan(&user)
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan user: %w", err)
 		}

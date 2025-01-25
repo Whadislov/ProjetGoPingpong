@@ -50,7 +50,7 @@ func SaveDB(golangDB *mt.Database) error {
 	return nil
 }
 
-// Checks if the API is launched
+// IsApiReady posts a message if the API is started
 func IsApiReady() bool {
 	resp, err := http.Get("http://localhost:8001/")
 	if err != nil {
@@ -59,4 +59,27 @@ func IsApiReady() bool {
 	defer resp.Body.Close()
 
 	return true
+}
+
+// Checks if the API is launched
+func AuthenticateUser() (bool, error) {
+	var authResult string
+	resp, err := http.Get("http://localhost:8001/api/authenticate-user")
+	if err != nil {
+		return false, fmt.Errorf("failed to fetch user authentification: %w", err)
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&authResult)
+	if err != nil {
+		return false, fmt.Errorf("error decoding JSON: %w", err)
+	}
+
+	if authResult == "Authentification is successfull" {
+		return true, nil
+	} else if authResult == "Authentification is unsuccessfull" {
+		return false, nil
+	} else {
+		return false, fmt.Errorf("authentification result is unknown: %w", err)
+	}
 }

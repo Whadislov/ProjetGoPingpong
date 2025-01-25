@@ -42,7 +42,7 @@ func AppStartOption(s string) {
 
 var createTablesQuery string = `
 BEGIN;
-CREATE TABLE IF NOT users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR UNIQUE NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
