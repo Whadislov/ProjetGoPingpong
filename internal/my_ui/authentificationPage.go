@@ -40,7 +40,12 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	signUpButton := widget.NewButton("Sign up", func() {
-		w.SetContent(signUpPage(db, w, a))
+		cancelButton := widget.NewButton("Cancel", func() {
+			w.SetContent(AuthentificationPage(w, a))
+		})
+
+		content := container.NewVBox(signUpPage(db, w, a), cancelButton)
+		w.SetContent(content)
 	})
 
 	if len(db.Users) > 0 {
@@ -51,8 +56,17 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 		)
 		return identificationPage
 	} else {
+
+		quitButton := widget.NewButton("Quit", func() {
+			a.Quit()
+			log.Println("Application exited.")
+		})
+		content := container.NewVBox(
+			signUpPage(db, w, a),
+			quitButton,
+		)
 		// No user in the database, go directly to sign up page
-		w.SetContent(signUpPage(db, w, a))
+		w.SetContent(content)
 		return signUpPage(db, w, a)
 	}
 }
@@ -65,6 +79,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	emailLabel := widget.NewLabel("✉️ Email")
 	emailEntry := widget.NewEntry()
+	emailEntry.SetPlaceHolder("abc@def.com")
 
 	usernameLabel := widget.NewLabel("👤 Username")
 	usernameEntry := widget.NewEntry()
@@ -77,21 +92,46 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	validationButton := widget.NewButton("Create", func() {
 		if len(db.Users) == 0 {
-			dialog.ShowInformation("Success", "Your user account has been created !", w)
-			mdb.SetUsernameOfSession(usernameEntry.Text)
-			log.Println("Sign up is successfull")
-			mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, db)
 
-			// Save the new user in the database
-			if appStartOption == "local" {
-				mdb.SaveDB(db)
-			} else if appStartOption == "browser" {
-				mfr.SaveDB(db)
+			_, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, db)
+			if err != nil {
+				switch err.Error() {
+				case "username cannot be empty":
+					dialog.ShowError(err, w)
+					w.SetContent(signUpPage(db, w, a))
+				case "username is already taken":
+					dialog.ShowError(err, w)
+					usernameEntry.SetPlaceHolder("")
+				case "email cannot be empty":
+					dialog.ShowError(err, w)
+					emailEntry.SetPlaceHolder("abc@def.com")
+				case "email is already used":
+					dialog.ShowError(err, w)
+					emailEntry.SetPlaceHolder("abc@def.com")
+				case "email must be valid. Example: abc@def.com":
+					dialog.ShowError(err, w)
+					emailEntry.SetPlaceHolder("abc@def.com")
+				default:
+					dialog.ShowError(err, w)
+					w.SetContent(signUpPage(db, w, a))
+				}
+			} else {
+				dialog.ShowInformation("Success", "Your user account has been created !", w)
+				mdb.SetUsernameOfSession(usernameEntry.Text)
+
+				// Save the new user in the database
+				if appStartOption == "local" {
+					mdb.SaveDB(db)
+				} else if appStartOption == "browser" {
+					mfr.SaveDB(db)
+				}
+
+				log.Println("Sign up is successfull")
+				fmt.Println("len(db.Users): ", len(db.Users))
+
+				w.SetContent(MainPage(db, w, a))
+				w.SetMainMenu(MainMenu(db, w, a))
 			}
-			fmt.Println("len(db.Users): ", len(db.Users))
-
-			w.SetContent(MainPage(db, w, a))
-			w.SetMainMenu(MainMenu(db, w, a))
 		} else {
 			// Verify if username or email are already used. Verify if passwords match
 			for _, user := range db.Users {
@@ -134,10 +174,6 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
-		w.SetContent(AuthentificationPage(w, a))
-	})
-
 	signUpPage := container.NewVBox(
 		pageLabel,
 		emailLabel,
@@ -149,7 +185,6 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		confirmPasswordLabel,
 		confirmPasswordEntry,
 		validationButton,
-		cancelButton,
 	)
 
 	return signUpPage

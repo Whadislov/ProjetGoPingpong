@@ -78,11 +78,19 @@ func isValidUsername(username string) (bool, error) {
 }
 
 // isValidEmail verifies that the name follows a valid regex
-func isValidEmail(email string) bool {
+func isValidEmail(email string) (bool, error) {
+	if email == "" {
+		return false, fmt.Errorf("email cannot be empty")
+	}
+
 	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	// Compile the regex
 	re := regexp.MustCompile(emailRegex)
 
-	// Verify if the string is a regex
-	return re.MatchString(email)
+	// Verify if the string is a regex, true means yes
+	if re.MatchString(email) {
+		return re.MatchString(email), nil
+	} else {
+		return re.MatchString(email), fmt.Errorf("email is not valid")
+	}
 }

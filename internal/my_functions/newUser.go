@@ -16,8 +16,9 @@ func NewUser(username string, email string, passwordHash string, db *mt.Database
 		return nil, err
 	}
 
-	if !isValidEmail(email) {
-		return nil, fmt.Errorf("email is not valid")
+	b, err = isValidEmail(email)
+	if !b {
+		return nil, err
 	}
 
 	for _, user := range db.Users {
