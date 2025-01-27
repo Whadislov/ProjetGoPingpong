@@ -215,6 +215,7 @@ func LoadDB() (*mt.Database, error) {
 		return nil, err
 	}
 	golangDB := &mt.Database{
+		Users:   users,
 		Players: players,
 		Teams:   teams,
 		Clubs:   clubs,

@@ -91,87 +91,74 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	confirmPasswordEntry := widget.NewPasswordEntry()
 
 	validationButton := widget.NewButton("Create", func() {
-		if len(db.Users) == 0 {
-
-			_, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, db)
-			if err != nil {
-				switch err.Error() {
-				case "username cannot be empty":
-					dialog.ShowError(err, w)
-					w.SetContent(signUpPage(db, w, a))
-				case "username is already taken":
-					dialog.ShowError(err, w)
-					usernameEntry.SetPlaceHolder("")
-				case "email cannot be empty":
-					dialog.ShowError(err, w)
-					emailEntry.SetPlaceHolder("abc@def.com")
-				case "email is already used":
-					dialog.ShowError(err, w)
-					emailEntry.SetPlaceHolder("abc@def.com")
-				case "email must be valid. Example: abc@def.com":
-					dialog.ShowError(err, w)
-					emailEntry.SetPlaceHolder("abc@def.com")
-				default:
-					dialog.ShowError(err, w)
-					w.SetContent(signUpPage(db, w, a))
-				}
-			} else {
-				dialog.ShowInformation("Success", "Your user account has been created !", w)
-				mdb.SetUsernameOfSession(usernameEntry.Text)
-
-				// Save the new user in the database
-				if appStartOption == "local" {
-					mdb.SaveDB(db)
-				} else if appStartOption == "browser" {
-					mfr.SaveDB(db)
-				}
-
-				log.Println("Sign up is successfull")
-				fmt.Println("len(db.Users): ", len(db.Users))
-
-				w.SetContent(MainPage(db, w, a))
-				w.SetMainMenu(MainMenu(db, w, a))
+		log.Println("Creating new User")
+		_, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, confirmPasswordEntry.Text, db)
+		if err != nil {
+			switch err.Error() {
+			case "email cannot be empty":
+				log.Println("email is empty")
+				dialog.ShowError(err, w)
+				emailEntry.SetPlaceHolder("abc@def.com")
+			case "email is already used":
+				log.Println("email is already used")
+				dialog.ShowError(err, w)
+				emailEntry.SetPlaceHolder("abc@def.com")
+			case "email must be valid. Example: abc@def.com":
+				log.Println("email is not valid")
+				dialog.ShowError(err, w)
+				emailEntry.SetPlaceHolder("abc@def.com")
+			case "username cannot be empty":
+				log.Println("username is empty")
+				dialog.ShowError(err, w)
+				usernameEntry.SetPlaceHolder("")
+			case "username must be valid (only letters and figures are allowed, spaces are not allowed)":
+				log.Println("username is not valid")
+				dialog.ShowError(err, w)
+				usernameEntry.SetPlaceHolder("")
+			case "username is already taken":
+				log.Println("username is already taken")
+				dialog.ShowError(err, w)
+				usernameEntry.SetPlaceHolder("")
+			case "password cannot be empty":
+				log.Println("password cannot be empty")
+				dialog.ShowError(err, w)
+				passwordEntry.SetText("")
+				confirmPasswordEntry.SetText("")
+			case "password must be valid (spaces are not allowed)":
+				log.Println("password is not valid")
+				dialog.ShowError(err, w)
+				passwordEntry.SetText("")
+				confirmPasswordEntry.SetText("")
+			case "passwords do not match":
+				log.Println("passwords do not match")
+				dialog.ShowError(err, w)
+				passwordEntry.SetText("")
+				confirmPasswordEntry.SetText("")
+			default:
+				log.Println("No issue")
+				dialog.ShowError(err, w)
+				w.SetContent(signUpPage(db, w, a))
 			}
+			log.Println("No issue")
 		} else {
-			// Verify if username or email are already used. Verify if passwords match
-			for _, user := range db.Users {
-				if emailEntry.Text == user.Email {
-					dialog.ShowError(fmt.Errorf("this email is already used"), w)
-					// Email already used, reset the entry
-					entryEmailHolder := ""
-					emailEntry.SetPlaceHolder(entryEmailHolder)
-				} else if usernameEntry.Text == user.Name {
-					dialog.ShowError(fmt.Errorf("this username is already taken"), w)
-					// Username already used, reset the entry
-					entryUsernameHolder := ""
-					usernameEntry.SetPlaceHolder(entryUsernameHolder)
-				} else if passwordEntry.Text != confirmPasswordEntry.Text {
-					dialog.ShowError(fmt.Errorf("passwords do not match"), w)
-					entryPasswordHolder := ""
-					passwordEntry.SetPlaceHolder(entryPasswordHolder)
-					entryConfirmPasswordHolder := ""
-					confirmPasswordEntry.SetPlaceHolder(entryConfirmPasswordHolder)
-				} else {
-					dialog.ShowInformation("Success", "Your user account has been created !", w)
-					mdb.SetUsernameOfSession(usernameEntry.Text)
-					log.Println("Sign up is successfull")
-					mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, db)
+			log.Println("User created successfully")
+			dialog.ShowInformation("Success", "Your user account has been created !", w)
+			mdb.SetUsernameOfSession(usernameEntry.Text)
 
-					// Save the new user in the database
-					if appStartOption == "local" {
-						mdb.SaveDB(db)
-					} else if appStartOption == "browser" {
-						mfr.SaveDB(db)
-					}
-					fmt.Println("len(db.Users): ", len(db.Users))
-
-					w.SetContent(MainPage(db, w, a))
-					w.SetMainMenu(MainMenu(db, w, a))
-				}
+			// Save the new user in the database
+			if appStartOption == "local" {
+				mdb.SaveDB(db)
+			} else if appStartOption == "browser" {
+				mfr.SaveDB(db)
 			}
+
+			log.Println("Sign up is successfull")
+			fmt.Println("len(db.Users): ", len(db.Users))
+
+			w.SetContent(MainPage(db, w, a))
+			w.SetMainMenu(MainMenu(db, w, a))
 
 		}
-
 	})
 
 	signUpPage := container.NewVBox(

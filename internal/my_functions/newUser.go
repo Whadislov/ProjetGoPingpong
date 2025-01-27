@@ -10,16 +10,19 @@ import (
 
 // NewUser creates a new user with the given name and adds it to the database.
 // Returns the created user and an error if the user name is empty or if there is an issue with the operation.
-func NewUser(username string, email string, passwordHash string, db *mt.Database) (*mt.User, error) {
-	b, err := isValidUsername(username)
+func NewUser(username string, email string, password string, confirmPassword string, db *mt.Database) (*mt.User, error) {
+	// In the UI, Email is first asked, then username, then password
+	b, err := isValidEmail(email)
 	if !b {
 		return nil, err
 	}
+	log.Println("Email is valid.")
 
-	b, err = isValidEmail(email)
+	b, err = isValidUsername(username)
 	if !b {
 		return nil, err
 	}
+	log.Println("username is valid.")
 
 	for _, user := range db.Users {
 		if user.Name == username {
@@ -29,6 +32,16 @@ func NewUser(username string, email string, passwordHash string, db *mt.Database
 		}
 	}
 
+	b, err = isValidPassword(password)
+	if !b {
+		return nil, err
+	}
+	log.Println("password is valid.")
+
+	if password != confirmPassword {
+		return nil, fmt.Errorf("passwords do not match")
+	}
+
 	// ISO 8601 timestamp
 	timestamp := time.Now().Format(time.RFC3339)
 
@@ -36,9 +49,10 @@ func NewUser(username string, email string, passwordHash string, db *mt.Database
 		ID:           len(db.Users),
 		Name:         username,
 		Email:        email,
-		PasswordHash: passwordHash,
+		PasswordHash: password,
 		CreatedAt:    timestamp,
 	}
+	log.Println("user:", u)
 
 	db.AddUser(u)
 	log.Printf("User %v sucessfully created.", username)
