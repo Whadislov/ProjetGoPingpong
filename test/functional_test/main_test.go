@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -17,12 +16,6 @@ func TestMainFunction(t *testing.T) {
 	config := api.Config{
 		ServerAddress: "localhost",
 		ServerPort:    "8000",
-	}
-
-	// Load the database (deserialize)
-	golangDB, err := mdb.LoadDB()
-	if err != nil {
-		t.Fatalf("Error while loading golang database: %v", err)
 	}
 
 	// Start the API server in a separate goroutine
@@ -46,7 +39,7 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	// Simulate the UI interaction
-	go mu.Display(golangDB)
+	go mu.Display("local")
 
 	// Additional tests for other endpoints and UI interactions can be added here
 }

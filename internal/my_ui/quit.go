@@ -7,7 +7,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
+	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
@@ -24,7 +24,7 @@ func Quit(db *mt.Database, w fyne.Window, a fyne.App, HasChanged bool) {
 						dialog.ShowError(err, w)
 					}
 				} else if appStartOption == "browser" {
-					err := mf.SaveDB(db)
+					err := mfr.SaveDB(db)
 					if err != nil {
 						dialog.ShowError(err, w)
 					}

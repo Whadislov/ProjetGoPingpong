@@ -1,5 +1,13 @@
 package my_types
 
+type User struct {
+	ID           int    `json:"id"`
+	Name         string `json:"name"`
+	Email        string `json:"email"`
+	PasswordHash string `json:"password_hash"`
+	CreatedAt    string `json:"created_at"`
+}
+
 type Club struct {
 	ID        int            `json:"id"`
 	Name      string         `json:"name"`
@@ -25,6 +33,7 @@ type Team struct {
 }
 
 type Database struct {
+	Users   map[int]*User   `json:"users"`
 	Clubs   map[int]*Club   `json:"clubs"`
 	Teams   map[int]*Team   `json:"teams"`
 	Players map[int]*Player `json:"players"`

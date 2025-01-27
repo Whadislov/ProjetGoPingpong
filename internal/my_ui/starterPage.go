@@ -5,7 +5,8 @@ import (
 	"log"
 	"time"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	//mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
+	//mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -14,7 +15,7 @@ import (
 )
 
 // StarterPage creates the introduction page to the UI and the starter page
-func StarterPage(db *mt.Database) fyne.App {
+func StarterPage() fyne.App {
 	a := app.New()
 
 	// Set the icon
@@ -38,19 +39,37 @@ func StarterPage(db *mt.Database) fyne.App {
 	welcomePage := container.NewCenter(welcomeText)
 
 	// Main page
-	mainPage := MainPage(db, mainWindow, a)
+	//mainPage := MainPage(db, mainWindow, a)
 
 	// Fade
 	go func() {
 		time.Sleep(1 * time.Second)
 		if appStartOption == "local" {
 			fadeText(welcomeText, themeColor)
+			// go to main page with delay so that the menu is not directly shown
+			log.Println("Transitioning to identification page")
+			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
+
+			/*
+				log.Println("Transitioning to main page")
+				mainWindow.SetContent(mainPage)
+			*/
+
+			// Load the database (deserialize)
+			/*
+				golangDB, err := mdb.LoadDB()
+				if err != nil {
+					panic(err)
+				}
+				mainMenu := MainMenu(golangDB, mainWindow, a)
+				mainWindow.SetMainMenu(mainMenu)
+			*/
+		} else if appStartOption == "browser" {
+			// No fade because it blinks on the browser and the problem is not yet solved
+			log.Println("Transitioning to the authentification page")
+			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
 		}
-		// go to main page with delay so that the menu is not directly shown
-		log.Println("Transitioning to main page")
-		mainWindow.SetContent(mainPage)
-		mainMenu := MainMenu(db, mainWindow, a)
-		mainWindow.SetMainMenu(mainMenu)
+
 	}()
 	log.Println("Displaying welcome page")
 	mainWindow.SetContent(welcomePage)

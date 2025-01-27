@@ -1,7 +1,6 @@
 package my_functions
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"unicode"
@@ -13,14 +12,9 @@ import (
 // NewPlayer creates a new player with the given name and adds it to the database.
 // Returns the created player and an error if the player name is empty or if there is an issue with the operation.
 func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
-	if playerName == "" {
-		return nil, fmt.Errorf("player name cannot be empty")
-	}
-
-	for _, r := range playerName {
-		if r < 'A' || r > 'z' {
-			return nil, fmt.Errorf("player name can only contain letters")
-		}
+	b, err := isValidName(playerName)
+	if !b {
+		return nil, err
 	}
 
 	playerName = strings.ToLower(playerName)

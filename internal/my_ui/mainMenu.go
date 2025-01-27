@@ -14,22 +14,23 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	mainPage := MainPage(db, w, a)
 
-	menu1Item1 := fyne.NewMenuItem("Show Main page", func() { w.SetContent(mainPage) })
-	menu1Item2 := fyne.NewMenuItem("Save changes", func() {
+	menu1Item1 := fyne.NewMenuItem("Main page", func() { w.SetContent(mainPage) })
+	menu1Item2 := fyne.NewMenuItem("My profile", func() { UserPage(userOfSession, db, w, a) })
+	menu1Item3 := fyne.NewMenuItem("Save changes", func() {
 		if !HasChanged {
-			dialog.ShowInformation("Information", "There is nothing to save", w)
-			//w.SetContent(MainPage(db, w, a))
+			dialog.ShowInformation("Information", "There is nothing new to save", w)
 		} else {
 			if appStartOption == "local" {
 				mdb.SaveDB(db)
 			} else if appStartOption == "browser" {
 				mf.SaveDB(db)
 			}
+			dialog.ShowInformation("Information", "Changes saved", w)
 			HasChanged = false
 		}
 	})
 
-	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2)
+	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3)
 
 	menu2Item1 := fyne.NewMenuItem("Players", func() { PlayerPage(db, w, a) })
 	menu2Item2 := fyne.NewMenuItem("Teams", func() { TeamPage(db, w, a) })
