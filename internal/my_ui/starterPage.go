@@ -25,7 +25,7 @@ func StarterPage() fyne.App {
 	}
 	a.SetIcon(icon)
 
-	mainWindow := a.NewWindow("TTapp")
+	mainWindow := a.NewWindow("TT companion")
 	mainWindow.Resize(fyne.NewSize(600, 400))
 
 	// Center the window on the monitor
@@ -33,7 +33,7 @@ func StarterPage() fyne.App {
 
 	// Welcome page
 	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	welcomeText := canvas.NewText("Welcome to TTapp", themeColor)
+	welcomeText := canvas.NewText("Welcome to TT companion", themeColor)
 	welcomeText.Alignment = fyne.TextAlignCenter
 	welcomeText.TextSize = 32
 	welcomePage := container.NewCenter(welcomeText)
