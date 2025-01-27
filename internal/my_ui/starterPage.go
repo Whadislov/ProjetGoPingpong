@@ -66,7 +66,7 @@ func StarterPage() fyne.App {
 			*/
 		} else if appStartOption == "browser" {
 			// No fade because it blinks on the browser and the problem is not yet solved
-			log.Println("Transitioning to identification page")
+			log.Println("Transitioning to the authentification page")
 			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
 		}
 

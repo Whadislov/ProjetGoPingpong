@@ -2,14 +2,14 @@ package mydb
 
 import (
 	"fmt"
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 var sqlDB *Database
-var userIDOfSession int
-var usernameOfSession string
+var userOfSession *mt.User
 
-func SetUsernameOfSession(u string) {
-	usernameOfSession = u
+func SetUserOfSession(u *mt.User) {
+	userOfSession = u
 }
 
 // Const for PostgreSQL

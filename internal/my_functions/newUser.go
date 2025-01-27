@@ -16,13 +16,13 @@ func NewUser(username string, email string, password string, confirmPassword str
 	if !b {
 		return nil, err
 	}
-	log.Println("Email is valid.")
+	log.Println("User creation : Email is valid.")
 
 	b, err = isValidUsername(username)
 	if !b {
 		return nil, err
 	}
-	log.Println("username is valid.")
+	log.Println("User creation : Username is valid.")
 
 	for _, user := range db.Users {
 		if user.Name == username {
@@ -36,7 +36,7 @@ func NewUser(username string, email string, password string, confirmPassword str
 	if !b {
 		return nil, err
 	}
-	log.Println("password is valid.")
+	log.Println("User creation : Password is valid.")
 
 	if password != confirmPassword {
 		return nil, fmt.Errorf("passwords do not match")
@@ -52,9 +52,8 @@ func NewUser(username string, email string, password string, confirmPassword str
 		PasswordHash: password,
 		CreatedAt:    timestamp,
 	}
-	log.Println("user:", u)
 
 	db.AddUser(u)
-	log.Printf("User %v sucessfully created.", username)
+	log.Printf("User creation : User sucessfully created.")
 	return u, nil
 }

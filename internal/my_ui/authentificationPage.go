@@ -25,7 +25,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	var db *mt.Database
 	var err error
 	if appStartOption == "local" {
-		db, err = mdb.LoadDB()
+		db, err = mdb.LoadUsersOnly()
 		if err != nil {
 			panic(err)
 		}
@@ -92,7 +92,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	validationButton := widget.NewButton("Create", func() {
 		log.Println("Creating new User")
-		_, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, confirmPasswordEntry.Text, db)
+		newUser, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, confirmPasswordEntry.Text, db)
 		if err != nil {
 			switch err.Error() {
 			case "email cannot be empty":
@@ -139,11 +139,9 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 				dialog.ShowError(err, w)
 				w.SetContent(signUpPage(db, w, a))
 			}
-			log.Println("No issue")
 		} else {
-			log.Println("User created successfully")
 			dialog.ShowInformation("Success", "Your user account has been created !", w)
-			mdb.SetUsernameOfSession(usernameEntry.Text)
+			mdb.SetUserOfSession(newUser)
 
 			// Save the new user in the database
 			if appStartOption == "local" {
@@ -151,13 +149,22 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			} else if appStartOption == "browser" {
 				mfr.SaveDB(db)
 			}
-
 			log.Println("Sign up is successfull")
-			fmt.Println("len(db.Users): ", len(db.Users))
 
-			w.SetContent(MainPage(db, w, a))
-			w.SetMainMenu(MainMenu(db, w, a))
-
+			// Now load the whole database
+			var err error
+			if appStartOption == "local" {
+				db, err = mdb.LoadDB()
+			} else if appStartOption == "browser" {
+				db, err = mfr.LoadDB()
+			}
+			if err != nil {
+				dialog.ShowError(err, w)
+			} else {
+				userOfSession = db.Users[newUser.ID]
+				w.SetContent(MainPage(db, w, a))
+				w.SetMainMenu(MainMenu(db, w, a))
+			}
 		}
 	})
 
@@ -190,26 +197,36 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	validationButton := widget.NewButton("Connect", func() {
 		// Verify if username and password match
 		log.Println("Verifying username and password")
-		fmt.Printf("Username: %s\n", usernameEntry.Text)
-		fmt.Println("len(users)", len(db.Users))
-		fmt.Println("len(users)", len(db.Players))
 		for _, user := range db.Users {
 			if usernameEntry.Text == user.Name {
-				log.Println("username exists")
 				if passwordEntry.Text == user.PasswordHash {
-					log.Println("Log in is successfull")
-					mdb.SetUsernameOfSession(usernameEntry.Text)
-					w.SetContent(MainPage(db, w, a))
-					w.SetMainMenu(MainMenu(db, w, a))
+					log.Println("Login is successfull")
+					mdb.SetUserOfSession(user)
+					// Now load the corresponding database of the user
+					var err error
+					if appStartOption == "local" {
+						db, err = mdb.LoadDB()
+					} else if appStartOption == "browser" {
+						db, err = mfr.LoadDB()
+					}
+
+					if err != nil {
+						dialog.ShowError(err, w)
+					} else {
+						userOfSession = db.Users[user.ID]
+						w.SetContent(MainPage(db, w, a))
+						w.SetMainMenu(MainMenu(db, w, a))
+						return
+					}
 				}
 			}
 		}
-		log.Println("Username and password mismatch")
-		err := fmt.Errorf("username and password mismatch")
-		dialog.ShowError(err, w)
+		// Username and password mismatch
+		log.Println("Login failed : Username and password mismatch")
+		dialog.ShowError(fmt.Errorf("username and password mismatch"), w)
 		// Reset entries
 		ReinitWidgetEntryText(usernameEntry, "")
-		ReinitWidgetEntryText(passwordEntry, "")
+		passwordEntry.SetText("")
 
 	})
 

@@ -7,9 +7,30 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
+// LoadUsers loads users from the database into the user map.
+func (db *Database) LoadUsers() (map[int]*mt.User, error) {
+	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users")
+	if err != nil {
+		return nil, fmt.Errorf("failed to load users: %w", err)
+	}
+	defer rows.Close()
+
+	var users = make(map[int]*mt.User)
+	for rows.Next() {
+		var user mt.User
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan user: %w", err)
+		}
+		users[user.ID] = &user
+	}
+
+	return users, rows.Err()
+}
+
 // LoadPlayers loads players from the database into the player map.
 func (db *Database) LoadPlayers() (map[int]*mt.Player, error) {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name, age, ranking, forehand, backhand, blade FROM players WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name, age, ranking, forehand, backhand, blade FROM players WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return nil, fmt.Errorf("failed to load players: %w", err)
 	}
@@ -34,7 +55,7 @@ func (db *Database) LoadPlayers() (map[int]*mt.Player, error) {
 
 // LoadTeams loads teams from the database into the team map.
 func (db *Database) LoadTeams() (map[int]*mt.Team, error) {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name FROM teams WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name FROM teams WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return nil, fmt.Errorf("failed to load teams: %w", err)
 	}
@@ -56,7 +77,7 @@ func (db *Database) LoadTeams() (map[int]*mt.Team, error) {
 
 // LoadClubs loads clubs from the database into the club map.
 func (db *Database) LoadClubs() (map[int]*mt.Club, error) {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name FROM clubs WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT id, name FROM clubs WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return nil, fmt.Errorf("failed to load clubs: %w", err)
 	}
@@ -79,7 +100,7 @@ func (db *Database) LoadClubs() (map[int]*mt.Club, error) {
 
 // LoadPlayerClubs loads the player-club relationships from the database.
 func (db *Database) LoadPlayerClubs(players map[int]*mt.Player, clubs map[int]*mt.Club) error {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT player_id, club_id FROM player_club WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT player_id, club_id FROM player_club WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return fmt.Errorf("failed to load player_club relationships: %w", err)
 	}
@@ -103,7 +124,7 @@ func (db *Database) LoadPlayerClubs(players map[int]*mt.Player, clubs map[int]*m
 
 // LoadPlayerTeams loads the player-team relationships from the database.
 func (db *Database) LoadPlayerTeams(players map[int]*mt.Player, teams map[int]*mt.Team) error {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT player_id, team_id FROM player_team WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT player_id, team_id FROM player_team WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return fmt.Errorf("failed to load player_team relationships: %w", err)
 	}
@@ -128,7 +149,7 @@ func (db *Database) LoadPlayerTeams(players map[int]*mt.Player, teams map[int]*m
 
 // LoadTeamClubs loads the team-club relationships from the database.
 func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club) error {
-	rows, err := db.Conn.Query(fmt.Sprintln("SELECT team_id, club_id FROM team_club WHERE user_id = ", userIDOfSession))
+	rows, err := db.Conn.Query(fmt.Sprintln("SELECT team_id, club_id FROM team_club WHERE user_id = ", userOfSession.ID))
 	if err != nil {
 		return fmt.Errorf("failed to load team_club relationships: %w", err)
 	}
@@ -150,27 +171,6 @@ func (db *Database) LoadTeamClubs(teams map[int]*mt.Team, clubs map[int]*mt.Club
 	return rows.Err()
 }
 
-// LoadUsers loads users from the database into the user map.
-func (db *Database) LoadUsers() (map[int]*mt.User, error) {
-	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users")
-	if err != nil {
-		return nil, fmt.Errorf("failed to load users: %w", err)
-	}
-	defer rows.Close()
-
-	var users = make(map[int]*mt.User)
-	for rows.Next() {
-		var user mt.User
-		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
-		if err != nil {
-			return nil, fmt.Errorf("failed to scan user: %w", err)
-		}
-		users[user.ID] = &user
-	}
-
-	return users, rows.Err()
-}
-
 // LoadDB loads the database.
 func LoadDB() (*mt.Database, error) {
 	db, err := ConnectToDB()
@@ -179,21 +179,18 @@ func LoadDB() (*mt.Database, error) {
 		return nil, err
 	}
 
+	log.Println("Loading users")
 	users, err := db.LoadUsers()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, user := range users {
-		if user.Name == usernameOfSession {
-			userIDOfSession = user.ID
-		}
-	}
-
+	log.Println("Loading players")
 	players, err := db.LoadPlayers()
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Loading teams")
 	teams, err := db.LoadTeams()
 	if err != nil {
 		return nil, err
@@ -225,4 +222,24 @@ func LoadDB() (*mt.Database, error) {
 	return golangDB, nil
 }
 
-// Choose between Sqlite for local developement or POSTgreSQL for the production
+// LoadUsers loads users from the database into the user map.
+func LoadUsersOnly() (*mt.Database, error) {
+	db, err := ConnectToDB()
+
+	if err != nil {
+		fmt.Println("Error while connecting to postgresql database:", err)
+		return nil, err
+	}
+
+	log.Println("Loading users")
+	users, err := db.LoadUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	golangDB := &mt.Database{
+		Users: users,
+	}
+	defer db.Close()
+	return golangDB, nil
+}

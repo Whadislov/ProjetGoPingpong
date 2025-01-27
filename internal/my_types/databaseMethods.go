@@ -65,6 +65,16 @@ func (d *Database) DeleteClub(clubID int) error {
 	return nil
 }
 
+// DeleteClub removes a club from the database by their ID.
+// Returns an error if the club does not exist.
+func (d *Database) DeleteUser(userID int) error {
+	if _, ok := d.Users[userID]; !ok {
+		return fmt.Errorf("userID %v does not exist", userID)
+	}
+	delete(d.Users, userID)
+	return nil
+}
+
 // GetClub retrieves a club from the database by their ID.
 // Returns an error if the club does not exist.
 func (d *Database) GetClub(clubID int) (*Club, error) {
