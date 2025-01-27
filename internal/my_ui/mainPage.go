@@ -23,7 +23,7 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	// Main page design
 	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	mainText := canvas.NewText("TTapp", themeColor)
+	mainText := canvas.NewText("TT companion", themeColor)
 	mainText.Alignment = fyne.TextAlignCenter
 	mainText.TextSize = 32
 
