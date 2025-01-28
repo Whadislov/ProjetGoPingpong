@@ -30,7 +30,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 			panic(err)
 		}
 	} else if appStartOption == "browser" {
-		db, err = mfr.LoadDB()
+		db, err = mfr.LoadUsersOnly()
 		if err != nil {
 			panic(err)
 		}
@@ -40,11 +40,11 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	signUpButton := widget.NewButton("Sign up", func() {
-		cancelButton := widget.NewButton("Cancel", func() {
+		cancelButtonInSignUpPage := widget.NewButton("Cancel", func() {
 			w.SetContent(AuthentificationPage(w, a))
 		})
 
-		content := container.NewVBox(signUpPage(db, w, a), cancelButton)
+		content := container.NewVBox(signUpPage(db, w, a), cancelButtonInSignUpPage)
 		w.SetContent(content)
 	})
 
@@ -57,13 +57,13 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 		return identificationPage
 	} else {
 
-		quitButton := widget.NewButton("Quit", func() {
+		quitButtonInSignUpPage := widget.NewButton("Quit", func() {
 			a.Quit()
 			log.Println("Application exited.")
 		})
 		content := container.NewVBox(
 			signUpPage(db, w, a),
-			quitButton,
+			quitButtonInSignUpPage,
 		)
 		// No user in the database, go directly to sign up page
 		w.SetContent(content)
@@ -141,7 +141,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			}
 		} else {
 			dialog.ShowInformation("Success", "Your user account has been created !", w)
-			mdb.SetUserOfSession(newUser)
+			mdb.SetUserIDOfSession(newUser.ID)
 
 			// Save the new user in the database
 			if appStartOption == "local" {
@@ -201,7 +201,7 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			if usernameEntry.Text == user.Name {
 				if passwordEntry.Text == user.PasswordHash {
 					log.Println("Login is successfull")
-					mdb.SetUserOfSession(user)
+					mdb.SetUserIDOfSession(user.ID)
 					// Now load the corresponding database of the user
 					var err error
 					if appStartOption == "local" {

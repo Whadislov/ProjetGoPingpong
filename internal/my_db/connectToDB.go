@@ -59,7 +59,7 @@ func ConnectToDB() (*Database, error) {
 
 // CreateTables creates the necessary tables in the database for PostgreSQL.
 func (db *Database) CreateTables() error {
-	_, err := db.Conn.Exec(createTablesQuery)
+	_, err := db.Conn.Exec(createAllTablesQuery)
 	if err != nil {
 		return fmt.Errorf("failed to reset database: %w", err)
 	}

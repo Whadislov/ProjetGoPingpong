@@ -5,9 +5,9 @@ import (
 )
 
 // Display launches the UI
-func Display(appStartOption string) {
+func Display(appSOption string) {
 
-	mdb.AppStartOption(appStartOption)
-	AppStartOption(appStartOption)
+	appStartOption = appSOption
+	mdb.AppStartOption(appSOption)
 	StarterPage()
 }

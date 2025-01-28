@@ -2,14 +2,15 @@ package mydb
 
 import (
 	"fmt"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	"log"
 )
 
 var sqlDB *Database
-var userOfSession *mt.User
+var userIDOfSession int
 
-func SetUserOfSession(u *mt.User) {
-	userOfSession = u
+func SetUserIDOfSession(id int) {
+	userIDOfSession = id
+	log.Println("(Parameters) User ID of the session set to", userIDOfSession)
 }
 
 // Const for PostgreSQL
@@ -21,9 +22,10 @@ const (
 	dbName   = "ttapp_database"
 )
 
-var psqlInfo string
+var psqlInfo string = "postgresql://ttapp_database_owner:7MopfqD4SIyh@ep-white-unit-a2ap77if.eu-central-1.aws.neon.tech/ttapp_database?sslmode=require"
 
 func AppStartOption(s string) {
+	log.Println("Setting up the connexion information to the database")
 	if s == "local" {
 		// PostgreSQL info
 		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+
@@ -35,12 +37,12 @@ func AppStartOption(s string) {
 	}
 }
 
-// Query script for table creation
+// Query script for table creation (split in two parts users + other tables)
 // player_club = table relation for players and clubs
 // player_team = table relation for players and teams
 // team_club = table relation for teams and clubs
 
-var createTablesQuery string = `
+var createUserTableQuery string = `
 BEGIN;
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -49,6 +51,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR NOT NULL,
     created_at TIMESTAMPTZ
 );
+`
+var createOtherTablesQuery string = `
 
 CREATE TABLE IF NOT EXISTS players (
     id SERIAL PRIMARY KEY,
@@ -108,16 +112,17 @@ CREATE TABLE IF NOT EXISTS team_club (
 
 COMMIT;`
 
+var createAllTablesQuery string = createUserTableQuery + createOtherTablesQuery
+
 // Query script for table reset because we can't delete elements from the database directly
-// Replace "BEGIN;" (createTablesQuery[6:]) from the other script with this part
+// $1 is the user_id
 var resetTablesQuery string = `
 BEGIN;
 
-TRUNCATE TABLE users CASCADE;
-TRUNCATE TABLE player_team CASCADE;
-TRUNCATE TABLE player_club CASCADE;
-TRUNCATE TABLE team_club CASCADE;
-TRUNCATE TABLE players CASCADE;
-TRUNCATE TABLE teams CASCADE;
-TRUNCATE TABLE clubs CASCADE;
-` + createTablesQuery[6:]
+DELETE FROM players WHERE user_id = $1;
+DELETE FROM teams WHERE user_id = $1;
+DELETE FROM clubs WHERE user_id = $1;
+DELETE FROM player_club WHERE user_id = $1;
+DELETE FROM player_team WHERE user_id = $1;
+DELETE FROM team_club WHERE user_id = $1;
+` + createOtherTablesQuery

@@ -9,6 +9,7 @@ import (
 
 // SavePlayers saves players in the database.
 func (db *Database) SaveUsers(users map[int]*mt.User) error {
+	log.Println("(SaveU) User ID of the session set to", userIDOfSession)
 	for _, user := range users {
 		query := `
         INSERT INTO users (id, username, email, password_hash, created_at)
@@ -28,19 +29,21 @@ func (db *Database) SaveUsers(users map[int]*mt.User) error {
 
 // SavePlayers saves players in the database.
 func (db *Database) SavePlayers(players map[int]*mt.Player) error {
+	log.Println("(SaveP) User ID of the session set to", userIDOfSession)
 	for _, player := range players {
-		query := fmt.Sprintf(`
+		query := `
         INSERT INTO players (id, name, age, ranking, forehand, backhand, blade, user_id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, %v)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,
             age = EXCLUDED.age,
             ranking = EXCLUDED.ranking,
             forehand = EXCLUDED.forehand,
             backhand = EXCLUDED.backhand,
-            blade = EXCLUDED.blade;
-        `, userOfSession.ID)
-		_, err := db.Conn.Exec(query, player.ID, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2])
+            blade = EXCLUDED.blade
+		WHERE players.user_id = EXCLUDED.user_id;
+        `
+		_, err := db.Conn.Exec(query, player.ID, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], userIDOfSession)
 		if err != nil {
 			return fmt.Errorf("failed to save player: %w", err)
 		}
@@ -50,14 +53,16 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 
 // SaveTeams saves teams in the database.
 func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
+	log.Println("(SaveT) User ID of the session set to", userIDOfSession)
 	for _, team := range teams {
-		query := fmt.Sprintf(`
+		query := `
         INSERT INTO teams (id, name, user_id)
-        VALUES ($1, $2, %v)
+        VALUES ($1, $2, $3)
         ON CONFLICT (id) DO UPDATE SET
-            name = EXCLUDED.name;
-        `, userOfSession.ID)
-		_, err := db.Conn.Exec(query, team.ID, team.Name)
+            name = EXCLUDED.name
+		WHERE teams.user_id = EXCLUDED.user_id;
+        `
+		_, err := db.Conn.Exec(query, team.ID, team.Name, userIDOfSession)
 		if err != nil {
 			return fmt.Errorf("failed to save team: %w", err)
 		}
@@ -67,14 +72,16 @@ func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
 
 // SaveClubs saves clubs in the database.
 func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
+	log.Println("(SaveC) User ID of the session set to", userIDOfSession)
 	for _, club := range clubs {
-		query := fmt.Sprintf(`
+		query := `
         INSERT INTO clubs (id, name, user_id)
-        VALUES ($1, $2, %v)
+        VALUES ($1, $2, $3)
         ON CONFLICT (id) DO UPDATE SET
-            name = EXCLUDED.name;
-        `, userOfSession.ID)
-		_, err := db.Conn.Exec(query, club.ID, club.Name)
+            name = EXCLUDED.name
+		WHERE clubs.user_id = EXCLUDED.user_id;
+        `
+		_, err := db.Conn.Exec(query, club.ID, club.Name, userIDOfSession)
 		if err != nil {
 			return fmt.Errorf("failed to save club: %w", err)
 		}
@@ -84,14 +91,16 @@ func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
 
 // SavePlayerClubs saves the player-club relationships in the database.
 func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
+	log.Println("(SavePC) User ID of the session set to", userIDOfSession)
 	for _, player := range players {
 		for clubID := range player.ClubIDs {
-			query := fmt.Sprintf(`
+			query := `
             INSERT INTO player_club (player_id, club_id, user_id)
-            VALUES ($1, $2, %v)
-            ON CONFLICT (player_id, club_id) DO NOTHING;
-            `, userOfSession.ID)
-			_, err := db.Conn.Exec(query, player.ID, clubID)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (player_id, club_id) DO NOTHING
+			WHERE player_club.user_id = EXCLUDED.user_id;
+            `
+			_, err := db.Conn.Exec(query, player.ID, clubID, userIDOfSession)
 			if err != nil {
 				return fmt.Errorf("failed to save player_club relationship: %w", err)
 			}
@@ -102,14 +111,16 @@ func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
 
 // SavePlayerTeams saves the player-team relationships in the database.
 func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
+	log.Println("(SavePT) User ID of the session set to", userIDOfSession)
 	for _, player := range players {
 		for teamID := range player.TeamIDs {
-			query := fmt.Sprintf(`
+			query := `
             INSERT INTO player_team (player_id, team_id, user_id)
-            VALUES ($1, $2, %v)
-            ON CONFLICT (player_id, team_id) DO NOTHING;
-            `, userOfSession.ID)
-			_, err := db.Conn.Exec(query, player.ID, teamID)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (player_id, team_id) DO NOTHING
+			WHERE player_team.user_id = EXCLUDED.user_id;
+            `
+			_, err := db.Conn.Exec(query, player.ID, teamID, userIDOfSession)
 			if err != nil {
 				return fmt.Errorf("failed to save player_team relationship: %w", err)
 			}
@@ -120,14 +131,16 @@ func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
 
 // SaveTeamClubs saves the team-club relationships in the database.
 func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
+	log.Println("(SaveTC) User ID of the session set to", userIDOfSession)
 	for _, team := range teams {
 		for clubID := range team.ClubID {
-			query := fmt.Sprintf(`
+			query := `
             INSERT INTO team_club (team_id, club_id, user_id)
-            VALUES ($1, $2, %v)
-            ON CONFLICT (team_id, club_id) DO NOTHING;
-            `, userOfSession.ID)
-			_, err := db.Conn.Exec(query, team.ID, clubID)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (team_id, club_id) DO NOTHING
+			WHERE team_club.user_id = EXCLUDED.user_id;
+            `
+			_, err := db.Conn.Exec(query, team.ID, clubID, userIDOfSession)
 			if err != nil {
 				return fmt.Errorf("failed to save team_club relationship: %w", err)
 			}
@@ -137,9 +150,10 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 }
 
 func (db *Database) ResetTables() error {
-	_, err := db.Conn.Exec(resetTablesQuery)
+	_, err := db.Conn.Exec(resetTablesQuery, userIDOfSession)
+	log.Println("(Reset Table) User ID of the session set to", userIDOfSession)
 	if err != nil {
-		return fmt.Errorf("failed to reset database: %w", err)
+		return fmt.Errorf("failed to reset user data: %w", err)
 	}
 	return nil
 }
@@ -154,11 +168,11 @@ func SaveDB(golangDB *mt.Database) error {
 	}
 	sqlDB.ResetTables()
 
+	log.Println("(SaveDb) User ID of the session set to", userIDOfSession)
 	err = sqlDB.SaveUsers(golangDB.Users)
 	if err != nil {
 		return err
 	}
-
 	err = sqlDB.SavePlayers(golangDB.Players)
 	if err != nil {
 		return err

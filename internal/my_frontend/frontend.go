@@ -29,6 +29,25 @@ func LoadDB() (*mt.Database, error) {
 	return golangDB, nil
 }
 
+// LoadDB loads the users.
+func LoadUsersOnly() (*mt.Database, error) {
+	var golangDB *mt.Database
+
+	resp, err := http.Get("http://localhost:8001/api/load-users")
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch database: %w", err)
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&golangDB)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding JSON: %w", err)
+	}
+
+	log.Println("Database loaded successfully")
+	return golangDB, nil
+}
+
 // SavedDB saves the database.
 func SaveDB(golangDB *mt.Database) error {
 

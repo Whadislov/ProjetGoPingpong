@@ -5,11 +5,6 @@ import (
 )
 
 var appStartOption string
-
-func AppStartOption(s string) {
-	appStartOption = s
-}
-
 var userOfSession *mt.User
 
 func SetUsernameOfSession(u *mt.User) {

@@ -28,6 +28,25 @@ func loadDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(db)
 }
 
+// Handler for loading the users
+func loadUsersHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received request to load users")
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	db, err := mdb.LoadUsersOnly()
+	if err != nil {
+		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		log.Println("Error connecting to database:", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(db)
+}
+
 // Handler for saving the local changes to the database
 func saveDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request to save database")
@@ -68,7 +87,7 @@ func isApiReady(w http.ResponseWriter, r *http.Request) {
 
 // Handler for authenticating the user
 func authenticateUserHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received request to authenticate database")
+	log.Println("Received request to authenticate")
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -81,7 +100,7 @@ func authenticateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := mdb.LoadDB()
+	db, err := mdb.LoadUsersOnly()
 	if err != nil {
 		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
 		log.Println("Error connecting to database:", err)
