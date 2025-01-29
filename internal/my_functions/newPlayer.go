@@ -24,7 +24,7 @@ func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 	}
 
 	p := &mt.Player{
-		ID:       len(db.Players),
+		ID:       NewPlayerCount,
 		Name:     playerName,
 		Age:      -1,
 		Ranking:  -1,
@@ -33,6 +33,8 @@ func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
 		ClubIDs:  make(map[int]string),
 	}
 
+	// Be ready for next player
+	NewPlayerCount--
 	db.AddPlayer(p)
 	log.Printf("Player %v sucessfully created.", playerName)
 	return p, nil

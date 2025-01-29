@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ
 );
 `
+
+// The 3 lines SELECT setval are used to synchronise the autoincrement
 var createOtherTablesQuery string = `
 
 CREATE TABLE IF NOT EXISTS players (
@@ -109,6 +111,10 @@ CREATE TABLE IF NOT EXISTS team_club (
 	user_id INTEGER NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+SELECT setval('players_id_seq', (SELECT MAX(id) FROM players));
+SELECT setval('teams_id_seq', (SELECT MAX(id) FROM teams));
+SELECT setval('clubs_id_seq', (SELECT MAX(id) FROM clubs));
 
 COMMIT;`
 
