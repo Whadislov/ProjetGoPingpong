@@ -46,9 +46,16 @@ func DeleteClub(c *mt.Club, db *mt.Database) error {
 	}
 
 	// Delete club
+	IDtoDelete := c.ID
+	// Delete from the local database
 	err := db.DeleteClub(c.ID)
 	if err != nil {
 		return fmt.Errorf("error when deleting club %s: %w", c.Name, err)
+	} else {
+		// If already in postgres, store the ID to be deleted
+		if IDtoDelete >= 0 {
+			db.AddDeletedClub(IDtoDelete)
+		}
 	}
 
 	return nil

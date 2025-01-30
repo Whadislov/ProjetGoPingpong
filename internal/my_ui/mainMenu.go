@@ -21,12 +21,35 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 			dialog.ShowInformation("Information", "There is nothing new to save", w)
 		} else {
 			if appStartOption == "local" {
-				mdb.SaveDB(db)
+				err := mdb.SaveDB(db)
+				if err != nil {
+					dialog.ShowError(err, w)
+				} else {
+					HasChanged = false
+					// Reload the database after saving (refresh the IDs)
+					db, err = mdb.LoadDB()
+					if err != nil {
+						dialog.ShowError(err, w)
+					} else {
+						dialog.ShowInformation("Information", "Changes saved", w)
+					}
+				}
+
 			} else if appStartOption == "browser" {
-				mf.SaveDB(db)
+				err := mf.SaveDB(db)
+				if err != nil {
+					dialog.ShowError(err, w)
+				} else {
+					HasChanged = false
+					// Reload the database after saving (refresh the IDs)
+					db, err = mf.LoadDB()
+					if err != nil {
+						dialog.ShowError(err, w)
+					} else {
+						dialog.ShowInformation("Information", "Changes saved", w)
+					}
+				}
 			}
-			dialog.ShowInformation("Information", "Changes saved", w)
-			HasChanged = false
 		}
 	})
 

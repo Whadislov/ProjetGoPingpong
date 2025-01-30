@@ -89,7 +89,6 @@ func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
 			}
 		}
 	}
-	log.Println("Leaving SaveT")
 	return nil
 }
 
@@ -130,8 +129,6 @@ func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
 func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
 	for _, player := range players {
 		for clubID := range player.ClubIDs {
-			log.Println("(SavePC) Player ID is = ", player.ID)
-			log.Println("(SavePC) Club ID is = ", clubID)
 			query := `
 			INSERT INTO player_club (player_id, club_id, user_id)
 			VALUES ($1, $2, $3)
@@ -182,9 +179,26 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 	return nil
 }
 
+// SaveDeletions saves the deletion that have been made by the user in the database.
+func (db *Database) SaveDeletions(DElements map[string][]int) error {
+	for table, ids := range DElements {
+		if table != "users" && table != "players" && table != "teams" && table != "clubs" {
+			return fmt.Errorf("invalid table name: %s", table)
+		} else {
+			for _, id := range ids {
+				query := fmt.Sprintf("DELETE FROM %s WHERE id = $1;", table)
+				_, err := db.Conn.Exec(query, id)
+				if err != nil {
+					return fmt.Errorf("failed to save the deletion: %w", err)
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func (db *Database) ResetTables() error {
 	_, err := db.Conn.Exec(resetTablesQuery, userIDOfSession)
-	log.Println("(Reset Table) User ID of the session set to", userIDOfSession)
 	if err != nil {
 		return fmt.Errorf("failed to reset user data: %w", err)
 	}
@@ -201,40 +215,44 @@ func SaveDB(golangDB *mt.Database) error {
 	}
 	sqlDB.ResetTables()
 
-	log.Println("(SaveDb) User ID of the session set to", userIDOfSession)
-	log.Println("(SaveDb) Entering SaveU")
+	log.Println("Saving user")
 	err = sqlDB.SaveUsers(golangDB.Users)
 	if err != nil {
 		return err
 	}
-	log.Println("(SaveDb) Entering SaveP")
+	log.Println("Saving players")
 	err = sqlDB.SavePlayers(golangDB.Players)
 	if err != nil {
 		return err
 	}
-	log.Println("(SaveDb) Entering SaveT")
+	log.Println("Saving teams")
 	err = sqlDB.SaveTeams(golangDB.Teams)
 	if err != nil {
 		return err
 	}
-	log.Println("(SaveDb) Entering SaveC")
+	log.Println("Saving clubs")
 	err = sqlDB.SaveClubs(golangDB.Clubs)
 	if err != nil {
 		log.Println("(SaveDb SaveC) Error", err)
 		return err
 	}
-	log.Println("(SaveDb) Entering SavePT")
+	log.Println("Saving player team relationships")
 	err = sqlDB.SavePlayerTeams(golangDB.Players)
 	if err != nil {
 		return err
 	}
-	log.Println("(SaveDb) Entering SavePC")
+	log.Println("Saving player club relationships")
 	err = sqlDB.SavePlayerClubs(golangDB.Players)
 	if err != nil {
 		return err
 	}
-	log.Println("(SaveDb) Entering SaveTC")
+	log.Println("Saving team club relationships")
 	err = sqlDB.SaveTeamClubs(golangDB.Teams)
+	if err != nil {
+		return err
+	}
+	log.Println("Saving deleted elements")
+	err = sqlDB.SaveDeletions(golangDB.DeletedElements)
 	if err != nil {
 		return err
 	}

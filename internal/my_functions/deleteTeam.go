@@ -12,10 +12,10 @@ func DeleteTeam(t *mt.Team, db *mt.Database) error {
 	// Remove club depedences
 	if len(t.ClubID) > 0 {
 		// need clubID for t.RemoveClub
-		clubID := -1
+		var clubID int
 		for ID := range t.ClubID {
 			clubID = ID
-			err := db.Clubs[clubID].RemoveTeam(t)
+			err := db.Clubs[ID].RemoveTeam(t)
 			if err != nil {
 				return fmt.Errorf("error when deleting team %s: %w", t.Name, err)
 			}
@@ -46,10 +46,16 @@ func DeleteTeam(t *mt.Team, db *mt.Database) error {
 	}
 
 	// Delete team
-
+	IDtoDelete := t.ID
+	// Delete from the local database
 	err := db.DeleteTeam(t.ID)
 	if err != nil {
 		return fmt.Errorf("error when deleting team %s: %w", t.Name, err)
+	} else {
+		// If already in postgres, store the ID to be deleted
+		if IDtoDelete >= 0 {
+			db.AddDeletedTeam(IDtoDelete)
+		}
 	}
 
 	return nil

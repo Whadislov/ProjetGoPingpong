@@ -195,27 +195,32 @@ func LoadDB() (*mt.Database, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Loading clubs")
 	clubs, err := db.LoadClubs()
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Loading player team relationships")
 	err = db.LoadPlayerTeams(players, teams)
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Loading player club relationships")
 	err = db.LoadPlayerClubs(players, clubs)
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Loading team club relationships")
 	err = db.LoadTeamClubs(teams, clubs)
 	if err != nil {
 		return nil, err
 	}
 	golangDB := &mt.Database{
-		Users:   users,
-		Players: players,
-		Teams:   teams,
-		Clubs:   clubs,
+		Users:           users,
+		Players:         players,
+		Teams:           teams,
+		Clubs:           clubs,
+		DeletedElements: map[string][]int{},
 	}
 	log.Println("Database loaded successfully")
 	defer db.Close()
@@ -231,7 +236,6 @@ func LoadUsersOnly() (*mt.Database, error) {
 		return nil, err
 	}
 
-	log.Println("Loading users")
 	users, err := db.LoadUsers()
 	if err != nil {
 		return nil, err

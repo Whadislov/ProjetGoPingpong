@@ -88,3 +88,23 @@ func (d *Database) GetClub(clubID int) (*Club, error) {
 func (d *Database) AddUser(user *User) {
 	d.Users[user.ID] = user
 }
+
+// AddDeletedUser adds a user ID to be deleted on the postgres database.
+func (d *Database) AddDeletedUser(userID int) {
+	d.DeletedElements["users"] = append(d.DeletedElements["users"], userID)
+}
+
+// AddDeletedPlayer adds a player ID to be deleted on the postgres database.
+func (d *Database) AddDeletedPlayer(playerID int) {
+	d.DeletedElements["players"] = append(d.DeletedElements["players"], playerID)
+}
+
+// AddDeletedTeam adds a team ID to be deleted on the postgres database.
+func (d *Database) AddDeletedTeam(teamID int) {
+	d.DeletedElements["teams"] = append(d.DeletedElements["teams"], teamID)
+}
+
+// AddDeletedClub adds a user ID to be deleted on the postgres database.
+func (d *Database) AddDeletedClub(clubID int) {
+	d.DeletedElements["clubs"] = append(d.DeletedElements["clubs"], clubID)
+}

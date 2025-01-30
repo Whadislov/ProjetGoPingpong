@@ -30,11 +30,13 @@ type Team struct {
 	Name      string         `json:"name"`
 	PlayerIDs map[int]string `json:"players"`
 	ClubID    map[int]string `json:"clubs"`
+	IsDeleted bool           `json:"is_deleted"`
 }
 
 type Database struct {
-	Users   map[int]*User   `json:"users"`
-	Clubs   map[int]*Club   `json:"clubs"`
-	Teams   map[int]*Team   `json:"teams"`
-	Players map[int]*Player `json:"players"`
+	Users           map[int]*User    `json:"users"`
+	Clubs           map[int]*Club    `json:"clubs"`
+	Teams           map[int]*Team    `json:"teams"`
+	Players         map[int]*Player  `json:"players"`
+	DeletedElements map[string][]int `json:"deleted_elements"`
 }
