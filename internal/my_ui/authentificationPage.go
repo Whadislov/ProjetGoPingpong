@@ -137,6 +137,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 				w.SetContent(signUpPage(db, w, a))
 			}
 		} else {
+			var err error
 			dialog.ShowInformation("Success", "Your user account has been created !", w)
 			mdb.SetUserIDOfSession(newUser.ID)
 
@@ -149,7 +150,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			log.Println("Sign up is successfull")
 
 			// Now load the whole database
-			var err error
+
 			if appStartOption == "local" {
 				db, err = mdb.LoadDB()
 			} else if appStartOption == "browser" {
@@ -202,6 +203,7 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 					// Now load the corresponding database of the user
 					var err error
 					if appStartOption == "local" {
+						mdb.SetUserIDOfSession(user.ID)
 						db, err = mdb.LoadDB()
 					} else if appStartOption == "browser" {
 						db, err = mfr.LoadDB()

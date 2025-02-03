@@ -4,19 +4,39 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
 // Handler for loading the database
-func loadDatabaseHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received request to load database")
+func loadUserDatabaseHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received request to load user database")
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
+	/*
+		var userID int
+		err := json.NewDecoder(r.Body).Decode(&userID)
+		if err != nil {
+			http.Error(w, "Invalid JSON data", http.StatusBadRequest)
+			log.Println("Error decoding JSON:", err)
+			return
+		}
+	*/
+
+	userID := r.Header.Get("X-User-ID")
+	if userID == "" {
+		http.Error(w, "User is unidentified", http.StatusUnauthorized)
+		return
+	}
+
+	// Convert the str ID into a int ID
+	id, _ := strconv.Atoi(userID)
+	mdb.SetUserIDOfSession(id)
 	db, err := mdb.LoadDB()
 	if err != nil {
 		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
@@ -25,6 +45,7 @@ func loadDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(db)
 }
 
@@ -118,6 +139,7 @@ func authenticateUserHandler(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte("Authentification is unsuccessfull"))
 			} else {
+				log.Println("Authentification is successfull")
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte("Authentification is successfull"))
 			}
