@@ -38,8 +38,11 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	passwordEntry := widget.NewPasswordEntry()
 	passwordEntry.SetText(currentPassword)
 
-	createdAtLabel1 := widget.NewLabel("📅 User since: ")
-	createdAtLabel2 := widget.NewLabel(user.CreatedAt)
+	createdAtLabel1 := widget.NewLabel("📅 User since(yyyy-mm-dd): ")
+	// Example format: 2025-02-03T09:58:59Z
+	// Only show the date and not the hours
+	readableCreatedAt := user.CreatedAt[:10]
+	createdAtLabel2 := widget.NewLabel(readableCreatedAt)
 	createdAtContent := container.NewGridWithColumns(2, createdAtLabel1, createdAtLabel2)
 
 	changeUsernameButton := widget.NewButton("Edit username", func() {

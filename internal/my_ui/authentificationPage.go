@@ -26,14 +26,11 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	var err error
 	if appStartOption == "local" {
 		db, err = mdb.LoadUsersOnly()
-		if err != nil {
-			panic(err)
-		}
 	} else if appStartOption == "browser" {
 		db, err = mfr.LoadUsersOnly()
-		if err != nil {
-			panic(err)
-		}
+	}
+	if err != nil {
+		panic(err)
 	}
 	logInButton := widget.NewButton("Log in", func() {
 		w.SetContent(logInPage(db, w, a))

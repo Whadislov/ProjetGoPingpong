@@ -14,7 +14,7 @@ import (
 func main() {
 
 	// Start app locally or on a browser ?
-	appStartOption := "local"
+	appStartOption := "browser"
 
 	// Start app on a browser
 	if appStartOption == "browser" {

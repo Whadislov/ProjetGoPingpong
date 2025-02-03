@@ -22,6 +22,7 @@ const (
 	dbName   = "ttapp_database"
 )
 
+// Had to initialize directly here with the online database, because the browser would not load it from the function (need sync maybe)
 var psqlInfo string = "postgresql://ttapp_database_owner:7MopfqD4SIyh@ep-white-unit-a2ap77if.eu-central-1.aws.neon.tech/ttapp_database?sslmode=require"
 
 func AppStartOption(s string) {

@@ -1,8 +1,6 @@
 package myapp
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -25,9 +23,10 @@ func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 	createDeleteMenuButton := widget.NewButton("Delete", func() { DeletePage(db, w, a) })
 	createAddInfoToPlayerButton := widget.NewButton("Modify player information", func() { AddInfoToPlayerPage(db, w, a) })
 
-	functionalityText := canvas.NewText("Functionalities", color.RGBA{R: 0, G: 0, B: 0, A: 255})
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	functionalityText := canvas.NewText("Functionalities", themeColor)
 	functionalityText.Alignment = fyne.TextAlignCenter
-	functionalityText.TextSize = 16
+	functionalityText.TextSize = 32
 
 	functionalityPage := container.NewVBox(
 		functionalityText,

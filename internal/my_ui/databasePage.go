@@ -1,8 +1,6 @@
 package myapp
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -23,9 +21,10 @@ func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	teamButton := widget.NewButton("Show teams", func() { TeamPage(db, w, a) })
 	clubButton := widget.NewButton("Show clubs", func() { ClubPage(db, w, a) })
 
-	databaseText := canvas.NewText("Database", color.RGBA{R: 0, G: 0, B: 0, A: 255})
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	databaseText := canvas.NewText("Your database", themeColor)
 	databaseText.Alignment = fyne.TextAlignCenter
-	databaseText.TextSize = 16
+	databaseText.TextSize = 32
 
 	databasePage := container.NewVBox(
 		databaseText,
