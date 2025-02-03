@@ -42,7 +42,7 @@ func main() {
 		go func() {
 			<-apiReady
 			defer wg.Done()
-			log.Println("Starting app server on :8000")
+			log.Println("Starting app server on: 8000")
 			err := http.ListenAndServe(":8000", http.FileServer(http.Dir("./wasm")))
 			if err != nil {
 				log.Fatalf("App server error: %v", err)
