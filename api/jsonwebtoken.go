@@ -1,7 +1,7 @@
 package api
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -28,59 +28,54 @@ func generateJWT(userID int) (string, error) {
 	return tokenString, nil
 }
 
-// Handler de connexion : génère un token et le retourne en JSON
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	// 🚨 Simule une connexion réussie avec un ID utilisateur "12345"
-	userID := 12345
-
-	// Générer le token JWT
-	token, err := generateJWT(userID)
-	if err != nil {
-		http.Error(w, "Erreur lors de la génération du token", http.StatusInternalServerError)
-		return
-	}
-
-	// Retourner le token en JSON
-	response := map[string]string{"token": token}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
-}
-
 // Middleware to verify JSON Web Token (JWT)
 func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			http.Error(w, "Missing token", http.StatusUnauthorized)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
 		// Extract the token after "Bearer "
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			// Checks the algorithm to prevent attacks
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method")
+			}
 			return jwtSecret, nil
 		})
 
 		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
 		// Extract User ID from the token
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			http.Error(w, "Impossible to read the token", http.StatusUnauthorized)
+			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
 		}
 
-		userID, ok := claims["user_id"].(string) // User ID needs to be a string
+		// Check token's expiration
+		if exp, ok := claims["exp"].(float64); ok {
+			if time.Now().Unix() > int64(exp) {
+				http.Error(w, "Token expired", http.StatusUnauthorized)
+				return
+			}
+		}
+
+		// Now get user ID (string)
+		userID, ok := claims["user_id"].(string)
 		if !ok {
-			http.Error(w, "Invalid user ID ", http.StatusUnauthorized)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
-		// Add user ID in the header
-		r.Header.Set("X-User-ID", userID)
+		// Add user ID in the header to use it in API
+		r.Header.Set("User-ID", userID)
 
 		// Call next header
 		next(w, r)

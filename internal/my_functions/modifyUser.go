@@ -9,7 +9,7 @@ import (
 
 // ChangeUsername changes the current username with a new one.
 func ChangeUsername(currentUsername string, newUsername string, db *mt.Database) error {
-	b, err := isValidUsername(newUsername)
+	b, err := IsValidUsername(newUsername)
 	if !b {
 		return err
 	}
@@ -31,7 +31,7 @@ func ChangeUsername(currentUsername string, newUsername string, db *mt.Database)
 
 // ChangePassword changes the current password with a new one.
 func ChangePassword(newPassword string, user *mt.User) error {
-	b, err := isValidPassword(newPassword)
+	b, err := IsValidPassword(newPassword)
 	if !b {
 		return err
 	}
@@ -44,7 +44,7 @@ func ChangePassword(newPassword string, user *mt.User) error {
 
 // ChangeEmail changes the current email with a new one.
 func ChangeEmail(newEmail string, user *mt.User) error {
-	b, err := isValidEmail(newEmail)
+	b, err := IsValidEmail(newEmail)
 	if !b {
 		return err
 	}

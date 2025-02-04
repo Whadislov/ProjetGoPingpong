@@ -49,7 +49,7 @@ func GetName(x interface{}) string {
 }
 
 // isValidName verifies that the name follows some criterias
-func isValidName(name string) (bool, error) {
+func IsValidName(name string) (bool, error) {
 	if name == "" {
 		return false, fmt.Errorf("name cannot be empty")
 	}
@@ -63,7 +63,7 @@ func isValidName(name string) (bool, error) {
 }
 
 // isValidName verifies that the name follows some criterias
-func isValidUsername(username string) (bool, error) {
+func IsValidUsername(username string) (bool, error) {
 	if username == "" {
 		return false, fmt.Errorf("username cannot be empty")
 	}
@@ -82,7 +82,7 @@ func isValidUsername(username string) (bool, error) {
 }
 
 // isValidEmail verifies that the name follows a valid regex
-func isValidEmail(email string) (bool, error) {
+func IsValidEmail(email string) (bool, error) {
 	if email == "" {
 		return false, fmt.Errorf("email cannot be empty")
 	}
@@ -100,7 +100,7 @@ func isValidEmail(email string) (bool, error) {
 }
 
 // isValidEmail verifies that the password is not empty and does no contain spaces
-func isValidPassword(password string) (bool, error) {
+func IsValidPassword(password string) (bool, error) {
 	if password == "" {
 		return false, fmt.Errorf("password cannot be empty")
 	}

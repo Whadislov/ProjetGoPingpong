@@ -6,6 +6,7 @@ import (
 
 var appStartOption string
 var userOfSession *mt.User
+var jsonWebToken string
 
 func SetUsernameOfSession(u *mt.User) {
 	userOfSession = u

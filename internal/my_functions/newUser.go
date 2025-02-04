@@ -12,13 +12,13 @@ import (
 // Returns the created user and an error if the user name is empty or if there is an issue with the operation.
 func NewUser(username string, email string, password string, confirmPassword string, db *mt.Database) (*mt.User, error) {
 	// In the UI, Email is first asked, then username, then password
-	b, err := isValidEmail(email)
+	b, err := IsValidEmail(email)
 	if !b {
 		return nil, err
 	}
 	log.Println("User creation : Email is valid.")
 
-	b, err = isValidUsername(username)
+	b, err = IsValidUsername(username)
 	if !b {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func NewUser(username string, email string, password string, confirmPassword str
 		}
 	}
 
-	b, err = isValidPassword(password)
+	b, err = IsValidPassword(password)
 	if !b {
 		return nil, err
 	}

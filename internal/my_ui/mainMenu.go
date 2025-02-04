@@ -43,7 +43,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 				} else {
 					HasChanged = false
 					// Reload the database after saving (refresh the IDs)
-					db, err = mfr.LoadDB()
+					db, err = mfr.LoadDB(jsonWebToken)
 					if err != nil {
 						dialog.ShowError(err, w)
 					} else {

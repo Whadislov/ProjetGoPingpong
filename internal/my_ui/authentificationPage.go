@@ -46,12 +46,12 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	if len(db.Users) > 0 {
-		identificationPage := container.NewVBox(
+		authentificationPage := container.NewVBox(
 			pageLabel,
 			logInButton,
 			signUpButton,
 		)
-		return identificationPage
+		return authentificationPage
 	} else {
 
 		quitButtonInSignUpPage := widget.NewButton("Quit", func() {
@@ -132,7 +132,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 				passwordEntry.SetText("")
 				confirmPasswordEntry.SetText("")
 			default:
-				log.Println("No issue")
+				log.Println("unknown error")
 				dialog.ShowError(err, w)
 				w.SetContent(signUpPage(db, w, a))
 			}
@@ -142,20 +142,12 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			mdb.SetUserIDOfSession(newUser.ID)
 
 			// Save the new user in the database
-			if appStartOption == "local" {
-				mdb.SaveDB(db)
-			} else if appStartOption == "browser" {
-				mfr.SaveDB(db)
-			}
+			mdb.SaveDB(db)
 			log.Println("Sign up is successfull")
 
 			// Now load the whole database
+			db, err = mdb.LoadDB()
 
-			if appStartOption == "local" {
-				db, err = mdb.LoadDB()
-			} else if appStartOption == "browser" {
-				db, err = mfr.LoadDB()
-			}
 			if err != nil {
 				dialog.ShowError(err, w)
 			} else {
@@ -202,12 +194,9 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 					mdb.SetUserIDOfSession(user.ID)
 					// Now load the corresponding database of the user
 					var err error
-					if appStartOption == "local" {
-						mdb.SetUserIDOfSession(user.ID)
-						db, err = mdb.LoadDB()
-					} else if appStartOption == "browser" {
-						db, err = mfr.LoadDB()
-					}
+
+					mdb.SetUserIDOfSession(user.ID)
+					db, err = mdb.LoadDB()
 
 					if err != nil {
 						dialog.ShowError(err, w)

@@ -12,7 +12,7 @@ import (
 // NewPlayer creates a new player with the given name and adds it to the database.
 // Returns the created player and an error if the player name is empty or if there is an issue with the operation.
 func NewPlayer(playerName string, db *mt.Database) (*mt.Player, error) {
-	b, err := isValidName(playerName)
+	b, err := IsValidName(playerName)
 	if !b {
 		return nil, err
 	}
