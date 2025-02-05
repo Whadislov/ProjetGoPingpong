@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -12,6 +13,7 @@ import (
 
 // Handler for loading the database
 func loadUserDatabaseHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received request to load user DB")
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -110,6 +112,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Generated token : ", token)
+
 	json.NewEncoder(w).Encode(token)
 }
 
@@ -138,7 +142,7 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	// Load the whole database to register the new user. Could be optimised to request directly postgres
 	db, err := mdb.LoadDB()
 	if err != nil {
-		http.Error(w, "Could load database to create the new user", http.StatusInternalServerError)
+		http.Error(w, "Could not load database to create the new user", http.StatusInternalServerError)
 		return
 	}
 

@@ -10,6 +10,7 @@ import (
 
 // checkUserCredentials verifies if the credentials of the user are correct, returns the userID
 func checkUserCredentials(username string, password string) (int, error) {
+	log.Println("Loading DB to check user credentials")
 	db, err := mdb.LoadDB()
 	if err != nil {
 		return -1, fmt.Errorf("error during connexion to database to check user credentials")
@@ -30,7 +31,7 @@ func checkUserCredentials(username string, password string) (int, error) {
 
 // checkUserCredentials verifies that the newly created user does not use an already registered username
 func checkUserExists(username string, email string, db *mt.Database) (bool, error) {
-
+	log.Println("Loading DB to check user existence before creation")
 	for _, user := range db.Users {
 		if user.Name == username {
 			return true, fmt.Errorf("username already exists")

@@ -8,6 +8,7 @@ import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -16,24 +17,25 @@ import (
 // AuthentificationPageWeb returns a page that contains a log in button and a sign up button
 func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageLabel := widget.NewLabel("Please authenticate")
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	pageLabel := canvas.NewText("TT Companion", themeColor)
 	pageLabel.Alignment = fyne.TextAlignCenter
+	pageLabel.TextSize = 32
+
+	authLabel := widget.NewLabel("Please authenticate")
+	authLabel.Alignment = fyne.TextAlignCenter
 
 	logInButton := widget.NewButton("Log in", func() {
-		w.SetContent(logInPageWeb(w, a))
+		w.SetContent(loginPageWeb(w, a))
 	})
 
 	signUpButton := widget.NewButton("Sign up", func() {
-		cancelButtonInSignUpPage := widget.NewButton("Cancel", func() {
-			w.SetContent(AuthentificationPageWeb(w, a))
-		})
-
-		content := container.NewVBox(signUpPageWeb(w, a), cancelButtonInSignUpPage)
-		w.SetContent(content)
+		w.SetContent(signUpPageWeb(w, a))
 	})
 
 	authentificationPageWeb := container.NewVBox(
 		pageLabel,
+		authLabel,
 		logInButton,
 		signUpButton,
 	)
@@ -93,11 +95,15 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 				w.SetContent(signUpPageWeb(w, a))
 			} else {
 				log.Println("Sign up is successfull")
-				//userOfSession = db.Users[newUser.ID]
+				userOfSession = db.Users[0]
 				w.SetContent(MainPage(db, w, a))
 				w.SetMainMenu(MainMenu(db, w, a))
 			}
 		}
+	})
+
+	cancelButton := widget.NewButton("Cancel", func() {
+		w.SetContent(AuthentificationPageWeb(w, a))
 	})
 
 	signUpPageWeb := container.NewVBox(
@@ -111,13 +117,14 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		confirmPasswordLabel,
 		confirmPasswordEntry,
 		validationButton,
+		cancelButton,
 	)
 
 	return signUpPageWeb
 }
 
 // logInPageWeb returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
-func logInPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
+func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	pageLabel := widget.NewLabel("Logging in ...")
 
 	usernameLabel := widget.NewLabel("👤 Username")
@@ -131,20 +138,20 @@ func logInPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		if err != nil {
 			dialog.ShowError(fmt.Errorf("failed to login: %v", err), w)
 			// Reset entries
-			w.SetContent(logInPageWeb(w, a))
+			w.SetContent(loginPageWeb(w, a))
 		} else {
 			log.Println("Login is successfull")
-			//userOfSession = db.Users[user.ID]
+			userOfSession = db.Users[0]
 			w.SetContent(MainPage(db, w, a))
 			w.SetMainMenu(MainMenu(db, w, a))
 		}
 	})
 
 	cancelButton := widget.NewButton("Cancel", func() {
-		w.SetContent(AuthentificationPage(w, a))
+		w.SetContent(AuthentificationPageWeb(w, a))
 	})
 
-	logInPage := container.NewVBox(
+	loginPageWeb := container.NewVBox(
 		pageLabel,
 		usernameLabel,
 		usernameEntry,
@@ -154,5 +161,5 @@ func logInPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		cancelButton,
 	)
 
-	return logInPage
+	return loginPageWeb
 }

@@ -5,12 +5,12 @@ import (
 	"log"
 
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -18,17 +18,18 @@ import (
 
 // AuthentificationPage returns a page that contains a log in button and a sign up button
 func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
-
-	pageLabel := widget.NewLabel("Please authenticate")
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	pageLabel := canvas.NewText("TT Companion", themeColor)
 	pageLabel.Alignment = fyne.TextAlignCenter
+	pageLabel.TextSize = 32
+
+	authLabel := widget.NewLabel("Please authenticate")
+	authLabel.Alignment = fyne.TextAlignCenter
 
 	var db *mt.Database
 	var err error
-	if appStartOption == "local" {
-		db, err = mdb.LoadUsersOnly()
-	} else if appStartOption == "browser" {
-		db, err = mfr.LoadUsersOnly()
-	}
+	db, err = mdb.LoadUsersOnly()
+
 	if err != nil {
 		panic(err)
 	}
@@ -48,6 +49,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	if len(db.Users) > 0 {
 		authentificationPage := container.NewVBox(
 			pageLabel,
+			authLabel,
 			logInButton,
 			signUpButton,
 		)
