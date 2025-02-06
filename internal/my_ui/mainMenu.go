@@ -1,9 +1,10 @@
 package myapp
 
 import (
+	"log"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"log"
 
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
@@ -37,7 +38,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 				}
 
 			} else if appStartOption == "browser" {
-				err := mfr.SaveDB(db)
+				err := mfr.SaveDB(jsonWebToken, db)
 				if err != nil {
 					dialog.ShowError(err, w)
 				} else {
@@ -70,7 +71,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 							w.SetContent(AuthentificationPage(w, a))
 						}
 					} else if appStartOption == "browser" {
-						err = mfr.SaveDB(db)
+						err = mfr.SaveDB(jsonWebToken, db)
 						if err != nil {
 							dialog.ShowError(err, w)
 						} else {

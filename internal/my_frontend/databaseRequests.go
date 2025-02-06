@@ -43,23 +43,35 @@ func LoadDB(authToken string) (*mt.Database, error) {
 	return golangDB, nil
 }
 
-// SavedDB saves the database.
-func SaveDB(golangDB *mt.Database) error {
+// SaveDB saves the database.
+func SaveDB(authToken string, golangDB *mt.Database) error {
 
 	dataToSave, err := json.Marshal(golangDB)
 	if err != nil {
 		return fmt.Errorf("failed to marshal database: %w", err)
 	}
 
-	resp, err := http.Post("http://localhost:8001/api/save-database", "application/json", bytes.NewBuffer(dataToSave))
+	req, err := http.NewRequest("POST", "http://localhost:8001/api/save-database", bytes.NewBuffer(dataToSave))
 	if err != nil {
-		return fmt.Errorf("failed to sent request: %w", err)
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+
+	// Add the token in the Authorization header
+	log.Println("authToken=", authToken)
+	req.Header.Set("Authorization", "Bearer "+authToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to send request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("server error: %s", resp.Status)
+		return fmt.Errorf("server returned non-OK status: %d", resp.StatusCode)
 	}
+
 	log.Println("Database saved successfully")
 	return nil
 }

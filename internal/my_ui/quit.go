@@ -24,7 +24,7 @@ func Quit(db *mt.Database, w fyne.Window, a fyne.App, HasChanged bool) {
 						dialog.ShowError(err, w)
 					}
 				} else if appStartOption == "browser" {
-					err := mfr.SaveDB(db)
+					err := mfr.SaveDB(jsonWebToken, db)
 					if err != nil {
 						dialog.ShowError(err, w)
 					}

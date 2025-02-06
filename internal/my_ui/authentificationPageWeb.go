@@ -13,6 +13,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+var jsonWebToken string
+
 // AuthentificationPageWeb returns a page that contains a log in button and a sign up button
 func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
@@ -81,7 +83,8 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 			log.Println("passwords do not match:")
 			w.SetContent(signUpPageWeb(w, a))
 		} else {
-			db, err := mfr.SignUp(usernameEntry.Text, passwordEntry.Text, emailEntry.Text)
+			db, token, err := mfr.SignUp(usernameEntry.Text, passwordEntry.Text, emailEntry.Text)
+			jsonWebToken = token
 			// Last check if username or email already exist
 			if err != nil {
 				// Need to recheck this err
@@ -136,7 +139,8 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	passwordEntry := widget.NewPasswordEntry()
 
 	validationButton := widget.NewButton("Connect", func() {
-		db, err := mfr.Login(usernameEntry.Text, passwordEntry.Text)
+		db, token, err := mfr.Login(usernameEntry.Text, passwordEntry.Text)
+		jsonWebToken = token
 		if err != nil {
 			dialog.ShowError(fmt.Errorf("failed to login: %v", err), w)
 			// Reset entries

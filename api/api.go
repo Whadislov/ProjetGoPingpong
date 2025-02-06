@@ -9,7 +9,7 @@ import (
 func RunApi(config *Config) {
 	http.Handle("/api", corsMiddleware(http.HandlerFunc(isApiReady)))
 	http.Handle("/api/load-database", corsMiddleware(authMiddleware(http.HandlerFunc(loadUserDatabaseHandler))))
-	http.Handle("/api/save-database", corsMiddleware(http.HandlerFunc(saveDatabaseHandler)))
+	http.Handle("/api/save-database", corsMiddleware(authMiddleware(http.HandlerFunc(saveDatabaseHandler))))
 	http.Handle("/api/login", corsMiddleware(http.HandlerFunc(loginHandler)))
 	http.Handle("/api/signup", corsMiddleware(http.HandlerFunc(signUpHandler)))
 

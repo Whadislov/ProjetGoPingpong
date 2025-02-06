@@ -40,7 +40,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
 	createdAtLabel1 := widget.NewLabel("📅 User since(yyyy-mm-dd): ")
 	// Example format: 2025-02-03T09:58:59Z
-	// Only show the date and not the hours
+	// [:10] -> only show the date and not the hours
 	readableCreatedAt := user.CreatedAt[:10]
 	createdAtLabel2 := widget.NewLabel(readableCreatedAt)
 	createdAtContent := container.NewGridWithColumns(2, createdAtLabel1, createdAtLabel2)
@@ -68,7 +68,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 			if appStartOption == "local" {
 				err = mdb.SaveDB(db)
 			} else if appStartOption == "browser" {
-				err = mfr.SaveDB(db)
+				err = mfr.SaveDB(jsonWebToken, db)
 			}
 
 			if err != nil {
@@ -91,7 +91,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 							dialog.ShowError(err, w)
 						}
 					} else if appStartOption == "browser" {
-						err := mfr.SaveDB(db)
+						err := mfr.SaveDB(jsonWebToken, db)
 						if err != nil {
 							dialog.ShowError(err, w)
 						}
@@ -122,7 +122,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 // ChangeUsernamePage sets up the page to change user's username.
 func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Changing 👤 username", 32)
+	pageTitle := setTitle("Editing 👤 username", 32)
 
 	usernameLabel := widget.NewLabel("Your current username: " + user.Name)
 	editUsernameEntry := widget.NewEntry()
@@ -159,7 +159,7 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 // ChangeEmailPage sets up the page to change user's email.
 func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Changing ✉️ email", 32)
+	pageTitle := setTitle("Editing ✉️ email", 32)
 
 	emailLabel := widget.NewLabel("Your current email: " + user.Email)
 	editEmailEntry := widget.NewEntry()
@@ -196,7 +196,7 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 // ChangePasswordPage sets up the page to change user's email.
 func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Changing 🔒 password", 32)
+	pageTitle := setTitle("Editing 🔒 password", 32)
 
 	passwordLabel := widget.NewLabel("Enter your current password")
 
