@@ -13,7 +13,6 @@ import (
 
 // ClubInfos returns a container that has an accordion to show the players in the club, and a second accodion to show the teams in the club.
 func ClubInfos(club *mt.Club) *fyne.Container {
-
 	var pCanvasObjet fyne.CanvasObject
 	var tCanvasObjet fyne.CanvasObject
 
@@ -72,7 +71,7 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 
 // ClubPage sets up the page for displaying players and teams of a club.
 func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	label := widget.NewLabel("Clubs")
+	pageTitle := setTitle("Clubs", 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -91,8 +90,8 @@ func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	w.SetContent(container.NewVBox(
+		pageTitle,
 		returnToDatabasePageButton,
-		label,
 		ac),
 	)
 }

@@ -8,7 +8,6 @@ import (
 	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -17,10 +16,7 @@ import (
 // AuthentificationPageWeb returns a page that contains a log in button and a sign up button
 func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	pageLabel := canvas.NewText("TT Companion", themeColor)
-	pageLabel.Alignment = fyne.TextAlignCenter
-	pageLabel.TextSize = 32
+	pageTitle := setTitle("TT Companion", 32)
 
 	authLabel := widget.NewLabel("Please authenticate")
 	authLabel.Alignment = fyne.TextAlignCenter
@@ -34,7 +30,7 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	authentificationPageWeb := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		authLabel,
 		logInButton,
 		signUpButton,
@@ -47,8 +43,7 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 // signUpPageWeb returns a page that contains a create username and a create password field. Adds a new user in the database
 func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
-	pageLabel := widget.NewLabel("Create your account")
-	pageLabel.Alignment = fyne.TextAlignCenter
+	pageTitle := setTitle("Create your account", 32)
 
 	emailLabel := widget.NewLabel("✉️ Email")
 	emailEntry := widget.NewEntry()
@@ -95,7 +90,14 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 				w.SetContent(signUpPageWeb(w, a))
 			} else {
 				log.Println("Sign up is successfull")
-				userOfSession = db.Users[0]
+				// Set the user of the session for the profile page on the menu. There is only one user on the Users map
+				for _, user := range db.Users {
+					if user.Name == usernameEntry.Text {
+						userOfSession = user
+					} else {
+						dialog.ShowError(fmt.Errorf("failed to load your profile: "), w)
+					}
+				}
 				w.SetContent(MainPage(db, w, a))
 				w.SetMainMenu(MainMenu(db, w, a))
 			}
@@ -107,7 +109,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	signUpPageWeb := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		emailLabel,
 		emailEntry,
 		usernameLabel,
@@ -125,7 +127,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 // logInPageWeb returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
 func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
-	pageLabel := widget.NewLabel("Logging in ...")
+	pageTitle := setTitle("Login", 32)
 
 	usernameLabel := widget.NewLabel("👤 Username")
 	usernameEntry := widget.NewEntry()
@@ -141,7 +143,14 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 			w.SetContent(loginPageWeb(w, a))
 		} else {
 			log.Println("Login is successfull")
-			userOfSession = db.Users[0]
+			// Set the user of the session for the profile page on the menu. There is only one user on the Users map
+			for _, user := range db.Users {
+				if user.Name == usernameEntry.Text {
+					userOfSession = user
+				} else {
+					dialog.ShowError(fmt.Errorf("failed to load your profile: "), w)
+				}
+			}
 			w.SetContent(MainPage(db, w, a))
 			w.SetMainMenu(MainMenu(db, w, a))
 		}
@@ -152,7 +161,7 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	loginPageWeb := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		usernameLabel,
 		usernameEntry,
 		passwordLabel,

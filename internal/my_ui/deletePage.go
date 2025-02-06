@@ -19,6 +19,8 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// Rebuild UI on modifications
 	rebuildUI = func() {
 
+		pageTitle := setTitle("Delete", 32)
+
 		pLabel := widget.NewLabel("Players")
 		tLabel := widget.NewLabel("Teams")
 		cLabel := widget.NewLabel("Clubs")
@@ -170,6 +172,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			acc)
 
 		w.SetContent(container.NewVBox(
+			pageTitle,
 			returnToFonctionalityPageButton,
 			container.NewHBox(
 				playerVBox,

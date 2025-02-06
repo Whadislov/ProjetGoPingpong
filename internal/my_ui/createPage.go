@@ -19,6 +19,8 @@ import (
 // CreatePage sets up the page for creating players, teams, and clubs.
 func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
+	pageTitle := setTitle("Create", 32)
+
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
@@ -32,11 +34,11 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	playerButton := widget.NewButton("Create a new player", func() {
 
 		// Club Selection
-		selectClubLabel := widget.NewLabel("You must first select a club")
+		pageTitle := setTitle("Create new player: select a club", 32)
 
 		// clubSelectionPage
 		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			label := widget.NewLabel("Clubs")
+			pageTitle := setTitle("Create new player: select a club", 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			// Sort clubs for an alphabetical order button display
@@ -174,7 +176,10 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 					})
 					// Create a player in this club page
+					pageTitle := setTitle("Create new player: add player information", 32)
+
 					w.SetContent(container.NewVBox(
+						pageTitle,
 						clubLabel,
 						nameEntry,
 						ageEntry,
@@ -188,13 +193,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 			// Choose a club page
 			w.SetContent(container.NewVBox(
-				label,
+				pageTitle,
 				container.NewVBox(listOfClubs...),
 			))
 		})
 		// Club selection page
 		w.SetContent(container.NewVBox(
-			selectClubLabel,
+			pageTitle,
 			clubSelectionPageButton,
 			ReturnToCreatePageButton,
 		))
@@ -205,11 +210,11 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	teamButton := widget.NewButton("Create a new team", func() {
 
 		// Club Selection
-		selectClubLabel := widget.NewLabel("You must first select a club")
+		pageTitle := setTitle("Create new team: select a club", 32)
 
 		// clubSelectionPage
 		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			label := widget.NewLabel("Clubs")
+			pageTitle := setTitle("Create new team: select a club", 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			for _, club := range db.Clubs {
@@ -264,7 +269,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 					})
 					// Create a team in this club page
+					pageTitle := setTitle("Create new team", 32)
 					w.SetContent(container.NewVBox(
+						pageTitle,
 						clubLabel,
 						nameEntry,
 						validatationButton,
@@ -275,13 +282,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 			// Choose a club page
 			w.SetContent(container.NewVBox(
-				label,
+				pageTitle,
 				container.NewVBox(listOfClubs...),
 			))
 		})
 		// Club selection page
 		w.SetContent(container.NewVBox(
-			selectClubLabel,
+			pageTitle,
 			clubSelectionPageButton,
 			ReturnToCreatePageButton,
 		))
@@ -314,7 +321,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 		})
 		// Create a club page
+		pageTitle := setTitle("Create new club", 32)
 		w.SetContent(container.NewVBox(
+			pageTitle,
 			nameEntry,
 			validatationButton,
 			ReturnToCreatePageButton,
@@ -326,9 +335,10 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// If there is no club, a club must first be created
 
 	if len(db.Clubs) < 1 {
-		label := widget.NewLabel("In order to create new players and teams, you need first to create a new club")
+		label := widget.NewLabel("You currently have 0 club available, please create a club first.")
 
 		createPage := container.NewVBox(
+			pageTitle,
 			label,
 			clubButton,
 			ReturnToFonctionalityPageButton,
@@ -337,6 +347,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		w.SetContent(createPage)
 	} else {
 		createPage := container.NewVBox(
+			pageTitle,
 			playerButton,
 			teamButton,
 			clubButton,

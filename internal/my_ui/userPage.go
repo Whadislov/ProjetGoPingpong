@@ -16,9 +16,9 @@ import (
 
 // UserPage sets up the page for displaying user info.
 func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
-	pageLabel := widget.NewLabel("Your informations")
+	pageTitle := setTitle("Your informations", 32)
 	if HasChanged {
-		pageLabel = widget.NewLabel("Your informations* (in edition)")
+		pageTitle = setTitle("Your informations* (in edition)", 32)
 	} else {
 		// Display the correct user info after modifications even before saving
 		currentUsername = user.Name
@@ -107,7 +107,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	content := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		container.NewGridWithColumns(2, usernameContent, changeUsernameButton),
 		container.NewGridWithColumns(2, emailContent, changeEmailButton),
 		container.NewGridWithColumns(2, passwordContent, changePasswordButton),
@@ -122,7 +122,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 // ChangeUsernamePage sets up the page to change user's username.
 func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageLabel := widget.NewLabel("Changing 👤 username")
+	pageTitle := setTitle("Changing 👤 username", 32)
 
 	usernameLabel := widget.NewLabel("Your current username: " + user.Name)
 	editUsernameEntry := widget.NewEntry()
@@ -147,7 +147,7 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 	})
 
 	content := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		usernameLabel,
 		editUsernameEntry,
 		confirmButton,
@@ -159,7 +159,7 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 // ChangeEmailPage sets up the page to change user's email.
 func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageLabel := widget.NewLabel("Changing ✉️ email")
+	pageTitle := setTitle("Changing ✉️ email", 32)
 
 	emailLabel := widget.NewLabel("Your current email: " + user.Email)
 	editEmailEntry := widget.NewEntry()
@@ -184,7 +184,7 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 	})
 
 	content := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		emailLabel,
 		editEmailEntry,
 		confirmButton,
@@ -196,7 +196,7 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 // ChangePasswordPage sets up the page to change user's email.
 func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageLabel := widget.NewLabel("Changing 🔒 password")
+	pageTitle := setTitle("Changing 🔒 password", 32)
 
 	passwordLabel := widget.NewLabel("Enter your current password")
 
@@ -234,7 +234,7 @@ func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 	})
 
 	content := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		passwordLabel,
 		currentPasswordEntry,
 		editPasswordLabel,

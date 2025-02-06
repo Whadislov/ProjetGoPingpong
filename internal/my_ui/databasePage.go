@@ -2,7 +2,6 @@ package myapp
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -11,6 +10,7 @@ import (
 
 // DatabasePage sets up the page for showing players, teams, and clubs.
 func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Your database", 32)
 
 	returnToMainMenuButton := widget.NewButton("Return to main page", func() {
 		mainPage := MainPage(db, w, a)
@@ -21,13 +21,8 @@ func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	teamButton := widget.NewButton("Show teams", func() { TeamPage(db, w, a) })
 	clubButton := widget.NewButton("Show clubs", func() { ClubPage(db, w, a) })
 
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	databaseText := canvas.NewText("Your database", themeColor)
-	databaseText.Alignment = fyne.TextAlignCenter
-	databaseText.TextSize = 32
-
 	databasePage := container.NewVBox(
-		databaseText,
+		pageTitle,
 		playerButton,
 		teamButton,
 		clubButton,

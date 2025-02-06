@@ -10,7 +10,6 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
@@ -18,10 +17,7 @@ import (
 
 // AuthentificationPage returns a page that contains a log in button and a sign up button
 func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	pageLabel := canvas.NewText("TT Companion", themeColor)
-	pageLabel.Alignment = fyne.TextAlignCenter
-	pageLabel.TextSize = 32
+	pageTitle := setTitle("TT Companion", 32)
 
 	authLabel := widget.NewLabel("Please authenticate")
 	authLabel.Alignment = fyne.TextAlignCenter
@@ -48,7 +44,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 
 	if len(db.Users) > 0 {
 		authentificationPage := container.NewVBox(
-			pageLabel,
+			pageTitle,
 			authLabel,
 			logInButton,
 			signUpButton,
@@ -72,9 +68,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 
 // signUpPage returns a page that contains a create username and a create password field. Adds a new user in the database
 func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-
-	pageLabel := widget.NewLabel("Create your account")
-	pageLabel.Alignment = fyne.TextAlignCenter
+	pageTitle := setTitle("Create your account", 32)
 
 	emailLabel := widget.NewLabel("✉️ Email")
 	emailEntry := widget.NewEntry()
@@ -161,7 +155,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	signUpPage := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		emailLabel,
 		emailEntry,
 		usernameLabel,
@@ -178,7 +172,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 // logInPage returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
 func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageLabel := widget.NewLabel("Logging in ...")
+	pageTitle := setTitle("Login", 32)
 
 	usernameLabel := widget.NewLabel("👤 Username")
 	usernameEntry := widget.NewEntry()
@@ -225,7 +219,7 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	logInPage := container.NewVBox(
-		pageLabel,
+		pageTitle,
 		usernameLabel,
 		usernameEntry,
 		passwordLabel,

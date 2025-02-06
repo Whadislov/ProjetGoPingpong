@@ -4,6 +4,7 @@ import (
 	"sort"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
@@ -96,4 +97,14 @@ func IsNumbersOnly(s string) bool {
 		}
 	}
 	return true
+}
+
+// setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size
+func setTitle(s string, size float32) *canvas.Text {
+	a := fyne.CurrentApp()
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	title := canvas.NewText(s, themeColor)
+	title.Alignment = fyne.TextAlignCenter
+	title.TextSize = size
+	return title
 }

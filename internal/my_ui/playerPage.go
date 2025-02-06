@@ -48,7 +48,7 @@ Blade:	%v`,
 // PlayerPage sets up the page for displaying player info.
 func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
-	label := widget.NewLabel("Players")
+	pageTitle := setTitle("Players", 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -69,8 +69,8 @@ func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	w.SetContent(container.NewVBox(
+		pageTitle,
 		returnToDatabasePageButton,
-		label,
 		ac),
 	)
 }

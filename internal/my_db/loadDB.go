@@ -8,8 +8,8 @@ import (
 )
 
 // LoadUsers loads users from the database into the user map.
-func (db *Database) LoadUsers() (map[int]*mt.User, error) {
-	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users")
+func (db *Database) LoadUser() (map[int]*mt.User, error) {
+	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users WHERE id = $1", userIDOfSession)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load users: %w", err)
 	}
@@ -179,8 +179,8 @@ func LoadDB() (*mt.Database, error) {
 		return nil, err
 	}
 
-	log.Println("Loading users")
-	users, err := db.LoadUsers()
+	log.Println("Loading user")
+	users, err := db.LoadUser()
 	if err != nil {
 		return nil, err
 	}
@@ -228,6 +228,28 @@ func LoadDB() (*mt.Database, error) {
 }
 
 // LoadUsers loads users from the database into the user map.
+func (db *Database) LoadAllUsers() (map[int]*mt.User, error) {
+	log.Println("Loading all users")
+	rows, err := db.Conn.Query("SELECT id, username, email, password_hash, created_at FROM users")
+	if err != nil {
+		return nil, fmt.Errorf("failed to load users: %w", err)
+	}
+	defer rows.Close()
+
+	var users = make(map[int]*mt.User)
+	for rows.Next() {
+		var user mt.User
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan user: %w", err)
+		}
+		users[user.ID] = &user
+	}
+
+	return users, rows.Err()
+}
+
+// LoadUsers loads users from the database into the user map.
 func LoadUsersOnly() (*mt.Database, error) {
 	db, err := ConnectToDB()
 
@@ -236,7 +258,7 @@ func LoadUsersOnly() (*mt.Database, error) {
 		return nil, err
 	}
 
-	users, err := db.LoadUsers()
+	users, err := db.LoadAllUsers()
 	if err != nil {
 		return nil, err
 	}

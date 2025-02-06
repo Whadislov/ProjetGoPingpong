@@ -14,6 +14,7 @@ import (
 )
 
 func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
+	pageTitle := setTitle("Edit player information", 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
@@ -30,6 +31,7 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	}
 
 	content := container.NewVBox(
+		pageTitle,
 		returnToFonctionalityPageButton,
 		container.NewGridWithColumns(
 			2,
@@ -42,6 +44,7 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 }
 
 func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) {
+	pageTitle := setTitle("Edit player information", 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
@@ -168,6 +171,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 	)
 
 	content := container.NewVBox(
+		pageTitle,
 		returnToFonctionalityPageButton,
 		container.NewGridWithColumns(
 			2,

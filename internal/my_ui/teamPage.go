@@ -56,7 +56,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 
 // TeamPage sets up the page for displaying team info.
 func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	label := widget.NewLabel("Teams")
+	pageTitle := setTitle("Teams", 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -75,8 +75,8 @@ func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	w.SetContent(container.NewVBox(
+		pageTitle,
 		returnToDatabasePageButton,
-		label,
 		ac),
 	)
 }

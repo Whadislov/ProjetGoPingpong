@@ -15,16 +15,21 @@ import (
 // currentSelectionPageTfromP sets up the page for selecting players and teams.
 func currentSelectionPageTfromP(playerContent *fyne.Container, teamContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Remove: select a team", 32)
+
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		RemovePage(db, w, a)
 	})
 
 	if teamContent == nil {
-		content := container.NewVBox(playerContent,
+		content := container.NewVBox(
+			pageTitle,
+			playerContent,
 			returnToRemovePageButton)
 		return content
 	} else {
 		content := container.NewVBox(
+			pageTitle,
 			container.NewGridWithColumns(
 				2,
 				playerContent,
@@ -48,12 +53,14 @@ func SelectionPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 		playerSelectionPageTfromPButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageTfromP(db, w, a)) })
 		return container.NewVBox(playerSelectionPageTfromPButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently no players in any team"))
+		return container.NewVBox(widget.NewLabel("There is currently 0 player in any team"))
 	}
 }
 
 // selectPlayerPageTfromP sets up the page for selecting a player from the database.
 func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+
+	pageTitle := setTitle("Remove: select a player", 32)
 
 	returnToPlayerSelectionPageTfromPButton := widget.NewButton("Cancel", func() {
 		w.SetContent(
@@ -81,6 +88,7 @@ func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 		}
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToPlayerSelectionPageTfromPButton,
 		pLabel,
 		container.NewVBox(playerButtons...),
@@ -132,6 +140,7 @@ func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 
 // selectTeamPageTfromP sets up the page for selecting a team for a given player.
 func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Remove: select a team", 32)
 
 	returnToTeamSelectionPageTfromPButton := widget.NewButton("Return to team selection", func() {
 		w.SetContent(selectedPlayerPageTfromP(player, db, w, a))
@@ -149,6 +158,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 
 		label := widget.NewLabel("There is currently 0 team available.")
 		content := container.NewVBox(
+			pageTitle,
 			label,
 			okButton,
 		)
@@ -171,6 +181,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 		}
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToTeamSelectionPageTfromPButton,
 		tLabel,
 		container.NewVBox(teamButtons...),
@@ -181,6 +192,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 
 // createTeamButtonsTfromP creates buttons for each selected team.
 func createTeamButtonsTfromP(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeams map[int]*mt.Team, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+
 	// User can click on the selected team to remove the team from the selected team list
 	selectedTeamButton := widget.NewButton(team.Name, func() {
 		delete(selectedTeams, team.ID)
@@ -242,6 +254,8 @@ func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[int]*m
 
 // selectedTeamPageTfromP sets up the page for confirming the selected teams for a player.
 func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Remove: confirm selection", 32)
+
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		RemovePage(db, w, a)
 	})
@@ -309,6 +323,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[int]*mt.Team, d
 
 	// Now display the whole finished page, with chosen teams
 	content := container.NewVBox(
+		pageTitle,
 		container.NewGridWithColumns(
 			2,
 			playerContent,

@@ -15,6 +15,8 @@ import (
 // currentSelectionPagePtoT sets up the page for selecting teams and players.
 func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Add: select a player", 32)
+
 	returnToAddPageButton := widget.NewButton("Return to the add menu", func() {
 		AddPage(db, w, a)
 	})
@@ -25,6 +27,7 @@ func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.C
 		return content
 	} else {
 		content := container.NewVBox(
+			pageTitle,
 			container.NewGridWithColumns(
 				2,
 				teamContent,
@@ -38,14 +41,19 @@ func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.C
 // selectionPagePtoT sets up the initial selection page for teams.
 func SelectionPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Add: select a team", 32)
+
 	teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePtoT(db, w, a)) })
-	content := container.NewVBox(teamSelectionPageButton)
+	content := container.NewVBox(
+		pageTitle,
+		teamSelectionPageButton)
 
 	return content
 }
 
 // selectTeamPagePtoT sets up the page for selecting a team from the database.
 func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Add: select a team", 32)
 
 	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
 		w.SetContent(
@@ -67,6 +75,7 @@ func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 		teamButtons = append(teamButtons, teamButton)
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToTeamSelectionPageButton,
 		tLabel,
 		container.NewVBox(teamButtons...),
@@ -114,6 +123,8 @@ func selectedTeamPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 // selectPlayerPagePtoT sets up the page for selecting a player for a given team.
 func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Add: select a player", 32)
+
 	returnToPlayerSelectionPageButton := widget.NewButton("Return to player selection", func() {
 		w.SetContent(selectedTeamPagePtoT(team, db, w, a))
 	})
@@ -138,6 +149,7 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 
 		label := widget.NewLabel("There is currently 0 player available. Do you want to create a new player first ?")
 		content := container.NewVBox(
+			pageTitle,
 			label,
 			buttons,
 		)
@@ -175,6 +187,7 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToPlayerSelectionPageButton,
 		pLabel,
 		container.NewVBox(playerButtons...),
@@ -204,6 +217,8 @@ func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, db *mt.Database, 
 
 // addAnotherPlayerPagePtoT sets up the page for adding another player to the selected team.
 func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+
+	pageTitle := setTitle("Add: select a player", 32)
 
 	returnToPlayerSelectionPageButton := widget.NewButton("Cancel", func() {
 		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
@@ -253,6 +268,7 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.
 	}
 
 	content := container.NewVBox(
+		pageTitle,
 		returnToPlayerSelectionPageButton,
 		pLabel,
 		container.NewVBox(playerButtons...),
@@ -263,6 +279,8 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.
 
 // selectedPlayerPagePtoT sets up the page for confirming the selected players for a team.
 func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+
+	pageTitle := setTitle("Add: confirm", 32)
 
 	returnToAddRemovePageButton := widget.NewButton("Return to the add menu", func() {
 		AddPage(db, w, a)
@@ -329,6 +347,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, d
 
 	// Now display the whole finished page, with chosen players
 	content := container.NewVBox(
+		pageTitle,
 		container.NewGridWithColumns(
 			2,
 			teamContent,

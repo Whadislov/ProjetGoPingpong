@@ -15,16 +15,21 @@ import (
 // currentSelectionPagePfromT sets up the page for selecting teams and players.
 func currentSelectionPagePfromT(teamContent *fyne.Container, playerContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Remove: select a player", 32)
+
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		RemovePage(db, w, a)
 	})
 
 	if playerContent == nil {
-		content := container.NewVBox(teamContent,
+		content := container.NewVBox(
+			pageTitle,
+			teamContent,
 			returnToRemovePageButton)
 		return content
 	} else {
 		content := container.NewVBox(
+			pageTitle,
 			container.NewGridWithColumns(
 				2,
 				teamContent,
@@ -48,12 +53,14 @@ func SelectionPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 		teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePfromT(db, w, a)) })
 		return container.NewVBox(teamSelectionPageButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently no players in any team"))
+		return container.NewVBox(widget.NewLabel("There is currently 0 player in any team"))
 	}
 }
 
 // selectTeamPagePfromT sets up the page for selecting a team from the database.
 func selectTeamPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+
+	pageTitle := setTitle("Remove: select a team", 32)
 
 	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
 		w.SetContent(
@@ -81,6 +88,7 @@ func selectTeamPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 		}
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToTeamSelectionPageButton,
 		tLabel,
 		container.NewVBox(teamButtons...),
@@ -132,6 +140,7 @@ func selectedTeamPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 
 // selectPlayerPagePfromT sets up the page for selecting a player for a given team.
 func selectPlayerPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Remove: select a team", 32)
 
 	returnToPlayerSelectionPageButton := widget.NewButton("Return to player selection", func() {
 		w.SetContent(selectedTeamPagePfromT(team, db, w, a))
@@ -149,6 +158,7 @@ func selectPlayerPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 
 		label := widget.NewLabel("There is currently 0 player available.")
 		content := container.NewVBox(
+			pageTitle,
 			label,
 			okButton,
 		)
@@ -171,6 +181,7 @@ func selectPlayerPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 		}
 	}
 	content := container.NewVBox(
+		pageTitle,
 		returnToPlayerSelectionPageButton,
 		pLabel,
 		container.NewVBox(playerButtons...),
@@ -242,6 +253,7 @@ func addAnotherPlayerPagePfromT(team *mt.Team, alreadySelectedPlayers map[int]*m
 
 // selectedPlayerPagePfromT sets up the page for confirming the selected players for a team.
 func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[int]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Remove: confirm selection", 32)
 
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		AddPage(db, w, a)
@@ -314,6 +326,7 @@ func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[int]*mt.Player,
 
 	// Now display the whole finished page, with chosen players
 	content := container.NewVBox(
+		pageTitle,
 		container.NewGridWithColumns(
 			2,
 			teamContent,

@@ -61,30 +61,58 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 					var err error
 					if appStartOption == "local" {
 						err = mdb.SaveDB(db)
+						if err != nil {
+							dialog.ShowError(err, w)
+						} else {
+							HasChanged = false
+							log.Println("User logged out and saved his changes.")
+							w.SetMainMenu(nil)
+							w.SetContent(AuthentificationPage(w, a))
+						}
 					} else if appStartOption == "browser" {
 						err = mfr.SaveDB(db)
-					}
-					if err != nil {
-						dialog.ShowError(err, w)
-					} else {
-						HasChanged = false
-						log.Println("User logged out and saved his changes.")
-						w.SetContent(AuthentificationPage(w, a))
+						if err != nil {
+							dialog.ShowError(err, w)
+						} else {
+							HasChanged = false
+							log.Println("User logged out and saved his changes.")
+							w.SetMainMenu(nil)
+							w.SetContent(AuthentificationPageWeb(w, a))
+						}
 					}
 				} else {
 					// User does not want to save the changes
 					log.Println("User logged out and saved nothing.")
-					w.SetContent(AuthentificationPage(w, a))
+					if appStartOption == "local" {
+						// Reset the menu
+						w.SetMainMenu(nil)
+						w.SetContent(AuthentificationPage(w, a))
+					} else if appStartOption == "browser" {
+						// Reset the menu and the token
+						jsonWebToken = ""
+						w.SetMainMenu(nil)
+						w.SetContent(AuthentificationPageWeb(w, a))
+					}
 				}
 			}, w)
 		} else {
 			// Nothing has changed
 			log.Println("User logged out.")
-			w.SetContent(AuthentificationPage(w, a))
+			if appStartOption == "local" {
+				// Reset the menu
+				w.SetMainMenu(nil)
+				w.SetContent(AuthentificationPage(w, a))
+			} else if appStartOption == "browser" {
+				// Reset the menu and the token
+				jsonWebToken = ""
+				w.SetMainMenu(nil)
+				w.SetContent(AuthentificationPageWeb(w, a))
+			}
 		}
 
 	})
 
+	// menu item names are not linked with pageTitles, if there is a modification here -> modify also on pages
 	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3, menu1Item4)
 
 	menu2Item1 := fyne.NewMenuItem("Players", func() { PlayerPage(db, w, a) })
@@ -93,11 +121,11 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 	newMenu2 := fyne.NewMenu("Database", menu2Item1, menu2Item2, menu2Item3)
 
 	menu3Item1 := fyne.NewMenuItem("Create ", func() { CreatePage(db, w, a) })
-	menu3Item2 := fyne.NewMenuItem("Add ... to ...", func() { AddPage(db, w, a) })
-	menu3Item3 := fyne.NewMenuItem("Remove ... from ...", func() { RemovePage(db, w, a) })
+	menu3Item2 := fyne.NewMenuItem("Add", func() { AddPage(db, w, a) })
+	menu3Item3 := fyne.NewMenuItem("Remove", func() { RemovePage(db, w, a) })
 	menu3Item4 := fyne.NewMenuItem("Delete", func() { DeletePage(db, w, a) })
-	menu3Item5 := fyne.NewMenuItem("Modify player information", func() { AddInfoToPlayerPage(db, w, a) })
-	newMenu3 := fyne.NewMenu("Functions", menu3Item1, menu3Item2, menu3Item3, menu3Item4, menu3Item5)
+	menu3Item5 := fyne.NewMenuItem("Edit player information", func() { AddInfoToPlayerPage(db, w, a) })
+	newMenu3 := fyne.NewMenu("Functionalities", menu3Item1, menu3Item2, menu3Item3, menu3Item4, menu3Item5)
 
 	menu := fyne.NewMainMenu(newMenu1, newMenu2, newMenu3)
 
