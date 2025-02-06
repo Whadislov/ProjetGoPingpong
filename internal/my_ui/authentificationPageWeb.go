@@ -13,8 +13,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var jsonWebToken string
-
 // AuthentificationPageWeb returns a page that contains a log in button and a sign up button
 func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 

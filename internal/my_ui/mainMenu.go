@@ -77,7 +77,10 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 						} else {
 							HasChanged = false
 							log.Println("User logged out and saved his changes.")
+							// Reset the menu, the token and the database
+							jsonWebToken = ""
 							w.SetMainMenu(nil)
+							db = &mt.Database{}
 							w.SetContent(AuthentificationPageWeb(w, a))
 						}
 					}
@@ -89,9 +92,10 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 						w.SetMainMenu(nil)
 						w.SetContent(AuthentificationPage(w, a))
 					} else if appStartOption == "browser" {
-						// Reset the menu and the token
+						// Reset the menu, the token and the database
 						jsonWebToken = ""
 						w.SetMainMenu(nil)
+						db = &mt.Database{}
 						w.SetContent(AuthentificationPageWeb(w, a))
 					}
 				}
@@ -104,9 +108,10 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 				w.SetMainMenu(nil)
 				w.SetContent(AuthentificationPage(w, a))
 			} else if appStartOption == "browser" {
-				// Reset the menu and the token
+				// Reset the menu, the token and the database
 				jsonWebToken = ""
 				w.SetMainMenu(nil)
+				db = &mt.Database{}
 				w.SetContent(AuthentificationPageWeb(w, a))
 			}
 		}

@@ -112,8 +112,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("Generated token : ", token)
-
 	json.NewEncoder(w).Encode(token)
 }
 

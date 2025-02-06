@@ -1,41 +1,22 @@
 package mydb
 
-import (
-	"fmt"
-	"log"
-)
-
 var sqlDB *Database
 var userIDOfSession int
 
 func SetUserIDOfSession(id int) {
 	userIDOfSession = id
-	log.Println("(Parameters) User ID of the session set to", userIDOfSession)
 }
 
-// Const for PostgreSQL
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "p1Sw"
-	dbName   = "ttapp_database"
-)
+var psqlInfo string
 
-// Had to initialize directly here with the online database, because the browser would not load it from the function (need sync maybe)
-var psqlInfo string = "postgresql://ttapp_database_owner:7MopfqD4SIyh@ep-white-unit-a2ap77if.eu-central-1.aws.neon.tech/ttapp_database?sslmode=require"
+func SetPsqlInfo(link string) {
+	psqlInfo = link
+}
 
-func AppStartOption(s string) {
-	log.Println("Setting up the connexion information to the database")
-	if s == "local" {
-		// PostgreSQL info
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+
-			"password=%s dbname=%s sslmode=disable",
-			host, port, user, password, dbName)
-	} else if s == "browser" {
-		// Neon server
-		psqlInfo = "postgresql://ttapp_database_owner:7MopfqD4SIyh@ep-white-unit-a2ap77if.eu-central-1.aws.neon.tech/ttapp_database?sslmode=require"
-	}
+var dbName string
+
+func SetDBName(name string) {
+	dbName = name
 }
 
 // Query script for table creation (split in two parts users + other tables)

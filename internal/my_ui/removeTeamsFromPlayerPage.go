@@ -15,21 +15,17 @@ import (
 // currentSelectionPageTfromP sets up the page for selecting players and teams.
 func currentSelectionPageTfromP(playerContent *fyne.Container, teamContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Remove: select a team", 32)
-
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		RemovePage(db, w, a)
 	})
 
 	if teamContent == nil {
 		content := container.NewVBox(
-			pageTitle,
 			playerContent,
 			returnToRemovePageButton)
 		return content
 	} else {
 		content := container.NewVBox(
-			pageTitle,
 			container.NewGridWithColumns(
 				2,
 				playerContent,
@@ -50,10 +46,16 @@ func SelectionPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 	}
 
 	if playersInTeam > 0 {
+		pageTitle := setTitle("Remove: select a player", 32)
 		playerSelectionPageTfromPButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageTfromP(db, w, a)) })
-		return container.NewVBox(playerSelectionPageTfromPButton)
+		return container.NewVBox(
+			pageTitle,
+			playerSelectionPageTfromPButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently 0 player in any team"))
+		pageTitle := setTitle("Remove", 32)
+		return container.NewVBox(
+			pageTitle,
+			widget.NewLabel("There is currently 0 player in any team"))
 	}
 }
 
@@ -100,6 +102,8 @@ func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 // selectedPlayerPageTfromP sets up the page for a selected player and allows team selection.
 func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Remove: select a team", 32)
+
 	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
 	tLabel := widget.NewLabel("Team current selection 🤝")
 
@@ -129,12 +133,14 @@ func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	// Now display the whole page, with availability to choose a team
-	content := currentSelectionPageTfromP(
-		playerContent,
-		teamContent,
-		db, w, a,
+	content := container.NewVBox(
+		pageTitle,
+		currentSelectionPageTfromP(
+			playerContent,
+			teamContent,
+			db, w, a,
+		),
 	)
-
 	return content
 }
 

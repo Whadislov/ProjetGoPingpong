@@ -3,10 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"github.com/Whadislov/ProjetGoPingPong/api"
+	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -18,6 +22,15 @@ func main() {
 
 	// Start app on a browser
 	if appStartOption == "browser" {
+		// Load env variables
+		err := godotenv.Load("credentials.env")
+		if err != nil {
+			log.Fatal("Cannot load variables from .env")
+		}
+
+		mdb.SetPsqlInfo(os.Getenv("WEB_DB_LINK"))
+		mdb.SetDBName(os.Getenv("DB_NAME"))
+
 		var wg sync.WaitGroup
 
 		// API server (8001)
@@ -55,6 +68,14 @@ func main() {
 
 	// Start app locally
 	if appStartOption == "local" {
+		// Load env variables
+		err := godotenv.Load("credentials.env")
+		if err != nil {
+			log.Fatal("Cannot load variables from .env")
+		}
+
+		mdb.SetPsqlInfo(os.Getenv("LOCAL_DB_LINK"))
+		mdb.SetDBName(os.Getenv("DB_NAME"))
 		mu.Display(appStartOption)
 	}
 }

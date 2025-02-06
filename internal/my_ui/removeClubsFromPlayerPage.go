@@ -15,21 +15,17 @@ import (
 // currentSelectionPageCfromP sets up the page for selecting players and clubs.
 func currentSelectionPageCfromP(playerContent *fyne.Container, clubContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Remove: select a club", 32)
-
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
 		RemovePage(db, w, a)
 	})
 
 	if clubContent == nil {
 		content := container.NewVBox(
-			pageTitle,
 			playerContent,
 			returnToRemovePageButton)
 		return content
 	} else {
 		content := container.NewVBox(
-			pageTitle,
 			container.NewGridWithColumns(
 				2,
 				playerContent,
@@ -50,10 +46,16 @@ func SelectionPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 	}
 
 	if playersInClub > 0 {
+		pageTitle := setTitle("Remove: select a player", 32)
 		playerSelectionPageButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageCfromP(db, w, a)) })
-		return container.NewVBox(playerSelectionPageButton)
+		return container.NewVBox(
+			pageTitle,
+			playerSelectionPageButton)
 	} else {
-		return container.NewVBox(widget.NewLabel("There is currently 0 player in any club"))
+		pageTitle := setTitle("Remove", 32)
+		return container.NewVBox(
+			pageTitle,
+			widget.NewLabel("There is currently 0 player in any club"))
 	}
 }
 
@@ -100,6 +102,8 @@ func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 // selectedPlayerPageCfromP sets up the page for a selected player and allows club selection.
 func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	pageTitle := setTitle("Remove: select a club", 32)
+
 	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
 	cLabel := widget.NewLabel("Club current selection 🏠")
 
@@ -129,10 +133,13 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	// Now display the whole page, with availability to choose a club
-	content := currentSelectionPageCfromP(
-		playerContent,
-		clubContent,
-		db, w, a,
+	content := container.NewVBox(
+		pageTitle,
+		currentSelectionPageCfromP(
+			playerContent,
+			clubContent,
+			db, w, a,
+		),
 	)
 
 	return content
