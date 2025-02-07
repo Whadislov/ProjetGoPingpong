@@ -96,23 +96,25 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		sendJSONError(w, "Invalid request", "INVALID_REQUEST", http.StatusBadRequest)
 		return
 	}
 
 	userID, err := checkUserCredentials(creds.Username, creds.Password)
 	if err != nil {
-		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+		sendJSONError(w, "Invalid username or password", "INVALID_USERNAME_OR_PASSWORD", http.StatusUnauthorized)
 		return
 	}
 
 	token, err := generateJWT(userID)
 	if err != nil {
-		http.Error(w, "Could not generate token", http.StatusInternalServerError)
+		sendJSONError(w, "Could not generate token", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
 
-	json.NewEncoder(w).Encode(token)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
 }
 
 // signUpHandler process the request to create a new user, returns a token
@@ -124,7 +126,7 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&signUpData); err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		sendJSONError(w, "Invalid request", "INVALID_REQUEST", http.StatusBadRequest)
 		return
 	}
 
@@ -138,32 +140,37 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	*/
 
 	// Load the whole database to register the new user. Could be optimised to request directly postgres
-	db, err := mdb.LoadDB()
+	db, err := mdb.LoadUsersOnly()
 	if err != nil {
-		http.Error(w, "Could not load database to create the new user", http.StatusInternalServerError)
+		sendJSONError(w, "Could not load database to create the new user", "UNABLE_TO_LOAD_DATABASE", http.StatusInternalServerError)
 		return
 	}
 
 	// Verify if the user already exists
-	exists, _ := checkUserExists(signUpData.Username, signUpData.Email, db)
-	if exists {
-		http.Error(w, "User already exists", http.StatusConflict)
+	value, _ := checkUserExists(signUpData.Username, signUpData.Email, db)
+	if value == 1 {
+		sendJSONError(w, "Email already used", "EMAIL_USED", http.StatusConflict)
+		return
+	} else if value == 2 {
+		sendJSONError(w, "Username already exists", "USERNAME_EXISTS", http.StatusConflict)
 		return
 	}
 
 	// Save the user in the database, need to enter x2 password (UI design for the local app)
 	newUser, err := mf.NewUser(signUpData.Username, signUpData.Email, signUpData.Password, signUpData.Password, db)
 	if err != nil {
-		http.Error(w, "Could not create user", http.StatusInternalServerError)
+		sendJSONError(w, "Could not create user", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
 
 	// User Id is the number of current registered users (there is possibility yet to delete a user, so this should work for now)
 	token, err := generateJWT(newUser.ID)
 	if err != nil {
-		http.Error(w, "Could not generate token", http.StatusInternalServerError)
+		sendJSONError(w, "Could not generate token", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
 
-	json.NewEncoder(w).Encode(token)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
 }

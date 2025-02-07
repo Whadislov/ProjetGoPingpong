@@ -87,7 +87,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 			if err != nil {
 				// Need to recheck this err
 				log.Println("Username or email already exist")
-				dialog.ShowError(err, w)
+				dialog.ShowError(fmt.Errorf("failed to sign up: %v", err), w)
 				w.SetContent(signUpPageWeb(w, a))
 			} else {
 				log.Println("Sign up is successfull")
@@ -141,7 +141,6 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		jsonWebToken = token
 		if err != nil {
 			dialog.ShowError(fmt.Errorf("failed to login: %v", err), w)
-			// Reset entries
 			w.SetContent(loginPageWeb(w, a))
 		} else {
 			log.Println("Login is successfull")

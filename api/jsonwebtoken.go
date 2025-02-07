@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -81,4 +82,14 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		// Call next header
 		next(w, r)
 	}
+}
+
+// sendJSONError send an error following JSON format
+func sendJSONError(w http.ResponseWriter, message string, code string, status int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(map[string]string{
+		"error": message,
+		"code":  code,
+	})
 }

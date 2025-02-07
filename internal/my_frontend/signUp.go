@@ -10,14 +10,17 @@ import (
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-// Login requests a new user creation, if everything is fine, the database of the new user and the token are returned
+// SignUp requests a new user creation, if everything is fine, the database of the new user and the token are returned
 func SignUp(username string, password string, email string) (*mt.Database, string, error) {
 	var data struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 		Email    string `json:"email"`
 	}
-	var token string
+	var response struct {
+		Token string `json:"token"`
+	}
+
 	var db *mt.Database
 	data.Username = username
 	data.Password = password
@@ -34,15 +37,37 @@ func SignUp(username string, password string, email string) (*mt.Database, strin
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&token)
+	if resp.StatusCode != http.StatusOK {
+		var errorResponse struct {
+			Error string `json:"error"`
+			Code  string `json:"code"`
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
+			return nil, "", fmt.Errorf("error decoding server response: %w", err)
+		}
+
+		if errorResponse.Code == "USERNAME_EXISTS" {
+			return nil, "", fmt.Errorf("username is already taken")
+		} else if errorResponse.Code == "EMAIL_USED" {
+			return nil, "", fmt.Errorf("email is already in use")
+		} else if errorResponse.Code == "UNABLE_TO_LOAD_DATABASE" {
+			return nil, "", fmt.Errorf("unable to load the database")
+		} else if errorResponse.Code == "INVALID_REQUEST" {
+			return nil, "", fmt.Errorf("invalid request")
+		} else {
+			return nil, "", fmt.Errorf("internal error: %s", errorResponse.Error)
+		}
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return db, "", err
+		return db, "", fmt.Errorf("error decoding JSON: %w", err)
 	} else {
 		log.Println("Succeed to sign user %w in", username)
-		db, err := LoadDB(token)
+		db, err := LoadDB(response.Token)
 		if err != nil {
 			return db, "", fmt.Errorf("failed to load database: %w", err)
 		}
-		return db, token, nil
+		return db, response.Token, nil
 	}
 }
