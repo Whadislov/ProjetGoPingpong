@@ -19,16 +19,6 @@ func loadUserDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		var userID int
-		err := json.NewDecoder(r.Body).Decode(&userID)
-		if err != nil {
-			http.Error(w, "Invalid JSON data", http.StatusBadRequest)
-			log.Println("Error decoding JSON:", err)
-			return
-		}
-	*/
-
 	userID := r.Header.Get("User-ID")
 	if userID == "" {
 		http.Error(w, "User is unidentified", http.StatusUnauthorized)

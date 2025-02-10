@@ -6,6 +6,8 @@ import (
 
 	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // checkUserCredentials verifies if the credentials of the user are correct, returns the userID
@@ -18,7 +20,13 @@ func checkUserCredentials(username string, password string) (int, error) {
 
 	for _, user := range db.Users {
 		if username == user.Name {
-			if password == user.PasswordHash {
+
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			if err != nil {
+				return -1, fmt.Errorf("failed to hash password: %v", err)
+			}
+
+			if string(hashedPassword) == user.PasswordHash {
 				log.Println("User credentials are good")
 				mdb.SetUserIDOfSession(user.ID)
 				return user.ID, nil

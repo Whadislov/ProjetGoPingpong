@@ -6,6 +6,8 @@ import (
 	"time"
 
 	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // NewUser creates a new user with the given name and adds it to the database.
@@ -42,6 +44,11 @@ func NewUser(username string, email string, password string, confirmPassword str
 		return nil, fmt.Errorf("passwords do not match")
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, fmt.Errorf("failed to hash password: %v", err)
+	}
+
 	// ISO 8601 timestamp
 	timestamp := time.Now().Format(time.RFC3339)
 
@@ -49,7 +56,7 @@ func NewUser(username string, email string, password string, confirmPassword str
 		ID:           len(db.Users),
 		Name:         username,
 		Email:        email,
-		PasswordHash: password,
+		PasswordHash: string(hashedPassword),
 		CreatedAt:    timestamp,
 	}
 

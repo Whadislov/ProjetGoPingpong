@@ -45,7 +45,7 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Create your account", 32)
 
-	emailLabel := widget.NewLabel("✉️ Email")
+	emailLabel := widget.NewLabel("✉️ E-mail")
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder("abc@def.com")
 
@@ -66,7 +66,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 		if err != nil {
 			dialog.ShowError(err, w)
-			log.Println("email is not valid:", err)
+			log.Println("e-mail is not valid:", err)
 			w.SetContent(signUpPageWeb(w, a))
 		} else if err2 != nil {
 			dialog.ShowError(err, w)
@@ -86,7 +86,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 			// Last check if username or email already exist
 			if err != nil {
 				// Need to recheck this err
-				log.Println("Username or email already exist")
+				log.Println("Username or e-mail already exist")
 				dialog.ShowError(fmt.Errorf("failed to sign up: %v", err), w)
 				w.SetContent(signUpPageWeb(w, a))
 			} else {
@@ -157,6 +157,11 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		}
 	})
 
+	forgotPasswordButton := widget.NewButtonWithIcon("Forgot your password?", nil, func() {
+		w.SetContent(reinitPasswordPageWeb(w, a))
+	})
+	forgotPasswordButton.Importance = widget.LowImportance
+
 	cancelButton := widget.NewButton("Cancel", func() {
 		w.SetContent(AuthentificationPageWeb(w, a))
 	})
@@ -165,11 +170,60 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		pageTitle,
 		usernameLabel,
 		usernameEntry,
-		passwordLabel,
+		container.NewBorder(nil, nil, passwordLabel, forgotPasswordButton),
 		passwordEntry,
 		validationButton,
 		cancelButton,
 	)
 
 	return loginPageWeb
+}
+
+// reinitPasswordPage offers the user the ability to be sent an Email for a password reset
+func reinitPasswordPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Forgot your password ?", 32)
+	pageText := sexText("Enter your e-mail address and click on the button below to reset your password", 12)
+	emailString := "Enter your e-mail address"
+
+	emailEntry := widget.NewEntry()
+	emailEntry.SetPlaceHolder(emailString)
+
+	validationButton := widget.NewButton("Reset your password", func() {
+		b, err := mf.IsValidEmail(emailEntry.Text)
+		if !b {
+			dialog.ShowError(err, w)
+			w.SetContent(reinitPasswordPageWeb(w, a))
+		} else {
+
+			// E-mail found
+			var resetEmailDialogSuccess *dialog.CustomDialog
+			resetEmailMessage := widget.NewLabel(fmt.Sprintf("A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
+			returnToLoginPageWeb := widget.NewButton("Return to the login screen", func() {
+				resetEmailDialogSuccess.Hide()
+				w.SetContent(loginPageWeb(w, a))
+			})
+			resetEmailContent := container.NewVBox(
+				resetEmailMessage,
+				returnToLoginPageWeb,
+			)
+
+			resetEmailDialogSuccess = dialog.NewCustomWithoutButtons("Success", resetEmailContent, w)
+			resetEmailDialogSuccess.Show()
+		}
+
+	})
+
+	cancelButton := widget.NewButton("Cancel", func() {
+		w.SetContent(loginPageWeb(w, a))
+	})
+
+	reinitPasswordPageWeb := container.NewVBox(
+		pageTitle,
+		pageText,
+		emailEntry,
+		validationButton,
+		cancelButton,
+	)
+
+	return reinitPasswordPageWeb
 }

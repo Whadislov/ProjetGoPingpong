@@ -50,20 +50,6 @@ func StarterPage() fyne.App {
 			log.Println("Transitioning to identification page")
 			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
 
-			/*
-				log.Println("Transitioning to main page")
-				mainWindow.SetContent(mainPage)
-			*/
-
-			// Load the database (deserialize)
-			/*
-				golangDB, err := mdb.LoadDB()
-				if err != nil {
-					panic(err)
-				}
-				mainMenu := MainMenu(golangDB, mainWindow, a)
-				mainWindow.SetMainMenu(mainMenu)
-			*/
 		} else if appStartOption == "browser" {
 			// No fade because it blinks on the browser and the problem is not yet solved
 			log.Println("Transitioning to the authentification page web")

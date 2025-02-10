@@ -84,7 +84,7 @@ func IsValidUsername(username string) (bool, error) {
 // isValidEmail verifies that the name follows a valid regex
 func IsValidEmail(email string) (bool, error) {
 	if email == "" {
-		return false, fmt.Errorf("email cannot be empty")
+		return false, fmt.Errorf("e-mail cannot be empty")
 	}
 
 	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
@@ -95,7 +95,7 @@ func IsValidEmail(email string) (bool, error) {
 	if re.MatchString(email) {
 		return re.MatchString(email), nil
 	} else {
-		return re.MatchString(email), fmt.Errorf("email must be valid. Example: abc@def.com")
+		return re.MatchString(email), fmt.Errorf("e-mail must be valid. Example: abc@def.com")
 	}
 }
 

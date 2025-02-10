@@ -108,3 +108,13 @@ func setTitle(s string, size float32) *canvas.Text {
 	title.TextSize = size
 	return title
 }
+
+// setText sets the string as a text for the page. The string respects dark/light mode and has its size
+func sexText(s string, size float32) *canvas.Text {
+	a := fyne.CurrentApp()
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	title := canvas.NewText(s, themeColor)
+	title.Alignment = fyne.TextAlignCenter
+	title.TextSize = size
+	return title
+}

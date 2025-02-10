@@ -30,16 +30,11 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 		panic(err)
 	}
 	logInButton := widget.NewButton("Log in", func() {
-		w.SetContent(logInPage(db, w, a))
+		w.SetContent(loginPage(db, w, a))
 	})
 
 	signUpButton := widget.NewButton("Sign up", func() {
-		cancelButtonInSignUpPage := widget.NewButton("Cancel", func() {
-			w.SetContent(AuthentificationPage(w, a))
-		})
-
-		content := container.NewVBox(signUpPage(db, w, a), cancelButtonInSignUpPage)
-		w.SetContent(content)
+		w.SetContent(signUpPage(db, w, a))
 	})
 
 	if len(db.Users) > 0 {
@@ -70,7 +65,7 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Create your account", 32)
 
-	emailLabel := widget.NewLabel("✉️ Email")
+	emailLabel := widget.NewLabel("✉️ E-mail")
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder("abc@def.com")
 
@@ -88,16 +83,16 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		newUser, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, confirmPasswordEntry.Text, db)
 		if err != nil {
 			switch err.Error() {
-			case "email cannot be empty":
-				log.Println("email is empty")
+			case "e-mail cannot be empty":
+				log.Println("e-mail is empty")
 				dialog.ShowError(err, w)
 				emailEntry.SetPlaceHolder("abc@def.com")
-			case "email is already used":
-				log.Println("email is already used")
+			case "e-mail is already used":
+				log.Println("e-mail is already used")
 				dialog.ShowError(err, w)
 				emailEntry.SetPlaceHolder("abc@def.com")
-			case "email must be valid. Example: abc@def.com":
-				log.Println("email is not valid")
+			case "e-mail must be valid. Example: abc@def.com":
+				log.Println("e-mail is not valid")
 				dialog.ShowError(err, w)
 				emailEntry.SetPlaceHolder("abc@def.com")
 			case "username cannot be empty":
@@ -154,6 +149,10 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		}
 	})
 
+	cancelButton := widget.NewButton("Cancel", func() {
+		w.SetContent(AuthentificationPage(w, a))
+	})
+
 	signUpPage := container.NewVBox(
 		pageTitle,
 		emailLabel,
@@ -165,13 +164,14 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		confirmPasswordLabel,
 		confirmPasswordEntry,
 		validationButton,
+		cancelButton,
 	)
 
 	return signUpPage
 }
 
-// logInPage returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
-func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+// loginPage returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
+func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Login", 32)
 
 	usernameLabel := widget.NewLabel("👤 Username")
@@ -214,19 +214,95 @@ func logInPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	})
 
+	forgotPasswordButton := widget.NewButtonWithIcon("Forgot your password?", nil, func() {
+		w.SetContent(reinitPasswordPage(db, w, a))
+	})
+	forgotPasswordButton.Importance = widget.LowImportance
+
 	cancelButton := widget.NewButton("Cancel", func() {
 		w.SetContent(AuthentificationPage(w, a))
 	})
 
-	logInPage := container.NewVBox(
+	loginPage := container.NewVBox(
 		pageTitle,
 		usernameLabel,
 		usernameEntry,
-		passwordLabel,
+		container.NewBorder(nil, nil, passwordLabel, forgotPasswordButton),
 		passwordEntry,
 		validationButton,
 		cancelButton,
 	)
 
-	return logInPage
+	return loginPage
+}
+
+// reinitPasswordPage offers the user the ability to be sent an Email for a password reset
+func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Forgot your password ?", 32)
+	pageText := sexText("Enter your e-mail address and click on the button below to reset your password", 12)
+	emailString := "Enter your e-mail address"
+
+	emailEntry := widget.NewEntry()
+	emailEntry.SetPlaceHolder(emailString)
+
+	validationButton := widget.NewButton("Reset your password", func() {
+		b, err := mf.IsValidEmail(emailEntry.Text)
+		if !b {
+			dialog.ShowError(err, w)
+			w.SetContent(reinitPasswordPage(db, w, a))
+		} else {
+			for _, user := range db.Users {
+				if emailEntry.Text == user.Email {
+					// E-mail found
+					var resetEmailDialogSuccess *dialog.CustomDialog
+					resetEmailMessage := widget.NewLabel(fmt.Sprintf("A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
+					returnToLoginPage := widget.NewButton("Return to the login screen", func() {
+						resetEmailDialogSuccess.Hide()
+						w.SetContent(loginPage(db, w, a))
+					})
+					resetEmailContent := container.NewVBox(
+						resetEmailMessage,
+						returnToLoginPage,
+					)
+
+					resetEmailDialogSuccess = dialog.NewCustomWithoutButtons("Success", resetEmailContent, w)
+					resetEmailDialogSuccess.Show()
+				}
+			}
+			// E-mail valid, but not found
+			var resetEmailDialogFail *dialog.CustomDialog
+			goToSignupPage := widget.NewButton("Create your account", func() {
+				resetEmailDialogFail.Hide()
+				w.SetContent(signUpPage(db, w, a))
+			})
+			returnToLoginPage := widget.NewButton("Try again", func() {
+				resetEmailDialogFail.Hide()
+				w.SetContent(reinitPasswordPage(db, w, a))
+			})
+			resetEmailMessageFail := widget.NewLabel(fmt.Sprintf("Your e-mail %v has not been found in our database.\nPlease check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
+			resetEmailContentFail := container.NewVBox(
+				resetEmailMessageFail,
+				returnToLoginPage,
+				goToSignupPage,
+			)
+
+			resetEmailDialogFail = dialog.NewCustomWithoutButtons("Attention", resetEmailContentFail, w)
+			resetEmailDialogFail.Show()
+		}
+
+	})
+
+	cancelButton := widget.NewButton("Cancel", func() {
+		w.SetContent(loginPage(db, w, a))
+	})
+
+	reinitPasswordPage := container.NewVBox(
+		pageTitle,
+		pageText,
+		emailEntry,
+		validationButton,
+		cancelButton,
+	)
+
+	return reinitPasswordPage
 }
