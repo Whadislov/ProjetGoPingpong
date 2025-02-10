@@ -75,10 +75,10 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 						if err != nil {
 							dialog.ShowError(err, w)
 						} else {
-							HasChanged = false
 							log.Println("User logged out and saved his changes.")
-							// Reset the menu, the token and the database
+							// Reset the token, the flag, the menu and the database
 							jsonWebToken = ""
+							HasChanged = false
 							w.SetMainMenu(nil)
 							db = &mt.Database{}
 							w.SetContent(AuthentificationPageWeb(w, a))
@@ -88,12 +88,14 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 					// User does not want to save the changes
 					log.Println("User logged out and saved nothing.")
 					if appStartOption == "local" {
-						// Reset the menu
+						// Reset the flag and the menu
+						HasChanged = false
 						w.SetMainMenu(nil)
 						w.SetContent(AuthentificationPage(w, a))
 					} else if appStartOption == "browser" {
-						// Reset the menu, the token and the database
+						// Reset the token, the flag, the menu and the database
 						jsonWebToken = ""
+						HasChanged = false
 						w.SetMainMenu(nil)
 						db = &mt.Database{}
 						w.SetContent(AuthentificationPageWeb(w, a))

@@ -14,15 +14,15 @@ func TestAddPlayerToClub(t *testing.T) {
 	}
 
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		ClubIDs: map[int]string{},
+		ID:        0,
+		Firstname: "p1",
+		ClubIDs:   map[int]string{},
 	}
 
 	p2 := mt.Player{
-		ID:      1,
-		Name:    "p2",
-		ClubIDs: map[int]string{0: "c1"},
+		ID:        1,
+		Firstname: "p2",
+		ClubIDs:   map[int]string{0: "c1"},
 	}
 
 	c2 := mt.Club{
@@ -32,9 +32,9 @@ func TestAddPlayerToClub(t *testing.T) {
 	}
 
 	p3 := mt.Player{
-		ID:      2,
-		Name:    "p3",
-		ClubIDs: map[int]string{},
+		ID:        2,
+		Firstname: "p3",
+		ClubIDs:   map[int]string{},
 	}
 
 	expectedLen1 := 1

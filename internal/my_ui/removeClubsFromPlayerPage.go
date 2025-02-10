@@ -85,7 +85,7 @@ func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 		if len(player.ClubIDs) == 0 {
 			continue
 		} else {
-			playerButton := widget.NewButton(player.Name, func() { w.SetContent(selectedPlayerPageCfromP(player, db, w, a)) })
+			playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { w.SetContent(selectedPlayerPageCfromP(player, db, w, a)) })
 			playerButtons = append(playerButtons, playerButton)
 		}
 	}
@@ -104,11 +104,11 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 
 	pageTitle := setTitle("Remove: select a club", 32)
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
 	cLabel := widget.NewLabel("Club current selection 🏠")
 
 	// User can click on the selected player to return to the list of player
-	selectedPlayerButton := widget.NewButton(player.Name, func() {
+	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 		w.SetContent(selectPlayerPageCfromP(db, w, a))
 	})
 
@@ -118,7 +118,7 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	if len(player.ClubIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v has no club", player.Name), w)
+		dialog.ShowInformation("Information", fmt.Sprintf("%v has no club", player.Firstname+player.Lastname), w)
 		return selectPlayerPageCfromP(db, w, a)
 	}
 
@@ -266,7 +266,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 		RemovePage(db, w, a)
 	})
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Name))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
 
 	// "Sort the map of selectedClub" for a better button display
 	sortedselectedClub := SortMap(selectedClub)
@@ -284,7 +284,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 			}
 		}
 
-		successMsg := fmt.Sprintf("%v is no longer playing in %v", player.Name, strHelper(clubNames))
+		successMsg := fmt.Sprintf("%v is no longer playing in %v", player.Firstname+player.Lastname, strHelper(clubNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Success", successMsg, w)
 
@@ -312,7 +312,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 	})
 
 	// User can click on the selected player to return the list of players
-	selectedPlayerButton := widget.NewButton(player.Name, func() {
+	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 		w.SetContent(selectPlayerPageCfromP(db, w, a))
 	})
 

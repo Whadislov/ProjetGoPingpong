@@ -14,19 +14,19 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	}
 
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		TeamIDs: map[int]string{0: "t1"},
+		ID:        0,
+		Firstname: "p1",
+		TeamIDs:   map[int]string{0: "t1"},
 	}
 
 	p2 := mt.Player{
-		ID:   1,
-		Name: "p2",
+		ID:        1,
+		Firstname: "p2",
 	}
 
 	p3 := mt.Player{
-		ID:   2,
-		Name: "p3",
+		ID:        2,
+		Firstname: "p3",
 	}
 
 	t2 := mt.Team{
@@ -35,8 +35,8 @@ func TestRemovePlayerFromTeam(t *testing.T) {
 	}
 
 	p4 := mt.Player{
-		ID:   3,
-		Name: "p4",
+		ID:        3,
+		Firstname: "p4",
 	}
 
 	expectedLen1 := 1

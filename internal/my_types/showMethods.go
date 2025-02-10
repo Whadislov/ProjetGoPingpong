@@ -6,9 +6,10 @@ import (
 )
 
 func (p *Player) String() string {
-	return fmt.Sprintf("Id: %v, Name: %s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v",
+	return fmt.Sprintf("Id: %v, Firstname: %s, Lastname: %s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v",
 		p.ID,
-		p.Name,
+		p.Firstname,
+		p.Lastname,
 		p.Age,
 		p.Ranking,
 		p.Material,
@@ -23,7 +24,7 @@ func (p *Player) Show() error {
 		return fmt.Errorf("player does not exist")
 	}
 
-	fmt.Println("Showing characteristics of", p.Name)
+	fmt.Println("Showing characteristics of", p.Firstname, p.Lastname)
 
 	// Get team name
 	teams := []string{}
@@ -37,8 +38,9 @@ func (p *Player) Show() error {
 		clubs = append(clubs, club)
 	}
 
-	fmt.Printf("%s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v.\n",
-		p.Name,
+	fmt.Printf("%s %s, Age: %d, Ranking: %d, Material: %v, Teams: %v, Clubs: %v.\n",
+		p.Firstname,
+		p.Lastname,
 		p.Age,
 		p.Ranking,
 		p.Material,

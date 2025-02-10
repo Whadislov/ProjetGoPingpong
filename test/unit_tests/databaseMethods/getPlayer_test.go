@@ -8,14 +8,14 @@ import (
 func TestGetPlayer(t *testing.T) {
 	d := mt.Database{
 		Players: map[int]*mt.Player{0: {
-			ID:   0,
-			Name: "p",
+			ID:        0,
+			Firstname: "p",
 		},
 		},
 	}
 	expectedPlayer := mt.Player{
-		ID:   0,
-		Name: "p",
+		ID:        0,
+		Firstname: "p",
 	}
 
 	expectedError := "playerID 1 does not exist"

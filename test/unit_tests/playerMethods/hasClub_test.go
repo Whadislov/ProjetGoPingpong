@@ -7,14 +7,14 @@ import (
 
 func TestHasClub(t *testing.T) {
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		ClubIDs: map[int]string{0: "c1"},
+		ID:        0,
+		Firstname: "p1",
+		ClubIDs:   map[int]string{0: "c1"},
 	}
 
 	p2 := mt.Player{
-		ID:   1,
-		Name: "p2",
+		ID:        1,
+		Firstname: "p2",
 	}
 
 	expectedBool1 := true

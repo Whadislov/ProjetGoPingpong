@@ -30,7 +30,7 @@ func (db *Database) LoadUser() (map[int]*mt.User, error) {
 
 // LoadPlayers loads players from the database into the player map.
 func (db *Database) LoadPlayers() (map[int]*mt.Player, error) {
-	rows, err := db.Conn.Query("SELECT id, name, age, ranking, forehand, backhand, blade FROM players WHERE user_id = $1", userIDOfSession)
+	rows, err := db.Conn.Query("SELECT id, firstname, lastname, age, ranking, forehand, backhand, blade FROM players WHERE user_id = $1", userIDOfSession)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load players: %w", err)
 	}
@@ -43,7 +43,7 @@ func (db *Database) LoadPlayers() (map[int]*mt.Player, error) {
 		player.TeamIDs = make(map[int]string)
 		player.ClubIDs = make(map[int]string)
 
-		err := rows.Scan(&player.ID, &player.Name, &player.Age, &player.Ranking, &player.Material[0], &player.Material[1], &player.Material[2])
+		err := rows.Scan(&player.ID, &player.Firstname, &player.Lastname, &player.Age, &player.Ranking, &player.Material[0], &player.Material[1], &player.Material[2])
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan player: %w", err)
 		}
@@ -116,7 +116,7 @@ func (db *Database) LoadPlayerClubs(players map[int]*mt.Player, clubs map[int]*m
 			player.ClubIDs[clubID] = clubs[clubID].Name
 		}
 		if club, ok := clubs[clubID]; ok {
-			club.PlayerIDs[playerID] = players[playerID].Name
+			club.PlayerIDs[playerID] = fmt.Sprintf("%v %v", players[playerID].Firstname, players[playerID].Lastname)
 		}
 	}
 	return rows.Err()
@@ -140,7 +140,7 @@ func (db *Database) LoadPlayerTeams(players map[int]*mt.Player, teams map[int]*m
 			player.TeamIDs[teamID] = teams[teamID].Name
 		}
 		if team, ok := teams[teamID]; ok {
-			team.PlayerIDs[playerID] = players[playerID].Name
+			team.PlayerIDs[playerID] = fmt.Sprintf("%v %v", players[playerID].Firstname, players[playerID].Lastname)
 		}
 	}
 

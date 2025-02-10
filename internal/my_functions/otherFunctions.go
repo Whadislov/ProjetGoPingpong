@@ -19,11 +19,11 @@ func GetName(x interface{}) string {
 	switch v := x.(type) {
 	case mt.Player:
 		{
-			return v.Name
+			return v.Firstname + v.Lastname
 		}
 	case *mt.Player:
 		{
-			return v.Name
+			return v.Firstname + v.Lastname
 		}
 	case mt.Team:
 		{

@@ -39,7 +39,7 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 		keys = append(keys, key)
 	}
 
-	// Sort keys alphabeticaly per value using m.Name. Keys is the sorted slice
+	// Sort keys alphabeticaly per value using m.Lastname. Keys is the sorted slice
 	sort.Slice(keys, func(i, j int) bool {
 		return m[keys[i]].GetName() < m[keys[j]].GetName()
 	})

@@ -179,7 +179,7 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Name, func() {
+		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 			selectedPlayers[player.ID] = player
 			w.SetContent(selectedPlayerPagePtoT(team, selectedPlayers, db, w, a))
 		})
@@ -199,7 +199,7 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 // createPlayerButtonsPtoT creates buttons for each selected player.
 func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, db *mt.Database, selectedPlayers map[int]*mt.Player, selectedPlayerButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected player to remove the player from the selected player list
-	selectedPlayerButton := widget.NewButton(player.Name, func() {
+	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 		delete(selectedPlayers, player.ID)
 
 		// If there is 0 selected player, we should return to the player selection page
@@ -254,7 +254,7 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[int]*mt.
 	for _, p := range sortedPlayers {
 		player := p.Value
 
-		playerButton := widget.NewButton(player.Name, func() {
+		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 			alreadySelectedPlayers[player.ID] = player
 			w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 		})
@@ -297,7 +297,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[int]*mt.Player, d
 		for _, player := range selectedPlayers {
 			// Do the link
 			err = mf.AddPlayerToTeam(player, team)
-			playerNames = append(playerNames, player.Name)
+			playerNames = append(playerNames, player.Firstname+player.Lastname)
 			if err != nil {
 				dialog.ShowError(err, w)
 			}

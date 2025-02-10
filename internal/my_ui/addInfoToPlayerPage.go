@@ -26,7 +26,7 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Name, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
+		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 
@@ -50,7 +50,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	cancelButton := widget.NewButton("Cancel", func() { AddInfoToPlayerPage(db, w, a) })
 
-	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v.", p.Name))
+	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v %v.", p.Firstname, p.Lastname))
 
 	// Here are optional informations that can be added to the player
 	ageEntry := widget.NewEntry()
@@ -137,10 +137,10 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		// Has something changed ?
 		if isAgeModified || isRankingModified || isForehandModified || isBackhandModified || isBladeModified {
 			HasChanged = true
-			dialog.ShowInformation("Succes", fmt.Sprintf("%v has been modified", p.Name), w)
+			dialog.ShowInformation("Succes", fmt.Sprintf("%v %v has been modified", p.Firstname, p.Lastname), w)
 			AddInfoToPlayerPage(db, w, a)
 		} else {
-			dialog.ShowInformation("Information", fmt.Sprintf("%v has not been modified", p.Name), w)
+			dialog.ShowInformation("Information", fmt.Sprintf("%v %v has not been modified", p.Firstname, p.Lastname), w)
 		}
 
 	})
@@ -150,7 +150,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Name, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
+		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 

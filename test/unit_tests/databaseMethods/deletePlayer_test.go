@@ -10,8 +10,8 @@ func TestDeletePlayer(t *testing.T) {
 		Clubs: map[int]*mt.Club{},
 		Teams: map[int]*mt.Team{},
 		Players: map[int]*mt.Player{0: {
-			ID:   0,
-			Name: "c",
+			ID:        0,
+			Firstname: "c",
 		}},
 	}
 

@@ -33,11 +33,11 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 			// Let postgresql creates its own ID for a new player
 			var postgresPlayerID int
 			query := `
-			INSERT INTO players (id, name, age, ranking, forehand, backhand, blade, user_id)
-			VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7)
+			INSERT INTO players (id, firstname, lastname, age, ranking, forehand, backhand, blade, user_id)
+			VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING id;
 			`
-			err := db.Conn.QueryRow(query, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], userIDOfSession).Scan(&postgresPlayerID)
+			err := db.Conn.QueryRow(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], userIDOfSession).Scan(&postgresPlayerID)
 			if err != nil {
 				return fmt.Errorf("failed to save the new player: %w", err)
 			}
@@ -47,10 +47,10 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 			// Modify the player if it's not new
 			query := `
 			UPDATE players 
-			SET name = $1, age = $2, ranking = $3, forehand = $4, backhand = $5, blade = $6
+			SET firstname = $1, lastname = $2, age = $3, ranking = $4, forehand = $5, backhand = $6, blade = $7
 			WHERE id = $7;
 			`
-			_, err := db.Conn.Exec(query, player.Name, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], player.ID)
+			_, err := db.Conn.Exec(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], player.ID)
 			if err != nil {
 				return fmt.Errorf("failed to save the edited player: %w", err)
 			}

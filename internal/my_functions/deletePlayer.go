@@ -16,13 +16,13 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 			clubIDs = append(clubIDs, clubID)
 			err := db.Clubs[clubID].RemovePlayer(p)
 			if err != nil {
-				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
+				return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 			}
 		}
 		for _, clubID := range clubIDs {
 			err := p.RemoveClub(db.Clubs[clubID])
 			if err != nil {
-				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
+				return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 			}
 		}
 	}
@@ -34,13 +34,13 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 			teamIDs = append(teamIDs, teamID)
 			err := db.Teams[teamID].RemovePlayer(p)
 			if err != nil {
-				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
+				return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 			}
 		}
 		for _, teamID := range teamIDs {
 			err := p.RemoveTeam(db.Teams[teamID])
 			if err != nil {
-				return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
+				return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 			}
 		}
 	}
@@ -50,7 +50,7 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 	// Delete from the local database
 	err := db.DeletePlayer(p.ID)
 	if err != nil {
-		return fmt.Errorf("error when deleting player %s: %w", p.Name, err)
+		return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 	} else {
 		// If already in postgres, store the ID to be deleted
 		if IDtoDelete >= 0 {

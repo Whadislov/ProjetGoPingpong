@@ -12,11 +12,11 @@ func AddPlayerToClub(p *mt.Player, c *mt.Club) error {
 
 	err := p.AddClub(c)
 	if err != nil {
-		return fmt.Errorf("error when adding player %v to club %v: %w", p.Name, c.Name, err)
+		return fmt.Errorf("error when adding player %v %v to club %v: %w", p.Firstname, p.Lastname, c.Name, err)
 	}
 	err = c.AddPlayer(p)
 	if err != nil {
-		return fmt.Errorf("error when adding player %v to club %v: %w", p.Name, c.Name, err)
+		return fmt.Errorf("error when adding player %v %v to club %v: %w", p.Firstname, p.Lastname, c.Name, err)
 	}
 
 	return nil

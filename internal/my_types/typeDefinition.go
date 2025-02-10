@@ -16,13 +16,14 @@ type Club struct {
 }
 
 type Player struct {
-	ID       int            `json:"id"`
-	Name     string         `json:"name"`
-	Age      int            `json:"age"`
-	Ranking  int            `json:"ranking"`
-	Material []string       `json:"material"`
-	TeamIDs  map[int]string `json:"teams"`
-	ClubIDs  map[int]string `json:"clubs"`
+	ID        int            `json:"id"`
+	Firstname string         `json:"firstname"`
+	Lastname  string         `json:"lastname"`
+	Age       int            `json:"age"`
+	Ranking   int            `json:"ranking"`
+	Material  []string       `json:"material"`
+	TeamIDs   map[int]string `json:"teams"`
+	ClubIDs   map[int]string `json:"clubs"`
 }
 
 type Team struct {

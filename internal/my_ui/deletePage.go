@@ -43,16 +43,16 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			i := sortedPlayer.Key
 			p := db.Players[i]
 			item := widget.NewAccordionItem(
-				p.Name,
+				fmt.Sprintf("%v %v", p.Firstname, p.Lastname),
 				container.NewVBox(
 					PlayerInfos(p),
 					widget.NewButton("Delete", func() {
-						ShowConfirmationDialog(w, fmt.Sprintf("Delete player %v?", p.Name), func() {
+						ShowConfirmationDialog(w, fmt.Sprintf("Delete player %v %v?", p.Firstname, p.Lastname), func() {
 							err := mf.DeletePlayer(p, db)
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								successMsg := fmt.Sprintf("%v has been successfully deleted\n", p.Name)
+								successMsg := fmt.Sprintf("%v %v has been successfully deleted\n", p.Firstname, p.Lastname)
 								fmt.Println(successMsg)
 								dialog.ShowInformation("Succes", successMsg, w)
 

@@ -40,7 +40,8 @@ var createOtherTablesQuery string = `
 
 CREATE TABLE IF NOT EXISTS players (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+	firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
     age INTEGER,
     ranking INTEGER,
     forehand TEXT,

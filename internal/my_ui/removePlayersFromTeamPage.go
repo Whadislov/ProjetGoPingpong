@@ -180,7 +180,7 @@ func selectPlayerPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 		player := p.Value
 		// Check if the player from the database is already in the team's player map. If yes we want a button of this player
 		if _, ok := team.PlayerIDs[player.ID]; ok {
-			playerButton := widget.NewButton(player.Name, func() {
+			playerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 				selectedPlayers[player.ID] = player
 				w.SetContent(selectedPlayerPagePfromT(team, selectedPlayers, db, w, a))
 			})
@@ -200,7 +200,7 @@ func selectPlayerPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 // createPlayerButtonsPfromT creates buttons for each selected player.
 func createPlayerButtonsPfromT(team *mt.Team, player *mt.Player, db *mt.Database, selectedPlayers map[int]*mt.Player, selectedPlayerButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected player to remove the player from the selected player list
-	selectedPlayerButton := widget.NewButton(player.Name, func() {
+	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 		delete(selectedPlayers, player.ID)
 
 		// If there is 0 selected player, we should return to the player selection page
@@ -235,7 +235,7 @@ func addAnotherPlayerPagePfromT(team *mt.Team, alreadySelectedPlayers map[int]*m
 		if _, ok := team.PlayerIDs[player.ID]; ok {
 			if _, ok := alreadySelectedPlayers[player.ID]; !ok {
 				// Check if the player from team's player map is already in selected players. If not we want a button of this player
-				playerButton := widget.NewButton(player.Name, func() {
+				playerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
 					alreadySelectedPlayers[player.ID] = player
 					w.SetContent(selectedPlayerPagePfromT(team, alreadySelectedPlayers, db, w, a))
 				})
@@ -278,7 +278,7 @@ func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[int]*mt.Player,
 		for _, player := range selectedPlayers {
 			// Do the link
 			err = mf.RemovePlayerFromTeam(player, team)
-			playerNames = append(playerNames, player.Name)
+			playerNames = append(playerNames, player.Firstname+player.Lastname)
 			if err != nil {
 				dialog.ShowError(err, w)
 			}
