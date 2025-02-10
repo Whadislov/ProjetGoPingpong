@@ -11,11 +11,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Secret key to sign the token
-var jwtSecret = []byte("my_secret_jwt")
-
 // generateJWT generates a JWT token
 func generateJWT(userID int) (string, error) {
+
 	claims := jwt.MapClaims{
 		"user_id": strconv.Itoa(userID),
 		"exp":     time.Now().Add(24 * time.Hour).Unix(),

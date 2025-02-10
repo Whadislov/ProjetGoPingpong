@@ -78,7 +78,7 @@ func saveDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handler to check if the API is ready to take requests (not yet used)
-func isApiReady(w http.ResponseWriter, r *http.Request) {
+func IsApiReady(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -89,7 +89,7 @@ func isApiReady(w http.ResponseWriter, r *http.Request) {
 }
 
 // loginHandler process the request to analyse the credentials, returns a token
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -118,7 +118,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // signUpHandler process the request to create a new user, returns a token
-func signUpHandler(w http.ResponseWriter, r *http.Request) {
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	var signUpData struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
