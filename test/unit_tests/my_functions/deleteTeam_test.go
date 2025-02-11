@@ -19,7 +19,8 @@ func TestDeleteTeam(t *testing.T) {
 	}
 
 	d := mt.Database{
-		Teams: map[int]*mt.Team{0: &t1},
+		Teams:           map[int]*mt.Team{0: &t1},
+		DeletedElements: map[string][]int{},
 	}
 
 	expectedLen1 := 0

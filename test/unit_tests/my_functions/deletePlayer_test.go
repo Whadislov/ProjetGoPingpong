@@ -19,7 +19,8 @@ func TestDeletePlayer(t *testing.T) {
 	}
 
 	d := mt.Database{
-		Players: map[int]*mt.Player{0: &p1},
+		Players:         map[int]*mt.Player{0: &p1},
+		DeletedElements: map[string][]int{},
 	}
 
 	expectedLen1 := 0

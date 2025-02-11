@@ -30,9 +30,10 @@ func TestDeletePlayerComplexCase(t *testing.T) {
 	}
 
 	d := mt.Database{
-		Clubs:   map[int]*mt.Club{0: &c1},
-		Teams:   map[int]*mt.Team{0: &t1},
-		Players: map[int]*mt.Player{0: &p1},
+		Clubs:           map[int]*mt.Club{0: &c1},
+		Teams:           map[int]*mt.Team{0: &t1},
+		Players:         map[int]*mt.Player{0: &p1},
+		DeletedElements: map[string][]int{},
 	}
 
 	expectedLenDPlayers := 0
