@@ -17,9 +17,9 @@ func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		w.SetContent(mainPage)
 	})
 
-	playerButton := widget.NewButton("Show players", func() { PlayerPage(db, w, a) })
-	teamButton := widget.NewButton("Show teams", func() { TeamPage(db, w, a) })
-	clubButton := widget.NewButton("Show clubs", func() { ClubPage(db, w, a) })
+	playerButton := widget.NewButton("Your players", func() { PlayerPage(db, w, a) })
+	teamButton := widget.NewButton("Your teams", func() { TeamPage(db, w, a) })
+	clubButton := widget.NewButton("Your clubs", func() { ClubPage(db, w, a) })
 
 	databasePage := container.NewVBox(
 		pageTitle,

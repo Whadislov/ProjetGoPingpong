@@ -21,19 +21,19 @@ func checkUserCredentials(username string, password string) (int, error) {
 	for _, user := range db.Users {
 		if username == user.Name {
 
-			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 			if err != nil {
-				return -1, fmt.Errorf("failed to hash password: %v", err)
-			}
-
-			if string(hashedPassword) == user.PasswordHash {
+				// Password is wrong
+				log.Println("User credentials are wrong")
+				return -1, fmt.Errorf("username and password missmatch")
+			} else {
 				log.Println("User credentials are good")
 				mdb.SetUserIDOfSession(user.ID)
 				return user.ID, nil
 			}
 		}
 	}
-	// Wrong credentials or user does not exist
+	// User does not exist
 	return -1, fmt.Errorf("username and password missmatch")
 }
 

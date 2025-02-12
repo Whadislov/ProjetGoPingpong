@@ -13,6 +13,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // AuthentificationPage returns a page that contains a log in button and a sign up button
@@ -185,7 +187,11 @@ func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		log.Println("Verifying username and password")
 		for _, user := range db.Users {
 			if usernameEntry.Text == user.Name {
-				if passwordEntry.Text == user.PasswordHash {
+				err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(passwordEntry.Text))
+				if err != nil {
+					dialog.ShowError(fmt.Errorf("internal error: %v", err), w)
+					return
+				} else {
 					log.Println("Login is successfull")
 					mdb.SetUserIDOfSession(user.ID)
 					// Now load the corresponding database of the user

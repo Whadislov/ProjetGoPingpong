@@ -197,7 +197,8 @@ func reinitPasswordPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 			// E-mail found
 			var resetEmailDialogSuccess *dialog.CustomDialog
-			resetEmailMessage := widget.NewLabel(fmt.Sprintf("A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
+			cautionMessage := "⚠️ This feature is currently not working ⚠️\n\n"
+			resetEmailMessage := widget.NewLabel(fmt.Sprintf(cautionMessage+"A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
 			returnToLoginPageWeb := widget.NewButton("Return to the login screen", func() {
 				resetEmailDialogSuccess.Hide()
 				w.SetContent(loginPageWeb(w, a))
