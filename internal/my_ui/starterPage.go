@@ -16,7 +16,7 @@ import (
 
 // StarterPage creates the introduction page to the UI and the starter page
 func StarterPage() fyne.App {
-	a := app.New()
+	a := app.NewWithID("TTCompanion.com")
 
 	// Set the icon
 	icon, err := fyne.LoadResourceFromPath("cmd/app/Icon.png")
