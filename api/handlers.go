@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // Handler for loading the database

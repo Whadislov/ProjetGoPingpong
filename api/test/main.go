@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Whadislov/ProjetGoPingPong/api"
+	"github.com/Whadislov/TTCompanion/api"
 )
 
 func main() {

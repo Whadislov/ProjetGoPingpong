@@ -1,7 +1,7 @@
 package main
 
 import (
-	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
+	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )

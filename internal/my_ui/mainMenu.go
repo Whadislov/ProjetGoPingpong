@@ -6,9 +6,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // MainMenu creates the menus

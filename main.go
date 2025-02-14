@@ -10,9 +10,9 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/Whadislov/ProjetGoPingPong/api"
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mu "github.com/Whadislov/ProjetGoPingPong/internal/my_ui"
+	"github.com/Whadislov/TTCompanion/api"
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
 

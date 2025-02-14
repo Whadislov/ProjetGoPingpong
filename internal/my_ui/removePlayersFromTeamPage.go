@@ -1,8 +1,8 @@
 package myapp
 
 import (
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 
 	"fmt"
 

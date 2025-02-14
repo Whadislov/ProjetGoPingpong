@@ -1,7 +1,7 @@
 package teammethods_test
 
 import (
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"testing"
 )
 

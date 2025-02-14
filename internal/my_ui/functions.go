@@ -8,7 +8,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"

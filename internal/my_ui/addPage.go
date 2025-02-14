@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // AddPage sets up the main page for adding players to teams and vice versa.

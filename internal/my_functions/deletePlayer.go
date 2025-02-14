@@ -3,7 +3,7 @@ package my_functions
 import (
 	"fmt"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // DeletePlayer removes a player from the database and updates all related team and club records.

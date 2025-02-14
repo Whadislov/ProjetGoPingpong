@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // LoadDB loads the database.

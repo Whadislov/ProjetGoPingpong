@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Whadislov/ProjetGoPingPong/api"
+	"github.com/Whadislov/TTCompanion/api"
 )
 
 func TestIsApiReady(t *testing.T) {
