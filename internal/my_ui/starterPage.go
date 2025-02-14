@@ -16,10 +16,10 @@ import (
 
 // StarterPage creates the introduction page to the UI and the starter page
 func StarterPage() fyne.App {
-	a := app.NewWithID("TTCompanion.com")
+	a := app.NewWithID("com.onrender.TTCompanion")
 
 	// Set the icon
-	icon, err := fyne.LoadResourceFromPath("cmd/app/Icon.png")
+	icon, err := fyne.LoadResourceFromPath("Icon.png")
 	if err != nil {
 		log.Printf("Failed to load icon: %v", err)
 	}
