@@ -1,7 +1,7 @@
 package myapp
 
 import (
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 var appStartOption string

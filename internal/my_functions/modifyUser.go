@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // ChangeUsername changes the current username with a new one.

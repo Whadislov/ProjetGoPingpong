@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // SignUp requests a new user creation, if everything is fine, the database of the new user and the token are returned

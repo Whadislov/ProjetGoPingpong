@@ -8,8 +8,8 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // currentSelectionPageTtoP sets up the page for selecting players and teams.

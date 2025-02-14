@@ -3,7 +3,7 @@ package my_functions
 import (
 	"fmt"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // RemovePlayerFromTeam removes a player from a team by updating both the player's and the team's records.

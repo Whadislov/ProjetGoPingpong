@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
+	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"

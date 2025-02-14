@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
 // Login requests a credentials check to the API, if everything is fine, the database of the user is returned

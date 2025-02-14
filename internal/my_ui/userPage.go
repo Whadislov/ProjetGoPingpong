@@ -3,10 +3,10 @@ package myapp
 import (
 	"fmt"
 
-	mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
-	mfr "github.com/Whadislov/ProjetGoPingPong/internal/my_frontend"
-	mf "github.com/Whadislov/ProjetGoPingPong/internal/my_functions"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
