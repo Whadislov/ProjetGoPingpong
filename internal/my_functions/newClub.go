@@ -15,12 +15,14 @@ func NewClub(clubName string, db *mt.Database) (*mt.Club, error) {
 	}
 
 	c := &mt.Club{
-		ID:        len(db.Clubs),
+		ID:        NewClubCount,
 		Name:      clubName,
 		PlayerIDs: make(map[int]string),
 		TeamIDs:   make(map[int]string),
 	}
 
+	// Be ready for next club
+	NewClubCount--
 	db.AddClub(c)
 	log.Printf("Club %v sucessfully created.", clubName)
 	return c, nil

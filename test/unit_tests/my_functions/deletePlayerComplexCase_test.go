@@ -9,10 +9,10 @@ import (
 func TestDeletePlayerComplexCase(t *testing.T) {
 
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		TeamIDs: map[int]string{0: "t1"},
-		ClubIDs: map[int]string{0: "c1"},
+		ID:        0,
+		Firstname: "p1",
+		TeamIDs:   map[int]string{0: "t1"},
+		ClubIDs:   map[int]string{0: "c1"},
 	}
 
 	t1 := mt.Team{
@@ -25,14 +25,15 @@ func TestDeletePlayerComplexCase(t *testing.T) {
 	c1 := mt.Club{
 		ID:        0,
 		Name:      "c1",
-		PlayerIDs: map[int]string{p1.ID: p1.Name},
+		PlayerIDs: map[int]string{p1.ID: p1.Firstname},
 		TeamIDs:   map[int]string{t1.ID: t1.Name},
 	}
 
 	d := mt.Database{
-		Clubs:   map[int]*mt.Club{0: &c1},
-		Teams:   map[int]*mt.Team{0: &t1},
-		Players: map[int]*mt.Player{0: &p1},
+		Clubs:           map[int]*mt.Club{0: &c1},
+		Teams:           map[int]*mt.Team{0: &t1},
+		Players:         map[int]*mt.Player{0: &p1},
+		DeletedElements: map[string][]int{},
 	}
 
 	expectedLenDPlayers := 0

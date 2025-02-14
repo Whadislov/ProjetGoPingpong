@@ -16,14 +16,14 @@ func (t *Team) SetTeamName(name string) {
 // Returns an error if the player is already in the team.
 func (t *Team) AddPlayer(player *Player) error {
 	if _, ok := t.PlayerIDs[player.ID]; ok {
-		return fmt.Errorf("player %v is already in team %v", player.Name, t.Name)
+		return fmt.Errorf("player %v is already in team %v", player.Firstname+player.Lastname, t.Name)
 	}
 
 	if t.PlayerIDs == nil {
 		t.PlayerIDs = make(map[int]string)
 	}
 
-	t.PlayerIDs[player.ID] = player.Name
+	t.PlayerIDs[player.ID] = player.Firstname + player.Lastname
 	return nil
 }
 
@@ -46,7 +46,7 @@ func (t *Team) AddClub(club *Club) error {
 // Returns an error if the player is not in the team.
 func (t *Team) RemovePlayer(player *Player) error {
 	if _, ok := t.PlayerIDs[player.ID]; !ok {
-		return fmt.Errorf("player %v is not in team %v", player.Name, t.Name)
+		return fmt.Errorf("player %v is not in team %v", player.Firstname+player.Lastname, t.Name)
 	}
 	delete(t.PlayerIDs, player.ID)
 	return nil

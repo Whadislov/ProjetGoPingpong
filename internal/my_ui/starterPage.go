@@ -5,7 +5,8 @@ import (
 	"log"
 	"time"
 
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+	//mdb "github.com/Whadislov/ProjetGoPingPong/internal/my_db"
+	//mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -14,8 +15,8 @@ import (
 )
 
 // StarterPage creates the introduction page to the UI and the starter page
-func StarterPage(db *mt.Database) fyne.App {
-	a := app.New()
+func StarterPage() fyne.App {
+	a := app.NewWithID("TTCompanion.com")
 
 	// Set the icon
 	icon, err := fyne.LoadResourceFromPath("cmd/app/Icon.png")
@@ -24,7 +25,7 @@ func StarterPage(db *mt.Database) fyne.App {
 	}
 	a.SetIcon(icon)
 
-	mainWindow := a.NewWindow("TTapp")
+	mainWindow := a.NewWindow("TT Companion")
 	mainWindow.Resize(fyne.NewSize(600, 400))
 
 	// Center the window on the monitor
@@ -32,25 +33,29 @@ func StarterPage(db *mt.Database) fyne.App {
 
 	// Welcome page
 	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	welcomeText := canvas.NewText("Welcome to TTapp", themeColor)
+	welcomeText := canvas.NewText("Welcome to TT Companion", themeColor)
 	welcomeText.Alignment = fyne.TextAlignCenter
 	welcomeText.TextSize = 32
 	welcomePage := container.NewCenter(welcomeText)
 
 	// Main page
-	mainPage := MainPage(db, mainWindow, a)
+	//mainPage := MainPage(db, mainWindow, a)
 
 	// Fade
 	go func() {
 		time.Sleep(1 * time.Second)
 		if appStartOption == "local" {
 			fadeText(welcomeText, themeColor)
+			// go to main page with delay so that the menu is not directly shown
+			log.Println("Transitioning to identification page")
+			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
+
+		} else if appStartOption == "browser" {
+			// No fade because it blinks on the browser and the problem is not yet solved
+			log.Println("Transitioning to the authentification page web")
+			mainWindow.SetContent(AuthentificationPageWeb(mainWindow, a))
 		}
-		// go to main page with delay so that the menu is not directly shown
-		log.Println("Transitioning to main page")
-		mainWindow.SetContent(mainPage)
-		mainMenu := MainMenu(db, mainWindow, a)
-		mainWindow.SetMainMenu(mainMenu)
+
 	}()
 	log.Println("Displaying welcome page")
 	mainWindow.SetContent(welcomePage)

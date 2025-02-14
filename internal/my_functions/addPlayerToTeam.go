@@ -12,11 +12,11 @@ func AddPlayerToTeam(p *mt.Player, t *mt.Team) error {
 
 	err := p.AddTeam(t)
 	if err != nil {
-		return fmt.Errorf("error when adding team %v to player %v: %w", t.Name, p.Name, err)
+		return fmt.Errorf("error when adding team %v to player %v %v: %w", t.Name, p.Firstname, p.Lastname, err)
 	}
 	err = t.AddPlayer(p)
 	if err != nil {
-		return fmt.Errorf("error when adding player %v to team %v: %w", p.Name, t.Name, err)
+		return fmt.Errorf("error when adding player %v %v to team %v: %w", p.Firstname, p.Lastname, t.Name, err)
 	}
 
 	return nil

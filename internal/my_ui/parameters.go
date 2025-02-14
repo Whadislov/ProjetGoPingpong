@@ -1,7 +1,14 @@
 package myapp
 
-var appStartOption string
+import (
+	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
+)
 
-func AppStartOption(s string) {
-	appStartOption = s
-}
+var appStartOption string
+var userOfSession *mt.User
+var jsonWebToken string
+
+// For the UserPage to know the current username, email, password
+var currentUsername string
+var currentEmail string
+var currentPassword string

@@ -14,6 +14,7 @@ import (
 )
 
 func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
+	pageTitle := setTitle("Edit player information", 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
@@ -25,11 +26,12 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Name, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
+		playerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 
 	content := container.NewVBox(
+		pageTitle,
 		returnToFonctionalityPageButton,
 		container.NewGridWithColumns(
 			2,
@@ -42,12 +44,13 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 }
 
 func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) {
+	pageTitle := setTitle("Edit player information", 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
 	cancelButton := widget.NewButton("Cancel", func() { AddInfoToPlayerPage(db, w, a) })
 
-	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v.", p.Name))
+	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v %v.", p.Firstname, p.Lastname))
 
 	// Here are optional informations that can be added to the player
 	ageEntry := widget.NewEntry()
@@ -134,10 +137,10 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		// Has something changed ?
 		if isAgeModified || isRankingModified || isForehandModified || isBackhandModified || isBladeModified {
 			HasChanged = true
-			dialog.ShowInformation("Succes", fmt.Sprintf("%v has been modified", p.Name), w)
+			dialog.ShowInformation("Succes", fmt.Sprintf("%v %v has been modified", p.Firstname, p.Lastname), w)
 			AddInfoToPlayerPage(db, w, a)
 		} else {
-			dialog.ShowInformation("Information", fmt.Sprintf("%v has not been modified", p.Name), w)
+			dialog.ShowInformation("Information", fmt.Sprintf("%v %v has not been modified", p.Firstname, p.Lastname), w)
 		}
 
 	})
@@ -147,7 +150,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Name, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
+		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 
@@ -168,6 +171,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 	)
 
 	content := container.NewVBox(
+		pageTitle,
 		returnToFonctionalityPageButton,
 		container.NewGridWithColumns(
 			2,

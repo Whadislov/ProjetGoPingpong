@@ -7,9 +7,14 @@ func (p *Player) SetPlayerID(id int) {
 	p.ID = id
 }
 
-// SetPlayerName sets the name of the player.
-func (p *Player) SetPlayerName(name string) {
-	p.Name = name
+// SetPlayerName sets the first name of the player.
+func (p *Player) SetPlayerFirstname(name string) {
+	p.Firstname = name
+}
+
+// SetPlayerName sets the last name of the player.
+func (p *Player) SetPlayerLastname(name string) {
+	p.Lastname = name
 }
 
 // SetPlayerAge sets the age of the player.
@@ -32,7 +37,7 @@ func (p *Player) SetPlayerMaterial(forehand string, backhand string, blade strin
 // Returns an error if the team is already in the player's list.
 func (p *Player) AddTeam(team *Team) error {
 	if _, ok := p.TeamIDs[team.ID]; ok {
-		return fmt.Errorf("player %v is already in team %v", p.Name, team.Name)
+		return fmt.Errorf("player %v %v is already in team %v", p.Firstname, p.Lastname, team.Name)
 	}
 
 	if p.TeamIDs == nil {
@@ -47,7 +52,7 @@ func (p *Player) AddTeam(team *Team) error {
 // Returns an error if the club is already in the player's list.
 func (p *Player) AddClub(club *Club) error {
 	if _, ok := p.ClubIDs[club.ID]; ok {
-		return fmt.Errorf("player %v is already in club %v", p.Name, club.Name)
+		return fmt.Errorf("player %v %v is already in club %v", p.Firstname, p.Lastname, club.Name)
 	}
 
 	if p.ClubIDs == nil {
@@ -62,7 +67,7 @@ func (p *Player) AddClub(club *Club) error {
 // Returns an error if the team is not in the player's list.
 func (p *Player) RemoveTeam(team *Team) error {
 	if _, ok := p.TeamIDs[team.ID]; !ok {
-		return fmt.Errorf("player %v is not in team %v", p.Name, team.Name)
+		return fmt.Errorf("player %v %v is not in team %v", p.Firstname, p.Lastname, team.Name)
 	}
 	delete(p.TeamIDs, team.ID)
 	return nil
@@ -72,7 +77,7 @@ func (p *Player) RemoveTeam(team *Team) error {
 // Returns an error if the club is not in the player's list.
 func (p *Player) RemoveClub(club *Club) error {
 	if _, ok := p.ClubIDs[club.ID]; !ok {
-		return fmt.Errorf("player %v is not in club %v", p.Name, club.Name)
+		return fmt.Errorf("player %v %v is not in club %v", p.Firstname, p.Lastname, club.Name)
 	}
 	delete(p.ClubIDs, club.ID)
 	return nil
@@ -90,7 +95,7 @@ func (p *Player) HasClub() bool {
 
 }
 
-// GetName returns the player's name.
+// GetName returns the player's full name (first name + last name).
 func (p *Player) GetName() string {
-	return p.Name
+	return p.Firstname + p.Lastname
 }

@@ -14,15 +14,15 @@ func TestAddPlayerToTeam(t *testing.T) {
 	}
 
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		TeamIDs: map[int]string{},
+		ID:        0,
+		Firstname: "p1",
+		TeamIDs:   map[int]string{},
 	}
 
 	p2 := mt.Player{
-		ID:      1,
-		Name:    "p2",
-		TeamIDs: map[int]string{0: "t1"},
+		ID:        1,
+		Firstname: "p2",
+		TeamIDs:   map[int]string{0: "t1"},
 	}
 
 	y2 := mt.Team{
@@ -32,9 +32,9 @@ func TestAddPlayerToTeam(t *testing.T) {
 	}
 
 	p3 := mt.Player{
-		ID:      2,
-		Name:    "p3",
-		TeamIDs: map[int]string{},
+		ID:        2,
+		Firstname: "p3",
+		TeamIDs:   map[int]string{},
 	}
 
 	expectedLen1 := 1

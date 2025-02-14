@@ -24,7 +24,7 @@ func ConnectToDB() (*Database, error) {
 		return nil, fmt.Errorf("failed to connect to postgres database: %w", err)
 	}
 
-	// Check if the database exists
+	// Check if the database exists. pg_database = system view in PostgreSQL that contains info of all databases. datname = view that has all database names. $1 will be replaced by the first argument in the query
 	query := `SELECT 1 FROM pg_database WHERE datname = $1`
 	var exists int
 	err = conn.QueryRow(query, dbName).Scan(&exists)
@@ -59,7 +59,7 @@ func ConnectToDB() (*Database, error) {
 
 // CreateTables creates the necessary tables in the database for PostgreSQL.
 func (db *Database) CreateTables() error {
-	_, err := db.Conn.Exec(createTablesQuery)
+	_, err := db.Conn.Exec(createAllTablesQuery)
 	if err != nil {
 		return fmt.Errorf("failed to reset database: %w", err)
 	}

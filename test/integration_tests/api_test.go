@@ -1,107 +1,85 @@
-package integrationtests
+package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/Whadislov/ProjetGoPingPong/api"
-	mt "github.com/Whadislov/ProjetGoPingPong/internal/my_types"
 )
 
-// Mock database
-func setupMockDB() *mt.Database {
-	return &mt.Database{
-		Players: map[int]*mt.Player{
-			0: {ID: 0, Name: "Julien", Age: 27, Ranking: 1632, Material: []string{"Forehand", "Backhand", "Blade"}},
-		},
-		Teams: map[int]*mt.Team{
-			0: {ID: 0, Name: "Mannschaft 2"},
-		},
-		Clubs: map[int]*mt.Club{
-			0: {ID: 0, Name: "TSG Heilbronn"},
-		},
+func TestIsApiReady(t *testing.T) {
+	req, err := http.NewRequest("GET", "/api", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(api.IsApiReady)
+	handler.ServeHTTP(recorder, req)
+
+	if status := recorder.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 }
 
-// Mock config
-func setupMockConfig() *api.Config {
-	return &api.Config{
-		ServerAddress: "localhost",
-		ServerPort:    "7000",
+func TestLoginHandler(t *testing.T) {
+	creds := map[string]string{
+		"username": "testuser",
+		"password": "testpassword",
+	}
+	body, _ := json.Marshal(creds)
+
+	req, err := http.NewRequest("POST", "/api/login", bytes.NewBuffer(body))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(api.LoginHandler)
+	handler.ServeHTTP(recorder, req)
+
+	if status := recorder.Code; status != http.StatusUnauthorized {
+		t.Errorf("expected unauthorized, got %v", status)
 	}
 }
 
-func TestRunApi(t *testing.T) {
-	config := setupMockConfig()
+func TestSignUpHandler(t *testing.T) {
+	signUpData := map[string]string{
+		"username": "newuser",
+		"password": "newpassword",
+		"email":    "newuser@example.com",
+	}
+	body, _ := json.Marshal(signUpData)
 
-	// Start the API server in a separate goroutine
-	go func() {
-		api.RunApi(config)
-	}()
-
-	// Allow some time for the server to start
-	time.Sleep(2 * time.Second)
-
-	// Test the /players endpoint
-	resp, err := http.Get("http://" + config.ServerAddress + ":" + config.ServerPort + "/players")
+	req, err := http.NewRequest("POST", "/api/signup", bytes.NewBuffer(body))
 	if err != nil {
-		t.Fatalf("Failed to send GET request: %v", err)
+		t.Fatal(err)
 	}
+	req.Header.Set("Content-Type", "application/json")
 
-	defer resp.Body.Close()
+	recorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(api.SignUpHandler)
+	handler.ServeHTTP(recorder, req)
 
-	// Check the status code
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected status code %d, got %d", http.StatusOK, resp.StatusCode)
+	if status := recorder.Code; status != http.StatusInternalServerError {
+		t.Errorf("expected error due to missing DB, got %v", status)
 	}
+}
 
-	// Decode the players body
-	var players map[int]*mt.Player
-	err = json.NewDecoder(resp.Body).Decode(&players)
-	if err != nil {
-		t.Fatalf("Failed to decode players body: %v", err)
-	}
+func TestCorsMiddleware(t *testing.T) {
+	mockHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	handler := api.CorsMiddleware(mockHandler)
+	req, _ := http.NewRequest("OPTIONS", "/api", nil)
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, req)
 
-	// Check the players data
-	if len(players) != 1 || players[0].Name != "Julien" {
-		t.Fatalf("Unexpected players data: %+v", players)
-	}
-
-	// Test the /teams endpoint
-	resp, err = http.Get("http://" + config.ServerAddress + ":" + config.ServerPort + "/teams")
-	if err != nil {
-		t.Fatalf("Failed to send GET request: %v", err)
-	}
-
-	// Decode the teams body
-	var teams map[int]*mt.Team
-	err = json.NewDecoder(resp.Body).Decode(&teams)
-	if err != nil {
-		t.Fatalf("Failed to decode teams body: %v", err)
-	}
-
-	// Check the teams data
-	if len(teams) != 1 || teams[0].Name != "Mannschaft 2" {
-		t.Fatalf("Unexpected teams data: %+v", players)
-	}
-
-	// Test the /clubs endpoint
-	resp, err = http.Get("http://" + config.ServerAddress + ":" + config.ServerPort + "/clubs")
-	if err != nil {
-		t.Fatalf("Failed to send GET request: %v", err)
-	}
-
-	// Decode the clubs body
-	var clubs map[int]*mt.Club
-	err = json.NewDecoder(resp.Body).Decode(&clubs)
-	if err != nil {
-		t.Fatalf("Failed to decode clubs body: %v", err)
-	}
-
-	// Check the clubs data
-	if len(clubs) != 1 || clubs[0].Name != "TSG Heilbronn" {
-		t.Fatalf("Unexpected clubs data: %+v", clubs)
+	if recorder.Code != http.StatusOK {
+		t.Errorf("expected 200, got %v", recorder.Code)
 	}
 }

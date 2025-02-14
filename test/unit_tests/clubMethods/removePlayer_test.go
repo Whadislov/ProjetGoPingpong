@@ -13,13 +13,13 @@ func TestRemovePlayer(t *testing.T) {
 	}
 
 	p1 := mt.Player{
-		ID:   0,
-		Name: "p1",
+		ID:        0,
+		Firstname: "p1",
 	}
 
 	p2 := mt.Player{
-		ID:   1,
-		Name: "p2",
+		ID:        1,
+		Firstname: "p2",
 	}
 
 	expectedLen1 := 0

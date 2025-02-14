@@ -12,12 +12,12 @@ func RemovePlayerFromTeam(p *mt.Player, t *mt.Team) error {
 
 	err := t.RemovePlayer(p)
 	if err != nil {
-		return fmt.Errorf("%s has not been successfully removed from %s. Reason : %w", p.Name, t.Name, err)
+		return fmt.Errorf("%s %s has not been successfully removed from %s. Reason : %w", p.Firstname, p.Lastname, t.Name, err)
 	}
 
 	err = p.RemoveTeam(t)
 	if err != nil {
-		return fmt.Errorf("%s has not been successfully removed from %s. Reason : %w", p.Name, t.Name, err)
+		return fmt.Errorf("%s %s has not been successfully removed from %s. Reason : %w", p.Firstname, p.Lastname, t.Name, err)
 	}
 	return nil
 }

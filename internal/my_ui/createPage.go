@@ -3,9 +3,6 @@ package myapp
 import (
 	"fmt"
 	"strconv"
-	"strings"
-	"unicode"
-	"unicode/utf8"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -18,6 +15,8 @@ import (
 
 // CreatePage sets up the page for creating players, teams, and clubs.
 func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
+
+	pageTitle := setTitle("Create", 32)
 
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
@@ -32,11 +31,11 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	playerButton := widget.NewButton("Create a new player", func() {
 
 		// Club Selection
-		selectClubLabel := widget.NewLabel("You must first select a club")
+		pageTitle := setTitle("Create new player: select a club", 32)
 
 		// clubSelectionPage
 		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			label := widget.NewLabel("Clubs")
+			pageTitle := setTitle("Create new player: select a club", 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			// Sort clubs for an alphabetical order button display
@@ -49,9 +48,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 					clubLabel := widget.NewLabel(fmt.Sprintf("You are going to create a player for %v\n", club.Name))
 
 					// We can now create the player
-					nameEntry := widget.NewEntry()
-					entryNameHolder := "Name ..."
-					nameEntry.SetPlaceHolder(entryNameHolder)
+					firstnameEntry := widget.NewEntry()
+					entryFirstnameHolder := "Firstname ..."
+					firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
+
+					lastnameEntry := widget.NewEntry()
+					entryLastnameHolder := "Lastname ..."
+					lastnameEntry.SetPlaceHolder(entryLastnameHolder)
 
 					// Here are optional informations that can be added to the player
 					ageEntry := widget.NewEntry()
@@ -79,11 +82,18 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						ranking := -1
 
 						// Check player name
-						if nameEntry.Text == "" {
-							dialog.ShowError(fmt.Errorf("name must not be empty"), w)
+						if firstnameEntry.Text == "" {
+							dialog.ShowError(fmt.Errorf("firstname must not be empty"), w)
 							return
-						} else if !IsLettersOnly(nameEntry.Text) {
-							dialog.ShowError(fmt.Errorf("name must be letters only"), w)
+						} else if !IsLettersOnly(firstnameEntry.Text) {
+							dialog.ShowError(fmt.Errorf("firstname must be letters only"), w)
+							return
+						}
+						if lastnameEntry.Text == "" {
+							dialog.ShowError(fmt.Errorf("lastname must not be empty"), w)
+							return
+						} else if !IsLettersOnly(lastnameEntry.Text) {
+							dialog.ShowError(fmt.Errorf("lastname must be letters only"), w)
 							return
 						}
 						// Set player age
@@ -132,14 +142,10 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 
 						// Create the player
-						name := nameEntry.Text
-						name = strings.ToLower(name)
-						firstRune, size := utf8.DecodeRuneInString(name)
-						if firstRune != utf8.RuneError {
-							name = string(unicode.ToUpper(firstRune)) + name[size:]
-						}
+						firstname := firstnameEntry.Text
+						lastname := lastnameEntry.Text
 
-						p, errName := mf.NewPlayer(name, db)
+						p, errName := mf.NewPlayer(firstname, lastname, db)
 						if errName != nil {
 							dialog.ShowError(errName, w)
 							return
@@ -156,7 +162,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							return
 						} else {
 							// Player creation + link to club success
-							successMsg := fmt.Sprintf("Player %v has been successfully created\n", name)
+							successMsg := fmt.Sprintf("Player %v %v has been successfully created\n", firstname, lastname)
 							fmt.Println(successMsg)
 							dialog.ShowInformation("Succes", successMsg, w)
 
@@ -164,7 +170,8 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							HasChanged = true
 
 							// Reinit the entry text
-							ReinitWidgetEntryText(nameEntry, entryNameHolder)
+							ReinitWidgetEntryText(firstnameEntry, entryFirstnameHolder)
+							ReinitWidgetEntryText(lastnameEntry, entryLastnameHolder)
 							ReinitWidgetEntryText(ageEntry, entryAgeHolder)
 							ReinitWidgetEntryText(rankingEntry, entryRankingHolder)
 							ReinitWidgetEntryText(forehandEntry, entryForehandHolder)
@@ -174,9 +181,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 					})
 					// Create a player in this club page
+					pageTitle := setTitle("Create new player: add player information", 32)
+
 					w.SetContent(container.NewVBox(
+						pageTitle,
 						clubLabel,
-						nameEntry,
+						firstnameEntry,
+						lastnameEntry,
 						ageEntry,
 						rankingEntry,
 						container.NewGridWithColumns(3, forehandEntry, backhandEntry, bladeEntry),
@@ -188,13 +199,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 			// Choose a club page
 			w.SetContent(container.NewVBox(
-				label,
+				pageTitle,
 				container.NewVBox(listOfClubs...),
 			))
 		})
 		// Club selection page
 		w.SetContent(container.NewVBox(
-			selectClubLabel,
+			pageTitle,
 			clubSelectionPageButton,
 			ReturnToCreatePageButton,
 		))
@@ -205,11 +216,11 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	teamButton := widget.NewButton("Create a new team", func() {
 
 		// Club Selection
-		selectClubLabel := widget.NewLabel("You must first select a club")
+		pageTitle := setTitle("Create new team: select a club", 32)
 
 		// clubSelectionPage
 		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			label := widget.NewLabel("Clubs")
+			pageTitle := setTitle("Create new team: select a club", 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			for _, club := range db.Clubs {
@@ -264,7 +275,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 					})
 					// Create a team in this club page
+					pageTitle := setTitle("Create new team", 32)
 					w.SetContent(container.NewVBox(
+						pageTitle,
 						clubLabel,
 						nameEntry,
 						validatationButton,
@@ -275,13 +288,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 			// Choose a club page
 			w.SetContent(container.NewVBox(
-				label,
+				pageTitle,
 				container.NewVBox(listOfClubs...),
 			))
 		})
 		// Club selection page
 		w.SetContent(container.NewVBox(
-			selectClubLabel,
+			pageTitle,
 			clubSelectionPageButton,
 			ReturnToCreatePageButton,
 		))
@@ -314,7 +327,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 		})
 		// Create a club page
+		pageTitle := setTitle("Create new club", 32)
 		w.SetContent(container.NewVBox(
+			pageTitle,
 			nameEntry,
 			validatationButton,
 			ReturnToCreatePageButton,
@@ -326,9 +341,10 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// If there is no club, a club must first be created
 
 	if len(db.Clubs) < 1 {
-		label := widget.NewLabel("In order to create new players and teams, you need first to create a new club")
+		label := widget.NewLabel("You currently have 0 club available, please create a club first.")
 
 		createPage := container.NewVBox(
+			pageTitle,
 			label,
 			clubButton,
 			ReturnToFonctionalityPageButton,
@@ -337,6 +353,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		w.SetContent(createPage)
 	} else {
 		createPage := container.NewVBox(
+			pageTitle,
 			playerButton,
 			teamButton,
 			clubButton,

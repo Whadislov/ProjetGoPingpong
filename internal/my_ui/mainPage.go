@@ -23,15 +23,15 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	// Main page design
 	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	mainText := canvas.NewText("TTapp", themeColor)
+	mainText := canvas.NewText("TT Companion", themeColor)
 	mainText.Alignment = fyne.TextAlignCenter
 	mainText.TextSize = 32
 
-	showDBButton := widget.NewButton("Show database", func() {
+	showDBButton := widget.NewButton("Your database", func() {
 		w.SetContent(databasePage)
 	})
 
-	showFuncButton := widget.NewButton("Show functionalities", func() {
+	showFuncButton := widget.NewButton("Functionalities", func() {
 		w.SetContent(functionalityPage)
 	})
 

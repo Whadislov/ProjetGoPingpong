@@ -65,6 +65,16 @@ func (d *Database) DeleteClub(clubID int) error {
 	return nil
 }
 
+// DeleteClub removes a club from the database by their ID.
+// Returns an error if the club does not exist.
+func (d *Database) DeleteUser(userID int) error {
+	if _, ok := d.Users[userID]; !ok {
+		return fmt.Errorf("userID %v does not exist", userID)
+	}
+	delete(d.Users, userID)
+	return nil
+}
+
 // GetClub retrieves a club from the database by their ID.
 // Returns an error if the club does not exist.
 func (d *Database) GetClub(clubID int) (*Club, error) {
@@ -72,4 +82,29 @@ func (d *Database) GetClub(clubID int) (*Club, error) {
 		return nil, fmt.Errorf("clubID %v does not exist", clubID)
 	}
 	return d.Clubs[clubID], nil
+}
+
+// AddUser adds a new user to the database.
+func (d *Database) AddUser(user *User) {
+	d.Users[user.ID] = user
+}
+
+// AddDeletedUser adds a user ID to be deleted on the postgres database.
+func (d *Database) AddDeletedUser(userID int) {
+	d.DeletedElements["users"] = append(d.DeletedElements["users"], userID)
+}
+
+// AddDeletedPlayer adds a player ID to be deleted on the postgres database.
+func (d *Database) AddDeletedPlayer(playerID int) {
+	d.DeletedElements["players"] = append(d.DeletedElements["players"], playerID)
+}
+
+// AddDeletedTeam adds a team ID to be deleted on the postgres database.
+func (d *Database) AddDeletedTeam(teamID int) {
+	d.DeletedElements["teams"] = append(d.DeletedElements["teams"], teamID)
+}
+
+// AddDeletedClub adds a user ID to be deleted on the postgres database.
+func (d *Database) AddDeletedClub(clubID int) {
+	d.DeletedElements["clubs"] = append(d.DeletedElements["clubs"], clubID)
 }

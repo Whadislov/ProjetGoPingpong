@@ -4,6 +4,7 @@ import (
 	"sort"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
@@ -38,7 +39,7 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 		keys = append(keys, key)
 	}
 
-	// Sort keys alphabeticaly per value using m.Name. Keys is the sorted slice
+	// Sort keys alphabeticaly per value using m.Lastname. Keys is the sorted slice
 	sort.Slice(keys, func(i, j int) bool {
 		return m[keys[i]].GetName() < m[keys[j]].GetName()
 	})
@@ -96,4 +97,24 @@ func IsNumbersOnly(s string) bool {
 		}
 	}
 	return true
+}
+
+// setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size
+func setTitle(s string, size float32) *canvas.Text {
+	a := fyne.CurrentApp()
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	title := canvas.NewText(s, themeColor)
+	title.Alignment = fyne.TextAlignCenter
+	title.TextSize = size
+	return title
+}
+
+// setText sets the string as a text for the page. The string respects dark/light mode and has its size
+func sexText(s string, size float32) *canvas.Text {
+	a := fyne.CurrentApp()
+	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	title := canvas.NewText(s, themeColor)
+	title.Alignment = fyne.TextAlignCenter
+	title.TextSize = size
+	return title
 }

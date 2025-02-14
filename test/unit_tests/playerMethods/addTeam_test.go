@@ -7,9 +7,9 @@ import (
 
 func TestAddTeam(t *testing.T) {
 	p1 := mt.Player{
-		ID:      0,
-		Name:    "p1",
-		TeamIDs: map[int]string{0: "t1"},
+		ID:        0,
+		Firstname: "p1",
+		TeamIDs:   map[int]string{0: "t1"},
 	}
 
 	t1 := mt.Team{

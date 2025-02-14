@@ -14,7 +14,8 @@ import (
 
 // PlayerInfos returns a container that displays all the infos of a player.
 func PlayerInfos(player *mt.Player) *fyne.Container {
-	nameStr := "Name: 	" + player.Name
+	firstnameStr := "Firstname: 	" + player.Firstname
+	LastnameStr := "Lastname: 	" + player.Lastname
 	ageStr := "Age: 		" + strconv.Itoa(player.Age)
 	materialStr := fmt.Sprintf(
 		`Forehand:	%v
@@ -38,7 +39,7 @@ Blade:	%v`,
 	teamsStr := "Teams: 	" + strHelper(teams)
 	clubsStr := "Clubs: 	" + strHelper(clubs)
 
-	text := fmt.Sprintln(nameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr) + fmt.Sprintln(materialStr)
+	text := fmt.Sprintln(firstnameStr) + fmt.Sprintln(LastnameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr) + fmt.Sprintln(materialStr)
 	text = text[:len(text)-1] // remove the last \n
 	textLabel := widget.NewLabel(text)
 	item := container.NewVBox(textLabel)
@@ -48,7 +49,7 @@ Blade:	%v`,
 // PlayerPage sets up the page for displaying player info.
 func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
-	label := widget.NewLabel("Players")
+	pageTitle := setTitle("Players", 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -56,7 +57,7 @@ func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	for _, player := range sortedPlayers {
 		item := widget.NewAccordionItem(
-			player.Value.Name,
+			fmt.Sprintf("%v %v", player.Value.Firstname, player.Value.Lastname),
 			PlayerInfos(player.Value),
 		)
 
@@ -69,8 +70,8 @@ func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	w.SetContent(container.NewVBox(
+		pageTitle,
 		returnToDatabasePageButton,
-		label,
 		ac),
 	)
 }

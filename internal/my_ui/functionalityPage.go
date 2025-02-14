@@ -1,10 +1,7 @@
 package myapp
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -13,6 +10,7 @@ import (
 
 // FunctionalityPage creates the functionality page
 func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle("Functionalities", 32)
 
 	returnToMainMenuButton := widget.NewButton("Return main page", func() {
 		mainPage := MainPage(db, w, a)
@@ -20,17 +18,13 @@ func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 	})
 
 	createMenuButton := widget.NewButton("Create", func() { CreatePage(db, w, a) })
-	createAddMenuButton := widget.NewButton("Add ... to ...", func() { AddPage(db, w, a) })
-	createRemoveMenuButton := widget.NewButton("Remove ... from ...", func() { RemovePage(db, w, a) })
+	createAddMenuButton := widget.NewButton("Add", func() { AddPage(db, w, a) })
+	createRemoveMenuButton := widget.NewButton("Remove", func() { RemovePage(db, w, a) })
 	createDeleteMenuButton := widget.NewButton("Delete", func() { DeletePage(db, w, a) })
-	createAddInfoToPlayerButton := widget.NewButton("Modify player information", func() { AddInfoToPlayerPage(db, w, a) })
-
-	functionalityText := canvas.NewText("Functionalities", color.RGBA{R: 0, G: 0, B: 0, A: 255})
-	functionalityText.Alignment = fyne.TextAlignCenter
-	functionalityText.TextSize = 16
+	createAddInfoToPlayerButton := widget.NewButton("Edit player information", func() { AddInfoToPlayerPage(db, w, a) })
 
 	functionalityPage := container.NewVBox(
-		functionalityText,
+		pageTitle,
 		createMenuButton,
 		createAddMenuButton,
 		createRemoveMenuButton,
