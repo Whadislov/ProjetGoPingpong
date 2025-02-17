@@ -3,12 +3,13 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestNewPlayer(t *testing.T) {
 	d := mt.Database{
-		Players: map[int]*mt.Player{},
+		Players: map[uuid.UUID]*mt.Player{},
 	}
 
 	expectedLen := 1

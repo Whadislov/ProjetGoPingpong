@@ -27,7 +27,7 @@ func SetDBName(name string) {
 var createUserTableQuery string = `
 BEGIN;
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR UNIQUE NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
     password_hash VARCHAR NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
 var createOtherTablesQuery string = `
 
 CREATE TABLE IF NOT EXISTS players (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
     age INTEGER,
@@ -47,57 +47,53 @@ CREATE TABLE IF NOT EXISTS players (
     forehand TEXT,
     backhand TEXT,
     blade TEXT,
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS teams (
-	id SERIAL PRIMARY KEY,
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	name TEXT NOT NULL,
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS clubs (
-	id SERIAL PRIMARY KEY,
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	name TEXT NOT NULL,
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS player_club (
-	player_id INTEGER NOT NULL,
-	club_id INTEGER NOT NULL,
+	player_id UUID NOT NULL,
+	club_id UUID NOT NULL,
 	PRIMARY KEY (player_id, club_id),
 	FOREIGN KEY (player_id) REFERENCES players(id),
 	FOREIGN KEY (club_id) REFERENCES clubs(id),
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS player_team (
-	player_id INTEGER NOT NULL,
-	team_id INTEGER NOT NULL,
+	player_id UUID NOT NULL,
+	team_id UUID NOT NULL,
 	PRIMARY KEY (player_id, team_id),
 	FOREIGN KEY (player_id) REFERENCES players(id),
 	FOREIGN KEY (team_id) REFERENCES teams(id),
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS team_club (
-	team_id INTEGER NOT NULL,
-	club_id INTEGER NOT NULL,
+	team_id UUID NOT NULL,
+	club_id UUID NOT NULL,
 	PRIMARY KEY (team_id, club_id),
 	FOREIGN KEY (team_id) REFERENCES teams(id),
 	FOREIGN KEY (club_id) REFERENCES clubs(id),
-	user_id INTEGER NOT NULL,
+	user_id UUID NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-
-SELECT setval('players_id_seq', (SELECT MAX(id) FROM players));
-SELECT setval('teams_id_seq', (SELECT MAX(id) FROM teams));
-SELECT setval('clubs_id_seq', (SELECT MAX(id) FROM clubs));
 
 COMMIT;`
 

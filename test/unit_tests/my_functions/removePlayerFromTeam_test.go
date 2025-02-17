@@ -3,40 +3,54 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestRemovePlayerFromTeam(t *testing.T) {
+	p1ID := uuid.New()
+	p2ID := uuid.New()
+	p3ID := uuid.New()
+	p4ID := uuid.New()
+	t1ID := uuid.New()
+	t2ID := uuid.New()
+	p1Name := "p1"
+	p2Name := "p2"
+	p3Name := "p3"
+	p4Name := "p4"
+	t1Name := "t1"
+	t2Name := "t2"
+
 	t1 := mt.Team{
-		ID:        0,
-		Name:      "t1",
-		PlayerIDs: map[int]string{0: "p1", 2: "p3"},
+		ID:        t1ID,
+		Name:      t1Name,
+		PlayerIDs: map[uuid.UUID]string{p1ID: p1Name, p3ID: p3Name},
 	}
 
 	p1 := mt.Player{
-		ID:        0,
-		Firstname: "p1",
-		TeamIDs:   map[int]string{0: "t1"},
+		ID:        p1ID,
+		Firstname: p1Name,
+		TeamIDs:   map[uuid.UUID]string{t1ID: t1Name},
 	}
 
 	p2 := mt.Player{
-		ID:        1,
-		Firstname: "p2",
+		ID:        p2ID,
+		Firstname: p2Name,
 	}
 
 	p3 := mt.Player{
-		ID:        2,
-		Firstname: "p3",
+		ID:        p3ID,
+		Firstname: p3Name,
 	}
 
 	t2 := mt.Team{
-		ID:   1,
-		Name: "t1",
+		ID:   t2ID,
+		Name: t2Name,
 	}
 
 	p4 := mt.Player{
-		ID:        3,
-		Firstname: "p4",
+		ID:        p4ID,
+		Firstname: p4Name,
 	}
 
 	expectedLen1 := 1

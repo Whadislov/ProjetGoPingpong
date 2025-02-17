@@ -3,38 +3,39 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestAddPlayerToTeam(t *testing.T) {
 	t1 := mt.Team{
-		ID:        0,
+		ID:        uuid.New(),
 		Name:      "t1",
-		PlayerIDs: map[int]string{},
+		PlayerIDs: map[uuid.UUID]string{},
 	}
 
 	p1 := mt.Player{
-		ID:        0,
+		ID:        uuid.New(),
 		Firstname: "p1",
-		TeamIDs:   map[int]string{},
+		TeamIDs:   map[uuid.UUID]string{},
 	}
 
 	p2 := mt.Player{
-		ID:        1,
+		ID:        uuid.New(),
 		Firstname: "p2",
-		TeamIDs:   map[int]string{0: "t1"},
-	}
-
-	y2 := mt.Team{
-		ID:        1,
-		Name:      "y2",
-		PlayerIDs: map[int]string{2: "p3"},
+		TeamIDs:   map[uuid.UUID]string{t1.ID: t1.Name},
 	}
 
 	p3 := mt.Player{
-		ID:        2,
+		ID:        uuid.New(),
 		Firstname: "p3",
-		TeamIDs:   map[int]string{},
+		TeamIDs:   map[uuid.UUID]string{},
+	}
+
+	t2 := mt.Team{
+		ID:        uuid.New(),
+		Name:      "y2",
+		PlayerIDs: map[uuid.UUID]string{p3.ID: p3.Firstname},
 	}
 
 	expectedLen1 := 1
@@ -51,7 +52,7 @@ func TestAddPlayerToTeam(t *testing.T) {
 			t.Errorf("Expected error %v, got %v", expectedError2, err2)
 		}
 
-		err3 := mf.AddPlayerToTeam(&p3, &y2)
+		err3 := mf.AddPlayerToTeam(&p3, &t2)
 		if err3 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError3, err3)
 		}

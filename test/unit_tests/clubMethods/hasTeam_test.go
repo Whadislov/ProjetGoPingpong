@@ -2,20 +2,21 @@ package clubmethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestHasTeam(t *testing.T) {
 	c1 := mt.Club{
-		ID:      0,
+		ID:      uuid.New(),
 		Name:    "c1",
-		TeamIDs: map[int]string{0: "t1"},
+		TeamIDs: map[uuid.UUID]string{uuid.New(): "t1"},
 	}
 
 	c2 := mt.Club{
-		ID:      1,
+		ID:      uuid.New(),
 		Name:    "c2",
-		TeamIDs: map[int]string{},
+		TeamIDs: map[uuid.UUID]string{},
 	}
 
 	expectedBool1 := true
