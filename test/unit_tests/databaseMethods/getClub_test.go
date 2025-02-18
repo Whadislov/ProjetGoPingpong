@@ -2,27 +2,31 @@ package databasemethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestGetClub(t *testing.T) {
+	cID := uuid.New()
+	c2ID := uuid.New()
+
 	d := mt.Database{
-		Clubs: map[int]*mt.Club{0: {
-			ID:   0,
+		Clubs: map[uuid.UUID]*mt.Club{cID: {
+			ID:   cID,
 			Name: "c",
 		},
 		},
 	}
 	expectedClub := mt.Club{
-		ID:   0,
+		ID:   cID,
 		Name: "c",
 	}
 
 	expectedError := "clubID 1 does not exist"
 
 	t.Run("Get club from club ID", func(t *testing.T) {
-		c, err := d.GetClub(0)
-		_, err2 := d.GetClub(1)
+		c, err := d.GetClub(cID)
+		_, err2 := d.GetClub(c2ID)
 		if c == nil {
 			t.Errorf("Expected club %v, got %v", expectedClub, c)
 		}

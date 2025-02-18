@@ -4,31 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
-// generateJWT generates a JWT token
-func generateJWT(userID int) (string, error) {
+// generateJWT generates a JWT Credential token
+func generateJWT(userID uuid.UUID) (string, error) {
 
 	claims := jwt.MapClaims{
-		"user_id": strconv.Itoa(userID),
+		"user_id": userID.String(),
 		"exp":     time.Now().Add(24 * time.Hour).Unix(),
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtSecret)
+	credToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	credTokenString, err := credToken.SignedString(jwtSecret)
 	if err != nil {
 		return "", err
 	}
 
-	return tokenString, nil
+	return credTokenString, nil
 }
 
-// Middleware to verify JSON Web Token (JWT)
+// Middleware to verify JSON Web token (JWT)
 func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
@@ -37,32 +37,32 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		// Extract the token after "Bearer "
-		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Extract the Credential token after "Bearer "
+		credTokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		credToken, err := jwt.Parse(credTokenString, func(credToken *jwt.Token) (interface{}, error) {
 			// Checks the algorithm to prevent attacks
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			if _, ok := credToken.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method")
 			}
 			return jwtSecret, nil
 		})
 
-		if err != nil || !token.Valid {
+		if err != nil || !credToken.Valid {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
-		// Extract User ID from the token
-		claims, ok := token.Claims.(jwt.MapClaims)
+		// Extract User ID from the credToken
+		claims, ok := credToken.Claims.(jwt.MapClaims)
 		if !ok {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			http.Error(w, "Invalid credToken", http.StatusUnauthorized)
 			return
 		}
 
-		// Check token expiration
+		// Check credToken expiration
 		if exp, ok := claims["exp"].(float64); ok {
 			if time.Now().Unix() > int64(exp) {
-				http.Error(w, "Token expired", http.StatusUnauthorized)
+				http.Error(w, "credToken expired", http.StatusUnauthorized)
 				return
 			}
 		}

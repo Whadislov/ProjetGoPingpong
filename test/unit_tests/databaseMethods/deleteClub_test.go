@@ -1,27 +1,32 @@
 package databasemethods_test
 
 import (
+	"fmt"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestDeleteClub(t *testing.T) {
+	cID := uuid.New()
+	c2ID := uuid.New()
+
 	d := mt.Database{
-		Clubs: map[int]*mt.Club{0: {
-			ID:   0,
+		Clubs: map[uuid.UUID]*mt.Club{cID: {
+			ID:   cID,
 			Name: "c",
 		},
 		},
-		Teams:   map[int]*mt.Team{},
-		Players: map[int]*mt.Player{},
+		Teams:   map[uuid.UUID]*mt.Team{},
+		Players: map[uuid.UUID]*mt.Player{},
 	}
 
 	expectedLen := 0
-	expectedError := "clubID 1 does not exist"
+	expectedError := fmt.Sprintf("clubID %v does not exist", c2ID)
 
 	t.Run("Delete club from database", func(t *testing.T) {
-		err := d.DeleteClub(0)
-		err2 := d.DeleteClub(1)
+		err := d.DeleteClub(cID)
+		err2 := d.DeleteClub(c2ID)
 		lenToVerify := len(d.Clubs)
 		if lenToVerify != expectedLen {
 			t.Errorf("Expected len of Clubs %v, got %v", expectedLen, lenToVerify)

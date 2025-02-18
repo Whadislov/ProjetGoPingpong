@@ -3,38 +3,39 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestAddTeamToClub(t *testing.T) {
 	c1 := mt.Club{
-		ID:      0,
+		ID:      uuid.New(),
 		Name:    "c1",
-		TeamIDs: map[int]string{},
+		TeamIDs: map[uuid.UUID]string{},
 	}
 
 	t1 := mt.Team{
-		ID:     0,
+		ID:     uuid.New(),
 		Name:   "t1",
-		ClubID: map[int]string{},
+		ClubID: map[uuid.UUID]string{},
 	}
 
 	t2 := mt.Team{
-		ID:     1,
+		ID:     uuid.New(),
 		Name:   "t2",
-		ClubID: map[int]string{0: "c1"},
-	}
-
-	c2 := mt.Club{
-		ID:      1,
-		Name:    "c2",
-		TeamIDs: map[int]string{2: "t3"},
+		ClubID: map[uuid.UUID]string{c1.ID: "c1"},
 	}
 
 	t3 := mt.Team{
-		ID:     2,
+		ID:     uuid.New(),
 		Name:   "t3",
-		ClubID: map[int]string{},
+		ClubID: map[uuid.UUID]string{},
+	}
+
+	c2 := mt.Club{
+		ID:      uuid.New(),
+		Name:    "c2",
+		TeamIDs: map[uuid.UUID]string{t3.ID: t3.Name},
 	}
 
 	expectedLen1 := 1

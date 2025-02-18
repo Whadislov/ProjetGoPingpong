@@ -10,6 +10,7 @@ import (
 
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // currentSelectionPageTtoP sets up the page for selecting players and teams.
@@ -131,7 +132,7 @@ func selectTeamPageTtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 
 	tLabel := widget.NewLabel("Teams 🤝")
 	teamButtons := []fyne.CanvasObject{}
-	selectedTeams := make(map[int]*mt.Team)
+	selectedTeams := make(map[uuid.UUID]*mt.Team)
 
 	// We should create a team first
 	if len(db.Teams) == 0 {
@@ -158,7 +159,7 @@ func selectTeamPageTtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 	}
 
 	// We do not want to have a button for all the teams in the database. They have to meet some criterias : same club as the player, player not already playing in
-	screenedTeams := make(map[int]*mt.Team)
+	screenedTeams := make(map[uuid.UUID]*mt.Team)
 	// First get the club(s)
 	for clubID := range player.ClubIDs {
 		club, _ := db.GetClub(clubID)
@@ -195,7 +196,7 @@ func selectTeamPageTtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 }
 
 // createTeamButtonsTtoP creates buttons for each selected team.
-func createTeamButtonsTtoP(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeams map[int]*mt.Team, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createTeamButtonsTtoP(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeams map[uuid.UUID]*mt.Team, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected team to remove the team from the selected team list
 	selectedTeamButton := widget.NewButton(team.Name, func() {
 		delete(selectedTeams, team.ID)
@@ -214,7 +215,7 @@ func createTeamButtonsTtoP(player *mt.Player, team *mt.Team, db *mt.Database, se
 }
 
 // addAnotherTeamPageTtoP sets up the page for adding another team to the selected player.
-func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[uuid.UUID]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	pageTitle := setTitle("Add: select a team", 32)
 
@@ -226,7 +227,7 @@ func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[int]*mt.
 	teamButtons := []fyne.CanvasObject{}
 
 	// We do not want to have a button for all the teams in the database. They have to meet some criterias : same club as the player, player not already playing in, not already given a button
-	screenedTeams := make(map[int]*mt.Team)
+	screenedTeams := make(map[uuid.UUID]*mt.Team)
 	// First get the club(s)
 	for clubID := range player.ClubIDs {
 		club, _ := db.GetClub(clubID)
@@ -274,7 +275,7 @@ func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[int]*mt.
 }
 
 // selectedTeamPageTtoP sets up the page for confirming the selected teams for a player.
-func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	pageTitle := setTitle("Add: confirm", 32)
 

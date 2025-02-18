@@ -5,6 +5,7 @@ import (
 	"log"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // NewClub creates a new club with the given name and adds it to the database.
@@ -15,14 +16,12 @@ func NewClub(clubName string, db *mt.Database) (*mt.Club, error) {
 	}
 
 	c := &mt.Club{
-		ID:        NewClubCount,
+		ID:        uuid.New(),
 		Name:      clubName,
-		PlayerIDs: make(map[int]string),
-		TeamIDs:   make(map[int]string),
+		PlayerIDs: make(map[uuid.UUID]string),
+		TeamIDs:   make(map[uuid.UUID]string),
 	}
 
-	// Be ready for next club
-	NewClubCount--
 	db.AddClub(c)
 	log.Printf("Club %v sucessfully created.", clubName)
 	return c, nil

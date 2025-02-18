@@ -13,7 +13,7 @@ import (
 // Login requests a credentials check to the API, if everything is fine, the database of the user is returned
 func Login(username string, password string) (*mt.Database, string, error) {
 	var response struct {
-		Token string `json:"token"`
+		CredToken string `json:"cred_token"`
 	}
 
 	var creds struct {
@@ -58,11 +58,11 @@ func Login(username string, password string) (*mt.Database, string, error) {
 		return nil, "", fmt.Errorf("error decoding JSON: %w", err)
 	} else {
 		log.Println("Succeed to log user %w in", username)
-		db, err := LoadDB(response.Token)
+		db, err := LoadDB(response.CredToken)
 		if err != nil {
 			return nil, "", fmt.Errorf("failed to load database: %w", err)
 		}
 
-		return db, response.Token, nil
+		return db, response.CredToken, nil
 	}
 }

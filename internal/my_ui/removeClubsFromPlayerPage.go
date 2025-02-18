@@ -3,6 +3,7 @@ package myapp
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 
 	"fmt"
 
@@ -155,7 +156,7 @@ func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 
 	cLabel := widget.NewLabel("Clubs 🏠")
 	clubButtons := []fyne.CanvasObject{}
-	selectedClub := make(map[int]*mt.Club)
+	selectedClub := make(map[uuid.UUID]*mt.Club)
 
 	// Nothing to remove
 	if len(db.Players) == 0 {
@@ -198,7 +199,7 @@ func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 }
 
 // createClubButtonsCfromP creates buttons for each selected club.
-func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[int]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[uuid.UUID]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected club to remove the club from the selected club list
 	selectedclubButton := widget.NewButton(club.Name, func() {
 		delete(selectedClub, club.ID)
@@ -217,7 +218,7 @@ func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, 
 }
 
 // addAnotherclubPageCfromP sets up the page for adding another club to the selected player.
-func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToClubSelectionPageCfromPButton := widget.NewButton("Cancel", func() {
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
@@ -259,7 +260,7 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[int]*mt
 }
 
 // selectedClubPageCfromP sets up the page for confirming the selected clubs for a player.
-func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedClubPageCfromP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Remove: confirm selection", 32)
 
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {

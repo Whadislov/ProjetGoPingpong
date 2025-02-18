@@ -3,41 +3,55 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestRemoveTeamFromClub(t *testing.T) {
+	t1ID := uuid.New()
+	t2ID := uuid.New()
+	t3ID := uuid.New()
+	t4ID := uuid.New()
+	c1ID := uuid.New()
+	c2ID := uuid.New()
+	t1Name := "t1"
+	t2Name := "t2"
+	t3Name := "t3"
+	t4Name := "t4"
+	c1Name := "c1"
+	c2Name := "c2"
+
 	c1 := mt.Club{
-		ID:      0,
+		ID:      c1ID,
 		Name:    "c1",
-		TeamIDs: map[int]string{0: "t1", 2: "t3"},
+		TeamIDs: map[uuid.UUID]string{t1ID: t1Name, t3ID: t3Name},
 	}
 
 	t1 := mt.Team{
-		ID:     0,
-		Name:   "t1",
-		ClubID: map[int]string{0: "c1"},
+		ID:     t1ID,
+		Name:   t1Name,
+		ClubID: map[uuid.UUID]string{c1ID: c1Name},
 	}
 
 	t2 := mt.Team{
-		ID:   1,
-		Name: "t2",
+		ID:   t2ID,
+		Name: t2Name,
 	}
 
 	t3 := mt.Team{
-		ID:   2,
-		Name: "t3",
+		ID:   t3ID,
+		Name: t3Name,
 	}
 
 	c2 := mt.Club{
-		ID:   1,
-		Name: "c2",
+		ID:   c2ID,
+		Name: c2Name,
 	}
 
 	t4 := mt.Team{
-		ID:     3,
-		Name:   "t4",
-		ClubID: map[int]string{1: "c2"},
+		ID:     t4ID,
+		Name:   t4Name,
+		ClubID: map[uuid.UUID]string{c2ID: c2Name},
 	}
 
 	expectedLen1 := 1

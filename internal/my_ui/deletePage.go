@@ -10,6 +10,7 @@ import (
 
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // DeletePage sets up the page for deleting players, teams, and clubs.
@@ -126,12 +127,12 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 						ShowConfirmationDialog(w, fmt.Sprintf("Delete club %v? You are also going to delete the following teams: %v", c.Name, teamNames), func() {
 							// Get teamIDs without the link with the club (to avoid slice modification while iterating)
-							var teamIDs []int
+							var teamIDs []uuid.UUID
 							for teamID := range c.TeamIDs {
 								teamIDs = append(teamIDs, teamID)
 							}
 							// Delete the inner teams as well
-							for teamID := range teamIDs {
+							for _, teamID := range teamIDs {
 								err := mf.DeleteTeam(db.Teams[teamID], db)
 								if err != nil {
 									dialog.ShowError(err, w)

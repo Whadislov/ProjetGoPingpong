@@ -2,18 +2,19 @@ package playermethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestHasClub(t *testing.T) {
 	p1 := mt.Player{
-		ID:        0,
+		ID:        uuid.New(),
 		Firstname: "p1",
-		ClubIDs:   map[int]string{0: "c1"},
+		ClubIDs:   map[uuid.UUID]string{uuid.New(): "c1"},
 	}
 
 	p2 := mt.Player{
-		ID:        1,
+		ID:        uuid.New(),
 		Firstname: "p2",
 	}
 

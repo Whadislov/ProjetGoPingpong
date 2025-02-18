@@ -3,24 +3,24 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestDeletePlayer(t *testing.T) {
-
 	p1 := mt.Player{
-		ID:        0,
+		ID:        uuid.New(),
 		Firstname: "p1",
 	}
 
 	p2 := mt.Player{
-		ID:        1,
+		ID:        uuid.New(),
 		Firstname: "p2",
 	}
 
 	d := mt.Database{
-		Players:         map[int]*mt.Player{0: &p1},
-		DeletedElements: map[string][]int{},
+		Players:         map[uuid.UUID]*mt.Player{p1.ID: &p1},
+		DeletedElements: map[string][]uuid.UUID{},
 	}
 
 	expectedLen1 := 0

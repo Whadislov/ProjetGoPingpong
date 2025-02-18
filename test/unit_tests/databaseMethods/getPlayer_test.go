@@ -2,27 +2,31 @@ package databasemethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestGetPlayer(t *testing.T) {
+	pID := uuid.New()
+	p2ID := uuid.New()
+
 	d := mt.Database{
-		Players: map[int]*mt.Player{0: {
-			ID:        0,
+		Players: map[uuid.UUID]*mt.Player{pID: {
+			ID:        pID,
 			Firstname: "p",
 		},
 		},
 	}
 	expectedPlayer := mt.Player{
-		ID:        0,
+		ID:        pID,
 		Firstname: "p",
 	}
 
 	expectedError := "playerID 1 does not exist"
 
 	t.Run("Get player from player ID", func(t *testing.T) {
-		p, err := d.GetPlayer(0)
-		_, err2 := d.GetPlayer(1)
+		p, err := d.GetPlayer(pID)
+		_, err2 := d.GetPlayer(p2ID)
 		if p == nil {
 			t.Errorf("Expected player %v, got %v", expectedPlayer, p)
 		}

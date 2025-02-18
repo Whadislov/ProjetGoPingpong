@@ -3,13 +3,15 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestNewUser(t *testing.T) {
+	uID := uuid.New()
 	d := mt.Database{
-		Users: map[int]*mt.User{0: {
-			ID:           0,
+		Users: map[uuid.UUID]*mt.User{uID: {
+			ID:           uID,
 			Name:         "u1",
 			Email:        "a1@a1.com",
 			PasswordHash: "bvdfvdvver",

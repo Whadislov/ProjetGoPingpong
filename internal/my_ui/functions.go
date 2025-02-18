@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
@@ -24,8 +25,8 @@ func strHelper(list []string) string {
 	return str
 }
 
-func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
-	Key   int
+func SortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
+	Key   uuid.UUID
 	Value V
 } {
 	// This function takes as parameter a variable of type : mt.Player or mt.Team or mt.Club
@@ -34,7 +35,7 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 	// Tip: it does not return a map, because maps can't be sorted
 
 	// Get keys from the map
-	keys := make([]int, 0, len(m))
+	keys := make([]uuid.UUID, 0, len(m))
 	for key := range m {
 		keys = append(keys, key)
 	}
@@ -46,13 +47,13 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 
 	// Build a new slice with the pair key/value
 	sorted := make([]struct {
-		Key   int
+		Key   uuid.UUID
 		Value V
 	}, len(keys))
 	// The new slice is sorted thanks to the slice keys
 	for i, k := range keys {
 		sorted[i] = struct {
-			Key   int
+			Key   uuid.UUID
 			Value V
 		}{
 			Key:   k,

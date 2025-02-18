@@ -2,23 +2,24 @@ package teammethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestAddPlayer(t *testing.T) {
 	t1 := mt.Team{
-		ID:        0,
+		ID:        uuid.New(),
 		Name:      "t1",
-		PlayerIDs: map[int]string{0: "p1"},
+		PlayerIDs: map[uuid.UUID]string{uuid.New(): "p1"},
 	}
 
 	p1 := mt.Player{
-		ID:        0,
+		ID:        uuid.New(),
 		Firstname: "p1",
 	}
 
 	p2 := mt.Player{
-		ID:        1,
+		ID:        uuid.New(),
 		Firstname: "p2",
 	}
 

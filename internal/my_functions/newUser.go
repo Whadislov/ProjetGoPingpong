@@ -7,6 +7,7 @@ import (
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -53,11 +54,12 @@ func NewUser(username string, email string, password string, confirmPassword str
 	timestamp := time.Now().Format(time.RFC3339)
 
 	u := &mt.User{
-		ID:           len(db.Users),
+		ID:           uuid.New(),
 		Name:         username,
 		Email:        email,
 		PasswordHash: string(hashedPassword),
 		CreatedAt:    timestamp,
+		IsNew:        true,
 	}
 
 	db.AddUser(u)

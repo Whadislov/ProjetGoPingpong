@@ -6,16 +6,18 @@ import (
 
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
-
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // checkUserCredentials verifies if the credentials of the user are correct, returns the userID
-func checkUserCredentials(username string, password string) (int, error) {
+func checkUserCredentials(username string, password string) (uuid.UUID, error) {
+	// return a wrong ID if faulty
+	var errorID uuid.UUID = [16]byte{0}
 	log.Println("Loading DB to check user credentials")
 	db, err := mdb.LoadUsersOnly()
 	if err != nil {
-		return -1, fmt.Errorf("error during connexion to database to check user credentials")
+		return errorID, fmt.Errorf("error during connexion to database to check user credentials")
 	}
 
 	for _, user := range db.Users {
@@ -25,7 +27,7 @@ func checkUserCredentials(username string, password string) (int, error) {
 			if err != nil {
 				// Password is wrong
 				log.Println("User credentials are wrong")
-				return -1, fmt.Errorf("username and password missmatch")
+				return errorID, fmt.Errorf("username and password missmatch")
 			} else {
 				log.Println("User credentials are good")
 				mdb.SetUserIDOfSession(user.ID)
@@ -34,7 +36,7 @@ func checkUserCredentials(username string, password string) (int, error) {
 		}
 	}
 	// User does not exist
-	return -1, fmt.Errorf("username and password missmatch")
+	return errorID, fmt.Errorf("username and password missmatch")
 }
 
 // checkUserCredentials verifies that the newly created user does not use an already registered username
