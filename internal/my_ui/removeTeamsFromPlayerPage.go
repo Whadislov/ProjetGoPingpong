@@ -86,7 +86,7 @@ func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 		if len(player.TeamIDs) == 0 {
 			continue
 		} else {
-			playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { w.SetContent(selectedPlayerPageTfromP(player, db, w, a)) })
+			playerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() { w.SetContent(selectedPlayerPageTfromP(player, db, w, a)) })
 			playerButtons = append(playerButtons, playerButton)
 		}
 	}
@@ -105,11 +105,11 @@ func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 
 	pageTitle := setTitle("Remove: select a team", 32)
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 	tLabel := widget.NewLabel("Team current selection 🤝")
 
 	// User can click on the selected player to return to the list of player
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageTfromP(db, w, a))
 	})
 
@@ -119,7 +119,7 @@ func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	if len(player.TeamIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v has no team", player.Firstname+player.Lastname), w)
+		dialog.ShowInformation("Information", fmt.Sprintf("%v has no team", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
 		return selectPlayerPageTfromP(db, w, a)
 	}
 
@@ -267,7 +267,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.T
 		RemovePage(db, w, a)
 	})
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 	//tLabel := widget.NewLabel("Team current selection 🤝")
 
 	// "Sort the map of selectedTeams" for a better button display
@@ -286,7 +286,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.T
 			}
 		}
 
-		successMsg := fmt.Sprintf("Player %v no longer plays in team(s) %v", player.Firstname+player.Lastname, strHelper(teamNames))
+		successMsg := fmt.Sprintf("Player %v no longer plays in team(s) %v", fmt.Sprintf("%v %v", player.Firstname, player.Lastname), strHelper(teamNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Succes", successMsg, w)
 
@@ -314,7 +314,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.T
 	})
 
 	// User can click on the selected player to return the list of players
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageTfromP(db, w, a))
 	})
 

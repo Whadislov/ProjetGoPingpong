@@ -150,7 +150,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
+		playerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() { AddInfoToSelectedPlayerPage(player, db, w, a) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 
