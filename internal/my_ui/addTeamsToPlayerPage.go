@@ -72,7 +72,7 @@ func selectPlayerPageTtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 
 	for _, p := range sortedPlayers {
 		player := p.Value
-		playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { w.SetContent(selectedPlayerPageTtoP(player, db, w, a)) })
+		playerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() { w.SetContent(selectedPlayerPageTtoP(player, db, w, a)) })
 		playerButtons = append(playerButtons, playerButton)
 	}
 	content := container.NewVBox(
@@ -88,11 +88,11 @@ func selectPlayerPageTtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 // selectedPlayerPageTtoP sets up the page for a selected player and allows team selection.
 func selectedPlayerPageTtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 	tLabel := widget.NewLabel("Team current selection 🤝")
 
 	// User can click on the selected player to return to the list of player
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageTtoP(db, w, a))
 	})
 
@@ -283,7 +283,7 @@ func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Tea
 		AddPage(db, w, a)
 	})
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
+	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 
 	// "Sort the map of selectedTeams" for a better button display
 	sortedSelectedTeams := SortMap(selectedTeams)
@@ -301,7 +301,7 @@ func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Tea
 			}
 		}
 
-		successMsg := fmt.Sprintf("Player %v now plays in team(s) %v", player.Firstname+player.Lastname, strHelper(teamNames))
+		successMsg := fmt.Sprintf("Player %v now plays in team(s) %v", fmt.Sprintf("%v %v", player.Firstname, player.Lastname), strHelper(teamNames))
 		fmt.Println(successMsg)
 		dialog.ShowInformation("Succes", successMsg, w)
 
@@ -329,7 +329,7 @@ func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Tea
 	})
 
 	// User can click on the selected player to return the list of players
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageTtoP(db, w, a))
 	})
 
