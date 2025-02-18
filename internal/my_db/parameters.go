@@ -1,9 +1,13 @@
 package mydb
 
-var sqlDB *Database
-var userIDOfSession int
+import (
+	"github.com/google/uuid"
+)
 
-func SetUserIDOfSession(id int) {
+var sqlDB *Database
+var userIDOfSession uuid.UUID
+
+func SetUserIDOfSession(id uuid.UUID) {
 	userIDOfSession = id
 }
 
@@ -26,6 +30,7 @@ func SetDBName(name string) {
 
 var createUserTableQuery string = `
 BEGIN;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR UNIQUE NOT NULL,
@@ -103,6 +108,7 @@ var createAllTablesQuery string = createUserTableQuery + createOtherTablesQuery
 // $1 is the user_id
 var resetTablesQuery string = `
 BEGIN;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 DELETE FROM players WHERE user_id = $1;
 DELETE FROM teams WHERE user_id = $1;

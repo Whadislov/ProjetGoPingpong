@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"log"
 
-	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
-	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
-
-	mt "github.com/Whadislov/TTCompanion/internal/my_types"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"golang.org/x/crypto/bcrypt"
 )
 

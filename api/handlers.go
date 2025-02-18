@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // Handler for loading the database
@@ -25,10 +25,9 @@ func loadUserDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Convert the str ID into a int ID
-	id, err := strconv.Atoi(userID)
+	id, err := uuid.Parse(userID)
 	if err != nil {
-		http.Error(w, "Invalid UserID", http.StatusBadRequest)
+		http.Error(w, "Failed to parse user ID", http.StatusUnauthorized)
 		return
 	}
 
@@ -78,7 +77,7 @@ func IsApiReady(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("API is ready !"))
 }
 
-// loginHandler process the request to analyse the credentials, returns a token
+// loginHandler process the request to analyse the credentials, returns a Credential token
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds struct {
 		Username string `json:"username"`
@@ -96,18 +95,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := generateJWT(userID)
+	credToken, err := generateJWT(userID)
 	if err != nil {
-		sendJSONError(w, "Could not generate token", "INTERNAL_ERROR", http.StatusInternalServerError)
+		sendJSONError(w, "Could not generate credToken", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	json.NewEncoder(w).Encode(map[string]string{"cred_token": credToken})
 }
 
-// signUpHandler process the request to create a new user, returns a token
+// signUpHandler process the request to create a new user, returns a Credential token
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	var signUpData struct {
 		Username string `json:"username"`
@@ -154,13 +153,13 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// User Id is the number of current registered users (there is possibility yet to delete a user, so this should work for now)
-	token, err := generateJWT(newUser.ID)
+	credToken, err := generateJWT(newUser.ID)
 	if err != nil {
-		sendJSONError(w, "Could not generate token", "INTERNAL_ERROR", http.StatusInternalServerError)
+		sendJSONError(w, "Could not generate credToken", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"token": token})
+	json.NewEncoder(w).Encode(map[string]string{"cred_token": credToken})
 }

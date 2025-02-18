@@ -3,6 +3,7 @@ package myapp
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 
 	"fmt"
 
@@ -154,7 +155,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 
 	tLabel := widget.NewLabel("Teams 🤝")
 	teamButtons := []fyne.CanvasObject{}
-	selectedTeams := make(map[int]*mt.Team)
+	selectedTeams := make(map[uuid.UUID]*mt.Team)
 
 	// Nothing to remove
 	if len(db.Players) == 0 {
@@ -197,7 +198,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 }
 
 // createTeamButtonsTfromP creates buttons for each selected team.
-func createTeamButtonsTfromP(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeams map[int]*mt.Team, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createTeamButtonsTfromP(player *mt.Player, team *mt.Team, db *mt.Database, selectedTeams map[uuid.UUID]*mt.Team, selectedTeamButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 
 	// User can click on the selected team to remove the team from the selected team list
 	selectedTeamButton := widget.NewButton(team.Name, func() {
@@ -217,7 +218,7 @@ func createTeamButtonsTfromP(player *mt.Player, team *mt.Team, db *mt.Database, 
 }
 
 // addAnotherTeamPageTfromP sets up the page for adding another team to the selected player.
-func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[uuid.UUID]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	returnToTeamSelectionPageTfromPButton := widget.NewButton("Cancel", func() {
 		w.SetContent(selectedTeamPageTfromP(player, alreadySelectedTeams, db, w, a))
@@ -259,7 +260,7 @@ func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[int]*m
 }
 
 // selectedTeamPageTfromP sets up the page for confirming the selected teams for a player.
-func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[int]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Remove: confirm selection", 32)
 
 	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {

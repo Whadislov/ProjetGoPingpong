@@ -10,6 +10,7 @@ import (
 
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // currentSelectionPageCtoP sets up the page for selecting players and clubs.
@@ -131,7 +132,7 @@ func selectClubPageCtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 
 	cLabel := widget.NewLabel("Clubs 🏠")
 	clubButtons := []fyne.CanvasObject{}
-	selectedClub := make(map[int]*mt.Club)
+	selectedClub := make(map[uuid.UUID]*mt.Club)
 
 	// We should create a club first
 	if len(db.Clubs) == 0 {
@@ -182,7 +183,7 @@ func selectClubPageCtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 }
 
 // createclubButtonsCtoP creates buttons for each selected club.
-func createclubButtonsCtoP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[int]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createclubButtonsCtoP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[uuid.UUID]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected club to remove the club from the selected club list
 	selectedclubButton := widget.NewButton(club.Name, func() {
 		delete(selectedClub, club.ID)
@@ -201,7 +202,7 @@ func createclubButtonsCtoP(player *mt.Player, club *mt.Club, db *mt.Database, se
 }
 
 // addAnotherclubPageCtoP sets up the page for adding another club to the selected player.
-func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	pageTitle := setTitle("Add: select a club", 32)
 
@@ -246,7 +247,7 @@ func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[int]*mt.C
 }
 
 // selectedClubPageCtoP sets up the page for confirming the selected clubs for a player.
-func selectedClubPageCtoP(player *mt.Player, selectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func selectedClubPageCtoP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
 	pageTitle := setTitle("Add: confirm", 32)
 
