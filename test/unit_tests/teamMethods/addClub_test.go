@@ -7,10 +7,15 @@ import (
 )
 
 func TestAddClub(t *testing.T) {
+	c1 := mt.Club{
+		ID:   uuid.New(),
+		Name: "c1",
+	}
+
 	t1 := mt.Team{
 		ID:     uuid.New(),
 		Name:   "t1",
-		ClubID: map[uuid.UUID]string{uuid.New(): "c1"},
+		ClubID: map[uuid.UUID]string{c1.ID: c1.Name},
 	}
 
 	t2 := mt.Team{

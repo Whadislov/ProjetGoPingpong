@@ -20,6 +20,7 @@ func NewTeam(teamName string, db *mt.Database) (*mt.Team, error) {
 		Name:      teamName,
 		PlayerIDs: make(map[uuid.UUID]string),
 		ClubID:    make(map[uuid.UUID]string, 1), // Capacity 1
+		IsNew:     true,
 	}
 
 	db.AddTeam(t)
