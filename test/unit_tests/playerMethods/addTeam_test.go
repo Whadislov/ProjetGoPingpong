@@ -20,7 +20,7 @@ func TestAddTeam(t *testing.T) {
 	p1 := mt.Player{
 		ID:        uuid.New(),
 		Firstname: "p1",
-		TeamIDs:   map[uuid.UUID]string{t2.ID: "t1"},
+		TeamIDs:   map[uuid.UUID]string{t1.ID: t1.Name},
 	}
 
 	expectedLen := 2

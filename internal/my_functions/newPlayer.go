@@ -44,6 +44,7 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 		Material:  DefaultPlayerMaterial(),
 		TeamIDs:   make(map[uuid.UUID]string),
 		ClubIDs:   make(map[uuid.UUID]string),
+		IsNew:     true,
 	}
 
 	db.AddPlayer(p)

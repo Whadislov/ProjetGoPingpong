@@ -7,15 +7,15 @@ import (
 )
 
 func TestAddPlayer(t *testing.T) {
-	t1 := mt.Team{
-		ID:        uuid.New(),
-		Name:      "t1",
-		PlayerIDs: map[uuid.UUID]string{uuid.New(): "p1"},
-	}
-
 	p1 := mt.Player{
 		ID:        uuid.New(),
 		Firstname: "p1",
+	}
+
+	t1 := mt.Team{
+		ID:        uuid.New(),
+		Name:      "t1",
+		PlayerIDs: map[uuid.UUID]string{p1.ID: p1.Firstname},
 	}
 
 	p2 := mt.Player{

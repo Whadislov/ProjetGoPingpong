@@ -9,37 +9,34 @@ import (
 )
 
 // SaveUsers saves users in the database.
-// Need recheck
 func (db *Database) SaveUsers(users map[uuid.UUID]*mt.User) error {
 	for _, user := range users {
 		if user.IsNew {
+			// Let postgresql creates its own ID for a new user
+			var postgresUserID uuid.UUID
 			query := `
-        INSERT INTO users (id, username, email, password_hash, created_at)
-        VALUES (DEFAULT, $2, $3, $4, $5)
-        ON CONFLICT (id) DO UPDATE SET
-            username = EXCLUDED.username,
-            email = EXCLUDED.email,
-            password_hash = EXCLUDED.password_hash;
+        INSERT INTO users (username, email, password_hash, created_at)
+        VALUES ($1, $2, $3, $4)
+		RETURNING id;
         `
-			_, err := db.Conn.Exec(query, user.ID, user.Name, user.Email, user.PasswordHash, user.CreatedAt)
+			err := db.Conn.QueryRow(query, user.Name, user.Email, user.PasswordHash, user.CreatedAt).Scan(&postgresUserID)
 			if err != nil {
 				return fmt.Errorf("failed to save user: %w", err)
 			}
+			// Change the ID for the relationship tables
+			user.ID = postgresUserID
+			userIDOfSession = user.ID
 		} else {
 			query := `
-        INSERT INTO users (id, username, email, password_hash, created_at)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (id) DO UPDATE SET
-            username = EXCLUDED.username,
-            email = EXCLUDED.email,
-            password_hash = EXCLUDED.password_hash;
+        UPDATE users
+		SET username = $1, email = $2, password_hash = $3, created_at = $4
+		WHERE id = $5;
         `
-			_, err := db.Conn.Exec(query, user.ID, user.Name, user.Email, user.PasswordHash, user.CreatedAt)
+			_, err := db.Conn.Exec(query, user.Name, user.Email, user.PasswordHash, user.CreatedAt, user.ID)
 			if err != nil {
 				return fmt.Errorf("failed to save user: %w", err)
 			}
 		}
-
 	}
 	return nil
 }
@@ -51,8 +48,8 @@ func (db *Database) SavePlayers(players map[uuid.UUID]*mt.Player) error {
 			// Let postgresql creates its own ID for a new player
 			var postgresPlayerID uuid.UUID
 			query := `
-			INSERT INTO players (id, firstname, lastname, age, ranking, forehand, backhand, blade, user_id)
-			VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)
+			INSERT INTO players (firstname, lastname, age, ranking, forehand, backhand, blade, user_id)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], userIDOfSession).Scan(&postgresPlayerID)
@@ -84,8 +81,8 @@ func (db *Database) SaveTeams(teams map[uuid.UUID]*mt.Team) error {
 			// Let postgresql creates its own ID for a new team
 			var postgresTeamID uuid.UUID
 			query := `
-			INSERT INTO teams (id, name, user_id)
-			VALUES (DEFAULT, $1, $2)
+			INSERT INTO teams (name, user_id)
+			VALUES ($1, $2)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, team.Name, userIDOfSession).Scan(&postgresTeamID)
@@ -117,8 +114,8 @@ func (db *Database) SaveClubs(clubs map[uuid.UUID]*mt.Club) error {
 			// Let postgresql creates its own ID for a new club
 			var postgresClubID uuid.UUID
 			query := `
-			INSERT INTO clubs (id, name, user_id)
-			VALUES (DEFAULT, $1, $2)
+			INSERT INTO clubs (name, user_id)
+			VALUES ($1, $2)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, club.Name, userIDOfSession).Scan(&postgresClubID)
