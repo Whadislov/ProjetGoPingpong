@@ -49,21 +49,19 @@ func saveDatabaseHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
-
-	var db *mt.Database
+	var db mt.Database
 	err := json.NewDecoder(r.Body).Decode(&db)
 	if err != nil {
 		http.Error(w, "Invalid JSON data", http.StatusBadRequest)
 		return
 	}
-	err = mdb.SaveDB(db)
+	err = mdb.SaveDB(&db)
 	if err != nil {
 		http.Error(w, "Failed to save database", http.StatusBadRequest)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Database saved successfully"))
 }
 
 // Handler to check if the API is ready to take requests (not yet used)

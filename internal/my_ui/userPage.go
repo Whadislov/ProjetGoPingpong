@@ -7,6 +7,7 @@ import (
 	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"golang.org/x/crypto/bcrypt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -23,7 +24,6 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 		// Display the correct user info after modifications even before saving
 		currentUsername = user.Name
 		currentEmail = user.Email
-		currentPassword = user.PasswordHash
 	}
 
 	usernameLabel1 := widget.NewLabel("👤 Username:")
@@ -35,8 +35,6 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	emailContent := container.NewGridWithColumns(2, emailLabel1, emailLabel2)
 
 	passwordLabel := widget.NewLabel("🔒 Password:")
-	passwordEntry := widget.NewPasswordEntry()
-	passwordEntry.SetText(currentPassword)
 
 	createdAtLabel1 := widget.NewLabel("📅 User since(yyyy-mm-dd): ")
 	// Example format: 2025-02-03T09:58:59Z
@@ -57,7 +55,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 		ChangePasswordPage(user, db, w, a)
 	})
 
-	passwordContent := container.NewGridWithColumns(2, passwordLabel, passwordEntry)
+	passwordContent := container.NewGridWithColumns(2, passwordLabel)
 
 	saveChangesButton := widget.NewButton("Save changes", func() {
 		if !HasChanged {
@@ -68,7 +66,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 			if appStartOption == "local" {
 				err = mdb.SaveDB(db)
 			} else if appStartOption == "browser" {
-				err = mfr.SaveDB(jsonWebToken, db)
+				err = mfr.SaveDB(credToken, db)
 			}
 
 			if err != nil {
@@ -91,19 +89,20 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 							dialog.ShowError(err, w)
 						}
 					} else if appStartOption == "browser" {
-						err := mfr.SaveDB(jsonWebToken, db)
+						err := mfr.SaveDB(credToken, db)
 						if err != nil {
 							dialog.ShowError(err, w)
 						}
 					}
-					HasChanged = false
 				}
+				//Reset flag in both case
+				HasChanged = false
+				//Set Main page in both case
 				w.SetContent(MainPage(db, w, a))
 			}, w)
 		} else {
 			w.SetContent(MainPage(db, w, a))
 		}
-		w.SetContent(MainPage(db, w, a))
 	})
 
 	content := container.NewVBox(
@@ -207,23 +206,28 @@ func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 	confirmEditPasswordLabel := widget.NewLabel("Confirm your new password")
 
 	confirmButton := widget.NewButton("Confirm", func() {
-		if currentPasswordEntry.Text != user.PasswordHash {
+		err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(currentPasswordEntry.Text))
+		if err != nil {
+			// Password is wrong
 			dialog.ShowError(fmt.Errorf("wrong password"), w)
 			currentPasswordEntry.SetText("")
+			editPasswordEntry.SetText("")
+			confirmEditPasswordEntry.SetText("")
 		} else if editPasswordEntry.Text != confirmEditPasswordEntry.Text {
-			dialog.ShowError(fmt.Errorf("passwords do not match"), w)
+			dialog.ShowError(fmt.Errorf("new passwords do not match"), w)
+			currentPasswordEntry.SetText("")
 			editPasswordEntry.SetText("")
 			confirmEditPasswordEntry.SetText("")
 		} else {
 			err := mf.ChangePassword(editPasswordEntry.Text, user)
 			if err != nil {
 				dialog.ShowError(err, w)
+				currentPasswordEntry.SetText("")
 				editPasswordEntry.SetText("")
 				confirmEditPasswordEntry.SetText("")
 			} else {
 				dialog.ShowInformation("Success", "Password successfully changed", w)
 				HasChanged = true
-				currentPassword = editPasswordEntry.Text
 				UserPage(user, db, w, a)
 			}
 		}

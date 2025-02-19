@@ -5,6 +5,7 @@ import (
 	"log"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ChangeUsername changes the current username with a new one.
@@ -37,7 +38,13 @@ func ChangePassword(newPassword string, user *mt.User) error {
 	}
 	log.Println("User modification : New password is valid.")
 
-	user.PasswordHash = newPassword
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %v", err)
+	}
+
+	user.PasswordHash = string(hashedPassword)
+
 	log.Printf("User modification : User %v's password sucessfully modified.", user.Name)
 	return nil
 }

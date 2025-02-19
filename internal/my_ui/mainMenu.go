@@ -38,13 +38,13 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 				}
 
 			} else if appStartOption == "browser" {
-				err := mfr.SaveDB(jsonWebToken, db)
+				err := mfr.SaveDB(credToken, db)
 				if err != nil {
 					dialog.ShowError(err, w)
 				} else {
 					HasChanged = false
 					// Reload the database after saving (refresh the IDs)
-					db, err = mfr.LoadDB(jsonWebToken)
+					db, err = mfr.LoadDB(credToken)
 					if err != nil {
 						dialog.ShowError(err, w)
 					} else {
@@ -71,13 +71,13 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 							w.SetContent(AuthentificationPage(w, a))
 						}
 					} else if appStartOption == "browser" {
-						err = mfr.SaveDB(jsonWebToken, db)
+						err = mfr.SaveDB(credToken, db)
 						if err != nil {
 							dialog.ShowError(err, w)
 						} else {
 							log.Println("User logged out and saved his changes.")
 							// Reset the token, the flag, the menu and the database
-							jsonWebToken = ""
+							credToken = ""
 							HasChanged = false
 							w.SetMainMenu(nil)
 							db = &mt.Database{}
@@ -94,7 +94,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 						w.SetContent(AuthentificationPage(w, a))
 					} else if appStartOption == "browser" {
 						// Reset the token, the flag, the menu and the database
-						jsonWebToken = ""
+						credToken = ""
 						HasChanged = false
 						w.SetMainMenu(nil)
 						db = &mt.Database{}
@@ -111,7 +111,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 				w.SetContent(AuthentificationPage(w, a))
 			} else if appStartOption == "browser" {
 				// Reset the menu, the token and the database
-				jsonWebToken = ""
+				credToken = ""
 				w.SetMainMenu(nil)
 				db = &mt.Database{}
 				w.SetContent(AuthentificationPageWeb(w, a))
