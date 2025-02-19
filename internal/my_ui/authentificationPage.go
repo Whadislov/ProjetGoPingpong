@@ -17,6 +17,14 @@ import (
 
 // AuthentificationPage returns a page that contains a log in button and a sign up button
 func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
+
+	// Know if light mode is activated or not
+	if a.Settings().ThemeVariant() == 1 {
+		lightTheme.IsActivated = true
+	} else {
+		darkTheme.IsActivated = true
+	}
+
 	pageTitle := setTitle("TT Companion", 32)
 
 	authLabel := widget.NewLabel("Please authenticate")

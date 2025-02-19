@@ -18,7 +18,8 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	menu1Item1 := fyne.NewMenuItem("Main page", func() { w.SetContent(mainPage) })
 	menu1Item2 := fyne.NewMenuItem("My profile", func() { UserPage(userOfSession, db, w, a) })
-	menu1Item3 := fyne.NewMenuItem("Save changes", func() {
+	menu1Item3 := fyne.NewMenuItem("Options", func() { w.SetContent(OptionPage(db, w, a)) })
+	menu1Item4 := fyne.NewMenuItem("Save changes", func() {
 		if !HasChanged {
 			dialog.ShowInformation("Information", "There is nothing new to save", w)
 		} else {
@@ -54,7 +55,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 			}
 		}
 	})
-	menu1Item4 := fyne.NewMenuItem("Log out", func() {
+	menu1Item5 := fyne.NewMenuItem("Log out", func() {
 		if HasChanged {
 			dialog.ShowConfirm("Unsaved Changes", "You have unsaved changes. Do you want to save them before logging out?", func(confirm bool) {
 				if confirm {
@@ -121,7 +122,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 	})
 
 	// menu item names are not linked with pageTitles, if there is a modification here -> modify also on pages
-	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3, menu1Item4)
+	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3, menu1Item4, menu1Item5)
 
 	menu2Item1 := fyne.NewMenuItem("Players", func() { PlayerPage(db, w, a) })
 	menu2Item2 := fyne.NewMenuItem("Teams", func() { TeamPage(db, w, a) })

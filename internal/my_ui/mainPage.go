@@ -23,6 +23,7 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	// Functionality page
 	functionalityPage := FunctionalityPage(db, w, a)
 
+	// Main page
 	mainText := setTitle("TT Companion", 32)
 
 	showDBButton := widget.NewButton("Your database", func() {
@@ -34,19 +35,8 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	// Options button
-	themeButton := widget.NewButton("Options", func() {
-
-		if darkTheme.IsActivated {
-			a.Settings().SetTheme(&lightTheme)
-			lightTheme.IsActivated = true
-			darkTheme.IsActivated = false
-			w.SetContent(MainPage(db, w, a))
-		} else {
-			a.Settings().SetTheme(&darkTheme)
-			lightTheme.IsActivated = false
-			darkTheme.IsActivated = true
-			w.SetContent(MainPage(db, w, a))
-		}
+	OptionButton := widget.NewButton("Options", func() {
+		w.SetContent(OptionPage(db, w, a))
 	})
 
 	quitButton := widget.NewButton("Quit", func() {
@@ -58,7 +48,7 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			mainText,
 			showDBButton,
 			showFuncButton,
-			themeButton,
+			OptionButton,
 			quitButton,
 		)
 
@@ -68,6 +58,7 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			mainText,
 			showDBButton,
 			showFuncButton,
+			OptionButton,
 		)
 	}
 
