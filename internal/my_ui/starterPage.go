@@ -5,9 +5,6 @@ import (
 	"log"
 	"time"
 
-	//mdb "github.com/Whadislov/TTCompanion/internal/my_db"
-	//mt "github.com/Whadislov/TTCompanion/internal/my_types"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -37,9 +34,6 @@ func StarterPage() fyne.App {
 	welcomeText.Alignment = fyne.TextAlignCenter
 	welcomeText.TextSize = 32
 	welcomePage := container.NewCenter(welcomeText)
-
-	// Main page
-	//mainPage := MainPage(db, mainWindow, a)
 
 	// Fade
 	go func() {

@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
@@ -103,7 +104,14 @@ func IsNumbersOnly(s string) bool {
 // setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size
 func setTitle(s string, size float32) *canvas.Text {
 	a := fyne.CurrentApp()
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	themeColor := a.Settings().Theme().Color("foreground",
+		func() fyne.ThemeVariant {
+			if darkTheme.IsActivated {
+				return theme.VariantDark
+			} else {
+				return theme.VariantLight
+			}
+		}())
 	title := canvas.NewText(s, themeColor)
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size
@@ -113,7 +121,14 @@ func setTitle(s string, size float32) *canvas.Text {
 // setText sets the string as a text for the page. The string respects dark/light mode and has its size
 func sexText(s string, size float32) *canvas.Text {
 	a := fyne.CurrentApp()
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	themeColor := a.Settings().Theme().Color("foreground",
+		func() fyne.ThemeVariant {
+			if darkTheme.IsActivated {
+				return theme.VariantDark
+			} else {
+				return theme.VariantLight
+			}
+		}())
 	title := canvas.NewText(s, themeColor)
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size

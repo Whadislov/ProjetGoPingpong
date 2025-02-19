@@ -2,7 +2,6 @@ package myapp
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -15,17 +14,16 @@ var HasChanged bool
 // MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
+	// Initialize
+	var mainPage *fyne.Container
+
 	// Database page
 	databasePage := DatabasePage(db, w, a)
 
 	// Functionality page
 	functionalityPage := FunctionalityPage(db, w, a)
 
-	// Main page design
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	mainText := canvas.NewText("TT Companion", themeColor)
-	mainText.Alignment = fyne.TextAlignCenter
-	mainText.TextSize = 32
+	mainText := setTitle("TT Companion", 32)
 
 	showDBButton := widget.NewButton("Your database", func() {
 		w.SetContent(databasePage)
@@ -35,18 +33,32 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		w.SetContent(functionalityPage)
 	})
 
+	// Options button
+	themeButton := widget.NewButton("Options", func() {
+
+		if darkTheme.IsActivated {
+			a.Settings().SetTheme(&lightTheme)
+			lightTheme.IsActivated = true
+			darkTheme.IsActivated = false
+			w.SetContent(MainPage(db, w, a))
+		} else {
+			a.Settings().SetTheme(&darkTheme)
+			lightTheme.IsActivated = false
+			darkTheme.IsActivated = true
+			w.SetContent(MainPage(db, w, a))
+		}
+	})
+
 	quitButton := widget.NewButton("Quit", func() {
 		Quit(db, w, a, HasChanged)
 	})
-
-	// Initialize
-	var mainPage *fyne.Container
 
 	if appStartOption == "local" {
 		mainPage = container.NewVBox(
 			mainText,
 			showDBButton,
 			showFuncButton,
+			themeButton,
 			quitButton,
 		)
 
