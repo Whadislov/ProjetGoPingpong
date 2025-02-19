@@ -82,7 +82,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 			w.SetContent(signUpPageWeb(w, a))
 		} else {
 			db, token, err := mfr.SignUp(usernameEntry.Text, passwordEntry.Text, emailEntry.Text)
-			jsonWebToken = token
+			credToken = token
 			// Last check if username or email already exist
 			if err != nil {
 				// Need to recheck this err
@@ -138,7 +138,7 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 	validationButton := widget.NewButton("Connect", func() {
 		db, token, err := mfr.Login(usernameEntry.Text, passwordEntry.Text)
-		jsonWebToken = token
+		credToken = token
 		if err != nil {
 			dialog.ShowError(fmt.Errorf("failed to login: %v", err), w)
 			w.SetContent(loginPageWeb(w, a))

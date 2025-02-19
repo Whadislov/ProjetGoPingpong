@@ -66,7 +66,7 @@ func (db *Database) SavePlayers(players map[uuid.UUID]*mt.Player) error {
 			query := `
 			UPDATE players 
 			SET firstname = $1, lastname = $2, age = $3, ranking = $4, forehand = $5, backhand = $6, blade = $7
-			WHERE id = $7;
+			WHERE id = $8;
 			`
 			_, err := db.Conn.Exec(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], player.ID)
 			if err != nil {
