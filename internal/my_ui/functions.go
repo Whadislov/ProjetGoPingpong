@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"encoding/json"
 	"sort"
 
 	"fyne.io/fyne/v2"
@@ -11,6 +12,8 @@ import (
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"github.com/google/uuid"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
@@ -133,4 +136,31 @@ func sexText(s string, size float32) *canvas.Text {
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size
 	return title
+}
+
+// loadTheme sets the flags for the light Theme and the dark Theme
+func loadTheme(a fyne.App) {
+	if a.Settings().ThemeVariant() == 1 {
+		lightTheme.IsActivated = true
+	} else {
+		// Dark Theme on default
+		darkTheme.IsActivated = true
+	}
+}
+
+// loadLanguage load translations for the selected lang
+func loadLanguage(lang string) {
+	// language bundle
+	b := i18n.NewBundle(language.English)
+	b.RegisterUnmarshalFunc("json", json.Unmarshal)
+
+	b.LoadMessageFile("locales/en.json")
+	b.LoadMessageFile("locales/fr.json")
+
+	localizer = i18n.NewLocalizer(b, lang)
+}
+
+// T sets the right language for the user
+func T(messageID string) string {
+	return localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: messageID})
 }

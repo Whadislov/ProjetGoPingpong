@@ -16,12 +16,12 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	mainPage := MainPage(db, w, a)
 
-	menu1Item1 := fyne.NewMenuItem("Main page", func() { w.SetContent(mainPage) })
-	menu1Item2 := fyne.NewMenuItem("My profile", func() { UserPage(userOfSession, db, w, a) })
-	menu1Item3 := fyne.NewMenuItem("Options", func() { w.SetContent(OptionPage(db, w, a)) })
-	menu1Item4 := fyne.NewMenuItem("Save changes", func() {
+	menu1Item1 := fyne.NewMenuItem(T("main_page"), func() { w.SetContent(mainPage) })
+	menu1Item2 := fyne.NewMenuItem(T("my_profile"), func() { UserPage(userOfSession, db, w, a) })
+	menu1Item3 := fyne.NewMenuItem(T("options"), func() { w.SetContent(OptionPage(db, w, a)) })
+	menu1Item4 := fyne.NewMenuItem(T("save_changes"), func() {
 		if !HasChanged {
-			dialog.ShowInformation("Information", "There is nothing new to save", w)
+			dialog.ShowInformation(T("information"), T("there_is_nothing_new_to_save"), w)
 		} else {
 			if appStartOption == "local" {
 				err := mdb.SaveDB(db)
@@ -34,7 +34,7 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 					if err != nil {
 						dialog.ShowError(err, w)
 					} else {
-						dialog.ShowInformation("Information", "Changes saved", w)
+						dialog.ShowInformation(T("information"), T("changes_saved"), w)
 					}
 				}
 
@@ -49,15 +49,15 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 					if err != nil {
 						dialog.ShowError(err, w)
 					} else {
-						dialog.ShowInformation("Information", "Changes saved", w)
+						dialog.ShowInformation(T("information"), T("changes_saved"), w)
 					}
 				}
 			}
 		}
 	})
-	menu1Item5 := fyne.NewMenuItem("Log out", func() {
+	menu1Item5 := fyne.NewMenuItem(T("log_out"), func() {
 		if HasChanged {
-			dialog.ShowConfirm("Unsaved Changes", "You have unsaved changes. Do you want to save them before logging out?", func(confirm bool) {
+			dialog.ShowConfirm(T("unsaved_changes"), T("you_have_unsaved_changes"), func(confirm bool) {
 				if confirm {
 					// User wants to save the changes
 					var err error
@@ -122,19 +122,19 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 	})
 
 	// menu item names are not linked with pageTitles, if there is a modification here -> modify also on pages
-	newMenu1 := fyne.NewMenu("Main menu", menu1Item1, menu1Item2, menu1Item3, menu1Item4, menu1Item5)
+	newMenu1 := fyne.NewMenu(T("main_menu"), menu1Item1, menu1Item2, menu1Item3, menu1Item4, menu1Item5)
 
-	menu2Item1 := fyne.NewMenuItem("Players", func() { PlayerPage(db, w, a) })
-	menu2Item2 := fyne.NewMenuItem("Teams", func() { TeamPage(db, w, a) })
-	menu2Item3 := fyne.NewMenuItem("Clubs", func() { ClubPage(db, w, a) })
-	newMenu2 := fyne.NewMenu("Database", menu2Item1, menu2Item2, menu2Item3)
+	menu2Item1 := fyne.NewMenuItem(T("players"), func() { PlayerPage(db, w, a) })
+	menu2Item2 := fyne.NewMenuItem(T("teams"), func() { TeamPage(db, w, a) })
+	menu2Item3 := fyne.NewMenuItem(T("clubs"), func() { ClubPage(db, w, a) })
+	newMenu2 := fyne.NewMenu(T("database"), menu2Item1, menu2Item2, menu2Item3)
 
-	menu3Item1 := fyne.NewMenuItem("Create ", func() { CreatePage(db, w, a) })
-	menu3Item2 := fyne.NewMenuItem("Add", func() { AddPage(db, w, a) })
-	menu3Item3 := fyne.NewMenuItem("Remove", func() { RemovePage(db, w, a) })
-	menu3Item4 := fyne.NewMenuItem("Delete", func() { DeletePage(db, w, a) })
-	menu3Item5 := fyne.NewMenuItem("Edit player information", func() { AddInfoToPlayerPage(db, w, a) })
-	newMenu3 := fyne.NewMenu("Functionalities", menu3Item1, menu3Item2, menu3Item3, menu3Item4, menu3Item5)
+	menu3Item1 := fyne.NewMenuItem(T("create"), func() { CreatePage(db, w, a) })
+	menu3Item2 := fyne.NewMenuItem(T("add"), func() { AddPage(db, w, a) })
+	menu3Item3 := fyne.NewMenuItem(T("remove"), func() { RemovePage(db, w, a) })
+	menu3Item4 := fyne.NewMenuItem(T("delete"), func() { DeletePage(db, w, a) })
+	menu3Item5 := fyne.NewMenuItem(T("edit_player_information"), func() { AddInfoToPlayerPage(db, w, a) })
+	newMenu3 := fyne.NewMenu(T("functionalities"), menu3Item1, menu3Item2, menu3Item3, menu3Item4, menu3Item5)
 
 	menu := fyne.NewMainMenu(newMenu1, newMenu2, newMenu3)
 

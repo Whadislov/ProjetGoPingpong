@@ -14,38 +14,32 @@ var HasChanged bool
 // MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	// Initialize
 	var mainPage *fyne.Container
+	pageTitle := setTitle("TT Companion", 32)
 
-	// Database page
-	databasePage := DatabasePage(db, w, a)
-
-	// Functionality page
-	functionalityPage := FunctionalityPage(db, w, a)
-
-	// Main page
-	mainText := setTitle("TT Companion", 32)
-
-	showDBButton := widget.NewButton("Your database", func() {
-		w.SetContent(databasePage)
+	showDBButton := widget.NewButton(T("your_database"), func() {
+		w.SetContent(DatabasePage(db, w, a))
 	})
 
-	showFuncButton := widget.NewButton("Functionalities", func() {
-		w.SetContent(functionalityPage)
+	showFuncButton := widget.NewButton(T("functionalities"), func() {
+		w.SetContent(FunctionalityPage(db, w, a))
 	})
 
 	// Options button
-	OptionButton := widget.NewButton("Options", func() {
-		w.SetContent(OptionPage(db, w, a))
+	OptionButton := widget.NewButton(T("options"), func() {
+		returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
+			w.SetContent(MainPage(db, w, a))
+		})
+		w.SetContent(container.NewVBox(OptionPage(db, w, a), returnToMainMenuButton))
 	})
 
-	quitButton := widget.NewButton("Quit", func() {
+	quitButton := widget.NewButton(T("quit"), func() {
 		Quit(db, w, a, HasChanged)
 	})
 
 	if appStartOption == "local" {
 		mainPage = container.NewVBox(
-			mainText,
+			pageTitle,
 			showDBButton,
 			showFuncButton,
 			OptionButton,
@@ -55,7 +49,7 @@ func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	} else if appStartOption == "browser" {
 		// Remove the quit button
 		mainPage = container.NewVBox(
-			mainText,
+			pageTitle,
 			showDBButton,
 			showFuncButton,
 			OptionButton,

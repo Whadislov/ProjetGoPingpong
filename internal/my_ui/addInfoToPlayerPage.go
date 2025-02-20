@@ -14,7 +14,7 @@ import (
 )
 
 func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Edit player information", 32)
+	pageTitle := setTitle(T("edit_player_information"), 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
@@ -44,11 +44,11 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 }
 
 func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Edit player information", 32)
+	pageTitle := setTitle(T("edit_player_information"), 32)
 
 	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
-	cancelButton := widget.NewButton("Cancel", func() { AddInfoToPlayerPage(db, w, a) })
+	cancelButton := widget.NewButton(T("cancel"), func() { AddInfoToPlayerPage(db, w, a) })
 
 	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v %v.", p.Firstname, p.Lastname))
 
@@ -79,7 +79,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 	var isBackhandModified bool
 	var isBladeModified bool
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		// Check player age
 		if ageEntry.Text != "" {
 			a, errAge := strconv.Atoi(ageEntry.Text)
@@ -140,7 +140,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 			dialog.ShowInformation("Succes", fmt.Sprintf("%v %v has been modified", p.Firstname, p.Lastname), w)
 			AddInfoToPlayerPage(db, w, a)
 		} else {
-			dialog.ShowInformation("Information", fmt.Sprintf("%v %v has not been modified", p.Firstname, p.Lastname), w)
+			dialog.ShowInformation(T("information"), fmt.Sprintf("%v %v has not been modified", p.Firstname, p.Lastname), w)
 		}
 
 	})

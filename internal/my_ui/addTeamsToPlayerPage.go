@@ -56,7 +56,7 @@ func SelectionPageTtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 func selectPlayerPageTtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Add: select a player", 32)
 
-	returnToPlayerSelectionPageTtoPButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageTtoPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPageTtoP(
 				SelectionPageTtoP(db, w, a), nil, db, w, a,
@@ -219,7 +219,7 @@ func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[uuid.UUI
 
 	pageTitle := setTitle("Add: select a team", 32)
 
-	returnToTeamSelectionPageTtoPButton := widget.NewButton("Cancel", func() {
+	returnToTeamSelectionPageTtoPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedTeamPageTtoP(player, alreadySelectedTeams, db, w, a))
 	})
 
@@ -260,7 +260,7 @@ func addAnotherTeamPageTtoP(player *mt.Player, alreadySelectedTeams map[uuid.UUI
 	}
 
 	if len(teamButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more team to add", w)
+		dialog.ShowInformation(T("information"), "There is no more team to add", w)
 		w.SetContent(selectedTeamPageTtoP(player, alreadySelectedTeams, db, w, a))
 	}
 
@@ -288,7 +288,7 @@ func selectedTeamPageTtoP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.Tea
 	// "Sort the map of selectedTeams" for a better button display
 	sortedSelectedTeams := SortMap(selectedTeams)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		teamNames := []string{}
 		for _, t := range sortedSelectedTeams {

@@ -56,7 +56,7 @@ func SelectionPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Add: select a team", 32)
 
-	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToTeamSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPagePtoT(
 				SelectionPagePtoT(db, w, a), nil, db, w, a,
@@ -221,7 +221,7 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[uuid.UUI
 
 	pageTitle := setTitle("Add: select a player", 32)
 
-	returnToPlayerSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	})
 
@@ -264,7 +264,7 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[uuid.UUI
 	}
 
 	if len(playerButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more players to add", w)
+		dialog.ShowInformation(T("information"), "There is no more players to add", w)
 		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	}
 
@@ -292,7 +292,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.Pla
 	// "Sort the map of selected players" for a better button display
 	sortedSelectedPlayers := SortMap(selectedPlayers)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		playerNames := []string{}
 		for _, player := range selectedPlayers {
@@ -306,7 +306,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.Pla
 
 		successMsg := fmt.Sprintf("Team %v now has player(s) %v", team.Name, strHelper(playerNames))
 		fmt.Println(successMsg)
-		dialog.ShowInformation("Success", successMsg, w)
+		dialog.ShowInformation(T("success"), successMsg, w)
 
 		// Set the flag to true to indicate that the database has changed
 		HasChanged = true

@@ -53,7 +53,7 @@ func SelectionPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 			pageTitle,
 			playerSelectionPageTfromPButton)
 	} else {
-		pageTitle := setTitle("Remove", 32)
+		pageTitle := setTitle(T("remove"), 32)
 		return container.NewVBox(
 			pageTitle,
 			widget.NewLabel("There is currently 0 player in any team"))
@@ -65,7 +65,7 @@ func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 
 	pageTitle := setTitle("Remove: select a player", 32)
 
-	returnToPlayerSelectionPageTfromPButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageTfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPageTfromP(
 				SelectionPageTfromP(db, w, a), nil, db, w, a,
@@ -119,7 +119,7 @@ func selectedPlayerPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	if len(player.TeamIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v has no team", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
+		dialog.ShowInformation(T("information"), fmt.Sprintf("%v has no team", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
 		return selectPlayerPageTfromP(db, w, a)
 	}
 
@@ -220,7 +220,7 @@ func createTeamButtonsTfromP(player *mt.Player, team *mt.Team, db *mt.Database, 
 // addAnotherTeamPageTfromP sets up the page for adding another team to the selected player.
 func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[uuid.UUID]*mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	returnToTeamSelectionPageTfromPButton := widget.NewButton("Cancel", func() {
+	returnToTeamSelectionPageTfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedTeamPageTfromP(player, alreadySelectedTeams, db, w, a))
 	})
 
@@ -246,7 +246,7 @@ func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[uuid.U
 	}
 
 	if len(teamButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more team to add", w)
+		dialog.ShowInformation(T("information"), "There is no more team to add", w)
 		w.SetContent(selectedTeamPageTfromP(player, alreadySelectedTeams, db, w, a))
 	}
 
@@ -273,7 +273,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.T
 	// "Sort the map of selectedTeams" for a better button display
 	sortedSelectedTeams := SortMap(selectedTeams)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		teamNames := []string{}
 		for _, t := range sortedSelectedTeams {

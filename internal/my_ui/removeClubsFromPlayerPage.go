@@ -53,7 +53,7 @@ func SelectionPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 			pageTitle,
 			playerSelectionPageButton)
 	} else {
-		pageTitle := setTitle("Remove", 32)
+		pageTitle := setTitle(T("remove"), 32)
 		return container.NewVBox(
 			pageTitle,
 			widget.NewLabel("There is currently 0 player in any club"))
@@ -65,7 +65,7 @@ func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 
 	pageTitle := setTitle("Remove: select a player", 32)
 
-	returnToPlayerSelectionPageCfromPButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageCfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPageCfromP(
 				SelectionPageCfromP(db, w, a), nil, db, w, a,
@@ -119,7 +119,7 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	if len(player.ClubIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v has no club", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
+		dialog.ShowInformation(T("information"), fmt.Sprintf("%v has no club", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
 		return selectPlayerPageCfromP(db, w, a)
 	}
 
@@ -220,7 +220,7 @@ func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, 
 // addAnotherclubPageCfromP sets up the page for adding another club to the selected player.
 func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	returnToClubSelectionPageCfromPButton := widget.NewButton("Cancel", func() {
+	returnToClubSelectionPageCfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	})
 
@@ -246,7 +246,7 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UU
 	}
 
 	if len(clubButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more club to add", w)
+		dialog.ShowInformation(T("information"), "There is no more club to add", w)
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	}
 
@@ -272,7 +272,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Cl
 	// "Sort the map of selectedClub" for a better button display
 	sortedselectedClub := SortMap(selectedClub)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		clubNames := []string{}
 		for _, c := range sortedselectedClub {
@@ -287,7 +287,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Cl
 
 		successMsg := fmt.Sprintf("%v is no longer playing in %v", fmt.Sprintf("%v %v", player.Firstname, player.Lastname), strHelper(clubNames))
 		fmt.Println(successMsg)
-		dialog.ShowInformation("Success", successMsg, w)
+		dialog.ShowInformation(T("success"), successMsg, w)
 
 		// Set the flag to true to indicate that the database has changed
 		HasChanged = true

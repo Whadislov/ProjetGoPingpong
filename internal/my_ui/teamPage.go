@@ -18,17 +18,17 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 	var textP string
 
 	if len(team.ClubID) == 0 {
-		textC = "This team has no club."
+		textC = T("team_0_club")
 	} else {
 		clubs := []string{}
 		for _, club := range team.ClubID {
 			clubs = append(clubs, club)
 		}
-		textC = fmt.Sprintln("Club:		" + strHelper(clubs))
+		textC = fmt.Sprintln(T("club_with_space") + strHelper(clubs))
 	}
 
 	if len(team.PlayerIDs) == 0 {
-		textP = "This team has no player.\n"
+		textP = T("team_0_player")
 	} else {
 		// Sort players alphabetically
 		players := []string{}
@@ -38,7 +38,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 		slices.Sort(players)
 
 		// string that contains player names to display
-		textP = "Players:	"
+		textP = T("players_with_space")
 		for _, player := range players {
 			textP += fmt.Sprintln(player)
 			textP += "		"
@@ -56,7 +56,7 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 
 // TeamPage sets up the page for displaying team info.
 func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Teams", 32)
+	pageTitle := setTitle(T("teams"), 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -69,7 +69,7 @@ func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		ac.Append(item)
 	}
 
-	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+	returnToDatabasePageButton := widget.NewButton(T("return_to_database"), func() {
 		databasePage := DatabasePage(db, w, a)
 		w.SetContent(databasePage)
 	})

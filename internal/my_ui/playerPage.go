@@ -14,16 +14,16 @@ import (
 
 // PlayerInfos returns a container that displays all the infos of a player.
 func PlayerInfos(player *mt.Player) *fyne.Container {
-	firstnameStr := "Firstname: 	" + player.Firstname
-	LastnameStr := "Lastname: 	" + player.Lastname
-	ageStr := "Age: 		" + strconv.Itoa(player.Age)
+	firstnameStr := T("firstname_with_space") + player.Firstname
+	LastnameStr := T("lastname_with_space") + player.Lastname
+	ageStr := T("age_with_space") + strconv.Itoa(player.Age)
 	materialStr := fmt.Sprintf(
-		`Forehand:	%v
-Backhand:	%v
-Blade:	%v`,
-		player.Material[0], player.Material[1], player.Material[2])
+		`%v:	%v
+%v:	%v
+%v:	%v`,
+		T("forehand"), T("backhand"), T("blade"), player.Material[0], player.Material[1], player.Material[2])
 
-	rankingStr := "Ranking: 	" + strconv.Itoa(player.Ranking)
+	rankingStr := T("ranking_with_space") + strconv.Itoa(player.Ranking)
 	teams := []string{}
 	clubs := []string{}
 	for _, team := range player.TeamIDs {
@@ -36,8 +36,8 @@ Blade:	%v`,
 	}
 	// Sort clubs alphabetically
 	slices.Sort(clubs)
-	teamsStr := "Teams: 	" + strHelper(teams)
-	clubsStr := "Clubs: 	" + strHelper(clubs)
+	teamsStr := T("teams_with_space") + strHelper(teams)
+	clubsStr := T("clubs_with_space") + strHelper(clubs)
 
 	text := fmt.Sprintln(firstnameStr) + fmt.Sprintln(LastnameStr) + fmt.Sprintln(ageStr) + fmt.Sprintln(rankingStr) + fmt.Sprintln(teamsStr) + fmt.Sprintln(clubsStr) + fmt.Sprintln(materialStr)
 	text = text[:len(text)-1] // remove the last \n
@@ -49,7 +49,7 @@ Blade:	%v`,
 // PlayerPage sets up the page for displaying player info.
 func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Players", 32)
+	pageTitle := setTitle(T("players"), 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -64,7 +64,7 @@ func PlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		ac.Append(item)
 	}
 
-	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+	returnToDatabasePageButton := widget.NewButton(T("return_to_database"), func() {
 		databasePage := DatabasePage(db, w, a)
 		w.SetContent(databasePage)
 	})

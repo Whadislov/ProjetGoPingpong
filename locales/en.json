@@ -1,0 +1,326 @@
+{
+    "welcome_to_tt_companion": {
+        "other": "Welcome to TT Companion"
+    },
+    "your_informations": {
+        "other": "Your informations"
+    },
+    "your_informations_in_edition": {
+        "other": "Your informations* (in edition)"
+    },
+    "authentification": {
+        "other": "Authentification"
+    },
+    "please_authenticate": {
+        "other": "Please authenticate"
+    },
+    "log_in": {
+        "other": "Log in"
+    },
+    "log_out": {
+        "other": "Log out"
+    },
+    "sign_up": {
+        "other": "Sign up"
+    },
+    "quit": {
+        "other": "Quit"
+    },
+    "create_your_account": {
+        "other": "Create your account"
+    },
+    "username": {
+        "other": "👤 Username"
+    },
+    "password": {
+        "other": "🔒 Password"
+    },
+    "confirm_password": {
+        "other": "Confirm Password"
+    },
+    "create": {
+        "other": "Create"
+    },
+    "email.cannot_be_empty": {
+        "other": "e-mail cannot be empty"
+    },
+    "email.already_used": {
+        "other": "e-mail is already used"
+    },
+    "email.must_be_valid": {
+        "other": "e-mail must be valid. Example: abc@def.com"
+    },
+    "username.cannot_be_empty": {
+        "other": "username cannot be empty"
+    },
+    "username.already_used": {
+        "other": "username is already taken"
+    },
+    "username.must_be_valid": {
+        "other": "username must be valid (only letters and figures are allowed, spaces are not allowed)"
+    },
+    "password.cannot_be_empty": {
+        "other": "password cannot be empty"
+    },
+    "password.must_be_valid": {
+        "other": "password must be valid (only letters and figures are allowed, spaces are not allowed)"
+    },
+    "password.not_matching": {
+        "other": "passwords do not match"
+    },
+    "failed_to_sign_up": {
+        "other": "Failed to sign up: Username or e-mail already exists"
+    },
+    "failed_to_load_profile": {
+        "other": "Failed to load your profile"
+    },
+    "failed_to_log_in": {
+        "other": "Failed to log in: "
+    },
+    "unknown_error": {
+        "other": "unknown error"
+    },
+    "success": {
+        "other": "Success"
+    },
+    "your_user_account_has_been_created": {
+        "other": "Your user account has been created !"
+    },
+    "cancel": {
+        "other": "Cancel"
+    },
+    "login": {
+        "other": "Login"
+    },
+    "signup": {
+        "other": "Signup"
+    },
+    "connect": {
+        "other": "Connect"
+    },
+    "username_and_password_missmatch": {
+        "other": "Username and password mismatch"
+    },
+    "internal_error": {
+        "other": "Internal error"
+    },
+    "forgot_password": {
+        "other": "Forgot your password?"
+    },
+    "title.forgot_password_page": {
+        "other": "Forgot your password?"
+    },
+    "text.forgot_password": {
+        "other": "Enter your e-mail address and click on the button below to reset your password"
+    },
+    "enter_email_address": {
+        "other":"Enter your e-mail address"
+    },
+    "reset_your_password": {
+        "other": "Reset your password"
+    },
+    "attention": {
+        "other": "Attention"
+    },
+    "message.account_created": {
+        "other": "Your user account has been created!"
+    },
+    "message.email_not_found": {
+        "other": "Your e-mail {email} has not been found in our database.\nPlease check that you have correctly entered the e-mail address you used to log in."
+    },
+    "message.email_sent": {
+        "other": "A message has been sent to {email}.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in."
+    },
+    "return_to_login_screen": {
+        "other": "Return to the login screen"
+    },
+    "try_again": {
+        "other": "Try again"
+    },
+    "caution_message": {
+        "other": "⚠️ This feature is currently not working ⚠️\n\n"
+    }    ,
+    "options": {
+        "other": "Options"
+    },
+    "functionalities": {
+        "other": "Functionalities"
+    },
+    "your_database": {
+        "other": "Your database"
+    },
+    "return_to_main_page": {
+        "other": "Return to main page"
+    },
+    "main_page": {
+        "other": "Main page"
+    },
+    "my_profile": {
+        "other": "My profile"
+    },
+    "save_changes": {
+        "other": "Save changes"
+    },
+    "information": {
+        "other": "Information"
+    },
+    "there_is_nothing_new_to_save": {
+        "other": "There is nothing new to save"
+    },
+    "changes_saved": {
+        "other": "Changes saved"
+    },
+    "unsaved_changes": {
+        "other": "Unsaved changes"
+    },
+    "you_have_unsaved_changes": {
+        "other": "You have unsaved changes. Do you want to save them before logging out?"
+    },
+    "you_have_unsaved_changes_alt": {
+        "other": "You have unsaved changes. Do you want to save them before returning to the main page?"
+    },
+    "players": {
+        "other": "Players"
+    },
+    "teams": {
+        "other": "Teams"
+    },
+    "clubs": {
+        "other": "Clubs"
+    },
+    "database": {
+        "other": "Database"
+    },
+    "add": {
+        "other": "Add"
+    },
+    "remove": {
+        "other": "Remove"
+    },
+    "delete": {
+        "other": "Delete"
+    },
+    "edit_player_information": {
+        "other": "Edit player information"
+    },
+    "user_since": {
+        "other": "📅 User since(yyyy-mm-dd)"
+    },
+    "edit_username": {
+        "other": "Edit username"
+    },
+    "edit_email": {
+        "other": "Edit email"
+    },
+    "edit_password": {
+        "other": "Edit password"
+    },
+    "confirm": {
+        "other": "Confirm"
+    },
+    "editing_username": {
+        "other": "Editing 👤 username"
+    },
+    "current_username": {
+        "other": "Your current username: "
+    },
+    "enter_new_username": {
+        "other": "Enter your new username"
+    },
+    "username_successfully_changed": {
+        "other": "Username successfully changed"
+    },
+    "editing_email": {
+        "other": "Editing ✉️ email"
+    },
+    "current_email": {
+        "other": "Your current email: "
+    },
+    "enter_new_email": {
+        "other": "Enter your new email. Example: abc@def.com"
+    },
+    "email_successfully_changed": {
+        "other": "Email successfully changed"
+    },
+    "editing_password": {
+        "other": "Editing 🔒 password"
+    },
+    "enter_current_password": {
+        "other": "Enter your current password"
+    },
+    "enter_new_password": {
+        "other": "Enter your new password"
+    },
+    "confirm_your_new_password": {
+        "other": "Confirm your new password"
+    },
+    "wrong_password": {
+        "other": "wrong password"
+    },
+    "new_passwords_do_not_match": {
+        "other": "new passwords do not match"
+    },
+    "password_successfully_changed": {
+        "other": "Password successfully changed"
+    },
+    "return_to_database": {
+        "other": "Return to database"
+    },
+    "players_with_space": {
+        "other": "Players:  "
+    },
+    "club_with_space": {
+        "other": "Club:     "
+    },
+    "clubs_with_space": {
+        "other": "Clubs:          "
+    },
+    "teams_with_space": {
+        "other": "Teams:         "
+    },
+    "firstname_with_space": {
+        "other": "Firstname:    "
+    },
+    "lastname_with_space": {
+        "other": "Lastname:         "
+    },
+    "age_with_space": {
+        "other": "Age:              "
+    },
+    "ranking_with_space": {
+        "other": "Ranking:      "
+    },
+    "forehand": {
+        "other": "Forehand"
+    },
+    "backhand": {
+        "other": "Backhand"
+    },
+    "blade": {
+        "other": "Blade"
+    },
+    "team_0_player": {
+        "other": "This team has no player.\n"
+    },
+    "team_0_club": {
+        "other": "This team has no club."
+    },
+    "save_before_quit": {
+        "other": "You have unsaved changes. Do you want to save them before quitting?"
+    },
+    "currently_0_player": {
+        "other": "There is currently 0 player in this club"
+    },
+    "show_players": {
+        "other": "Show players"
+    },
+    "show_teams": {
+        "other": "Show teams"
+    },
+    "show_clubs": {
+        "other": "Show clubs"
+    },
+    "main_menu": {
+        "other": "Main menu"
+    }
+}

@@ -56,7 +56,7 @@ func SelectionPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 func selectPlayerPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Add: select a player", 32)
 
-	returnToPlayerSelectionPageCtoPButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageCtoPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPageCtoP(
 				SelectionPageCtoP(db, w, a), nil, db, w, a,
@@ -206,7 +206,7 @@ func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[uuid.UUID
 
 	pageTitle := setTitle("Add: select a club", 32)
 
-	returnToClubSelectionPageCtoPButton := widget.NewButton("Cancel", func() {
+	returnToClubSelectionPageCtoPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedClubPageCtoP(player, alreadyselectedClub, db, w, a))
 	})
 
@@ -232,7 +232,7 @@ func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[uuid.UUID
 	}
 
 	if len(clubButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more club to add", w)
+		dialog.ShowInformation(T("information"), "There is no more club to add", w)
 		w.SetContent(selectedClubPageCtoP(player, alreadyselectedClub, db, w, a))
 	}
 
@@ -260,7 +260,7 @@ func selectedClubPageCtoP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club
 	// "Sort the map of selectedClub" for a better button display
 	sortedselectedClub := SortMap(selectedClub)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		clubNames := []string{}
 		for _, c := range sortedselectedClub {

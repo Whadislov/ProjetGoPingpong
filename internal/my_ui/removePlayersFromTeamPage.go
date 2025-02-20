@@ -53,7 +53,7 @@ func SelectionPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 			pageTitle,
 			teamSelectionPageButton)
 	} else {
-		pageTitle := setTitle("Remove", 32)
+		pageTitle := setTitle(T("remove"), 32)
 		return container.NewVBox(
 			pageTitle,
 			widget.NewLabel("There is currently 0 player in any team"))
@@ -65,7 +65,7 @@ func selectTeamPagePfromT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 
 	pageTitle := setTitle("Remove: select a team", 32)
 
-	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToTeamSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPagePfromT(
 				SelectionPagePfromT(db, w, a), nil, db, w, a,
@@ -119,7 +119,7 @@ func selectedTeamPagePfromT(team *mt.Team, db *mt.Database, w fyne.Window, a fyn
 	)
 
 	if len(team.PlayerIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v is empty", team.Name), w)
+		dialog.ShowInformation(T("information"), fmt.Sprintf("%v is empty", team.Name), w)
 		return selectTeamPagePfromT(db, w, a)
 	}
 
@@ -220,7 +220,7 @@ func createPlayerButtonsPfromT(team *mt.Team, player *mt.Player, db *mt.Database
 // addAnotherPlayerPagePfromT sets up the page for adding another player to the selected team.
 func addAnotherPlayerPagePfromT(team *mt.Team, alreadySelectedPlayers map[uuid.UUID]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	returnToPlayerSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedPlayerPagePfromT(team, alreadySelectedPlayers, db, w, a))
 	})
 
@@ -246,7 +246,7 @@ func addAnotherPlayerPagePfromT(team *mt.Team, alreadySelectedPlayers map[uuid.U
 	}
 
 	if len(playerButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more player to remove", w)
+		dialog.ShowInformation(T("information"), "There is no more player to remove", w)
 		w.SetContent(selectedPlayerPagePfromT(team, alreadySelectedPlayers, db, w, a))
 	}
 
@@ -273,7 +273,7 @@ func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.P
 	// "Sort the map of selected players" for a better button display
 	sortedSelectedPlayers := SortMap(selectedPlayers)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		playerNames := []string{}
 		for _, player := range selectedPlayers {
@@ -287,11 +287,11 @@ func selectedPlayerPagePfromT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.P
 		if len(playerNames) > 1 {
 			successMsg := fmt.Sprintf("%v are no longer playing in %v", strHelper(playerNames), team.Name)
 			fmt.Println(successMsg)
-			dialog.ShowInformation("Success", successMsg, w)
+			dialog.ShowInformation(T("success"), successMsg, w)
 		} else {
 			successMsg := fmt.Sprintf("%v is no longer playing in %v", strHelper(playerNames), team.Name)
 			fmt.Println(successMsg)
-			dialog.ShowInformation("Success", successMsg, w)
+			dialog.ShowInformation(T("success"), successMsg, w)
 		}
 
 		// Set the flag to true to indicate that the database has changed

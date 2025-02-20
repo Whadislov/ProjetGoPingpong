@@ -10,18 +10,18 @@ import (
 
 // FunctionalityPage creates the functionality page
 func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Functionalities", 32)
+	pageTitle := setTitle(T("functionalities"), 32)
 
 	returnToMainMenuButton := widget.NewButton("Return main page", func() {
 		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
 	})
 
-	createMenuButton := widget.NewButton("Create", func() { CreatePage(db, w, a) })
-	createAddMenuButton := widget.NewButton("Add", func() { AddPage(db, w, a) })
-	createRemoveMenuButton := widget.NewButton("Remove", func() { RemovePage(db, w, a) })
-	createDeleteMenuButton := widget.NewButton("Delete", func() { DeletePage(db, w, a) })
-	createAddInfoToPlayerButton := widget.NewButton("Edit player information", func() { AddInfoToPlayerPage(db, w, a) })
+	createMenuButton := widget.NewButton(T("create"), func() { CreatePage(db, w, a) })
+	createAddMenuButton := widget.NewButton(T("add"), func() { AddPage(db, w, a) })
+	createRemoveMenuButton := widget.NewButton(T("remove"), func() { RemovePage(db, w, a) })
+	createDeleteMenuButton := widget.NewButton(T("delete"), func() { DeletePage(db, w, a) })
+	createAddInfoToPlayerButton := widget.NewButton(T("edit_player_information"), func() { AddInfoToPlayerPage(db, w, a) })
 
 	functionalityPage := container.NewVBox(
 		pageTitle,

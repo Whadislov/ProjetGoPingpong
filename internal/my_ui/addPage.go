@@ -10,7 +10,7 @@ import (
 
 // AddPage sets up the main page for adding players to teams and vice versa.
 func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Add", 32)
+	pageTitle := setTitle(T("add"), 32)
 
 	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
