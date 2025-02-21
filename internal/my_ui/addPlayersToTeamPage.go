@@ -16,9 +16,9 @@ import (
 // currentSelectionPagePtoT sets up the page for selecting teams and players.
 func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Add: select a player", 32)
+	pageTitle := setTitle(T("add_select_a_player"), 32)
 
-	returnToAddPageButton := widget.NewButton("Return to the add menu", func() {
+	returnToAddPageButton := widget.NewButton(T("return_to_the_add_menu"), func() {
 		AddPage(db, w, a)
 	})
 
@@ -42,9 +42,9 @@ func currentSelectionPagePtoT(teamContent *fyne.Container, playerContent *fyne.C
 // selectionPagePtoT sets up the initial selection page for teams.
 func SelectionPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Add: select a team", 32)
+	pageTitle := setTitle(T("add_select_a_team"), 32)
 
-	teamSelectionPageButton := widget.NewButton("Select a team", func() { w.SetContent(selectTeamPagePtoT(db, w, a)) })
+	teamSelectionPageButton := widget.NewButton(T("select_a_team"), func() { w.SetContent(selectTeamPagePtoT(db, w, a)) })
 	content := container.NewVBox(
 		pageTitle,
 		teamSelectionPageButton)
@@ -54,9 +54,9 @@ func SelectionPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 
 // selectTeamPagePtoT sets up the page for selecting a team from the database.
 func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Add: select a team", 32)
+	pageTitle := setTitle(T("add_select_a_team"), 32)
 
-	returnToTeamSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToTeamSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPagePtoT(
 				SelectionPagePtoT(db, w, a), nil, db, w, a,
@@ -64,7 +64,7 @@ func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 		)
 	})
 
-	tLabel := widget.NewLabel("Teams 🤝")
+	tLabel := widget.NewLabel(T("team_with_hands_emoji"))
 	teamButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of teams" for a better button display
@@ -88,8 +88,8 @@ func selectTeamPagePtoT(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 // selectedTeamPagePtoT sets up the page for a selected team and allows player selection.
 func selectedTeamPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
-	pLabel := widget.NewLabel("Player current selection 🏓")
+	tLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+"  %v 🤝", team.Name))
+	pLabel := widget.NewLabel(T("player_current_selection_emoji"))
 
 	// User can click on the selected team to return the list of teams
 	selectedTeamButton := widget.NewButton(team.Name, func() {
@@ -102,7 +102,7 @@ func selectedTeamPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 	)
 
 	// Now select a player
-	selectPlayerButton := widget.NewButton("Select a player", func() {
+	selectPlayerButton := widget.NewButton(T("select_a_player"), func() {
 		w.SetContent(selectPlayerPagePtoT(team, db, w, a))
 	})
 
@@ -124,22 +124,22 @@ func selectedTeamPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 // selectPlayerPagePtoT sets up the page for selecting a player for a given team.
 func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Add: select a player", 32)
+	pageTitle := setTitle(T("add_select_a_player"), 32)
 
-	returnToPlayerSelectionPageButton := widget.NewButton("Return to player selection", func() {
+	returnToPlayerSelectionPageButton := widget.NewButton(T("return_to_player_selection"), func() {
 		w.SetContent(selectedTeamPagePtoT(team, db, w, a))
 	})
 
-	pLabel := widget.NewLabel("Players 🏓")
+	pLabel := widget.NewLabel(T("players_with_racket_emoji"))
 	playerButtons := []fyne.CanvasObject{}
 	selectedPlayers := make(map[uuid.UUID]*mt.Player)
 
 	// We should create a player first
 	if len(db.Players) == 0 {
-		yesButton := widget.NewButton("Yes", func() {
+		yesButton := widget.NewButton(T("yes"), func() {
 			CreatePage(db, w, a)
 		})
-		noButton := widget.NewButton("No", func() {
+		noButton := widget.NewButton(T("no"), func() {
 			w.SetContent(FunctionalityPage(db, w, a))
 		})
 
@@ -148,7 +148,7 @@ func selectPlayerPagePtoT(team *mt.Team, db *mt.Database, w fyne.Window, a fyne.
 			noButton,
 		)
 
-		label := widget.NewLabel("There is currently 0 player available. Do you want to create a new player first ?")
+		label := widget.NewLabel(T("there_is_currently_0_player_available_do_you_want_create"))
 		content := container.NewVBox(
 			pageTitle,
 			label,
@@ -219,13 +219,13 @@ func createPlayerButtonsPtoT(team *mt.Team, player *mt.Player, db *mt.Database, 
 // addAnotherPlayerPagePtoT sets up the page for adding another player to the selected team.
 func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[uuid.UUID]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Add: select a player", 32)
+	pageTitle := setTitle(T("add_select_a_player"), 32)
 
-	returnToPlayerSelectionPageButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	})
 
-	pLabel := widget.NewLabel("Players 🏓")
+	pLabel := widget.NewLabel(T("players_with_racket_emoji"))
 	playerButtons := []fyne.CanvasObject{}
 
 	// We do not want to have a button for all the players in the database. They have to meet some criterias : same club as the team, not already in the team, not already given a button
@@ -264,7 +264,7 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[uuid.UUI
 	}
 
 	if len(playerButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more players to add", w)
+		dialog.ShowInformation(T("information"), T("there_is_no_more_player_to_add"), w)
 		w.SetContent(selectedPlayerPagePtoT(team, alreadySelectedPlayers, db, w, a))
 	}
 
@@ -281,18 +281,18 @@ func addAnotherPlayerPagePtoT(team *mt.Team, alreadySelectedPlayers map[uuid.UUI
 // selectedPlayerPagePtoT sets up the page for confirming the selected players for a team.
 func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Add: confirm", 32)
+	pageTitle := setTitle(T("add_confirm"), 32)
 
-	returnToAddRemovePageButton := widget.NewButton("Return to the add menu", func() {
+	returnToAddRemovePageButton := widget.NewButton(T("return_to_the_add_menu"), func() {
 		AddPage(db, w, a)
 	})
 
-	tLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🤝", team.Name))
+	tLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+"  %v 🤝", team.Name))
 
 	// "Sort the map of selected players" for a better button display
 	sortedSelectedPlayers := SortMap(selectedPlayers)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		playerNames := []string{}
 		for _, player := range selectedPlayers {
@@ -304,9 +304,9 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.Pla
 			}
 		}
 
-		successMsg := fmt.Sprintf("Team %v now has player(s) %v", team.Name, strHelper(playerNames))
+		successMsg := fmt.Sprintf(T("team_now_has_player"), team.Name, strHelper(playerNames))
 		fmt.Println(successMsg)
-		dialog.ShowInformation("Success", successMsg, w)
+		dialog.ShowInformation(T("success"), successMsg, w)
 
 		// Set the flag to true to indicate that the database has changed
 		HasChanged = true
@@ -327,7 +327,7 @@ func selectedPlayerPagePtoT(team *mt.Team, selectedPlayers map[uuid.UUID]*mt.Pla
 	}
 
 	// Add another player in the player selection
-	addAnotherPlayerButton := widget.NewButton("Add another player", func() {
+	addAnotherPlayerButton := widget.NewButton(T("add_another_player"), func() {
 		w.SetContent(addAnotherPlayerPagePtoT(team, selectedPlayers, db, w, a))
 	})
 

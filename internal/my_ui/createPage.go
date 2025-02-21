@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -16,26 +17,26 @@ import (
 // CreatePage sets up the page for creating players, teams, and clubs.
 func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Create", 32)
+	pageTitle := setTitle(T("create"), 32)
 
-	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
+	ReturnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
 
-	ReturnToCreatePageButton := widget.NewButton("Return to the creation menu", func() {
+	ReturnToCreatePageButton := widget.NewButton(T("return_to_the_create_menu"), func() {
 		CreatePage(db, w, a)
 	})
 
 	// Player
-	playerButton := widget.NewButton("Create a new player", func() {
+	playerButton := widget.NewButton(T("create_a_new_player"), func() {
 
 		// Club Selection
-		pageTitle := setTitle("Create new player: select a club", 32)
+		pageTitle := setTitle(T("create_a_new_player_select_a_club"), 32)
 
 		// clubSelectionPage
-		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			pageTitle := setTitle("Create new player: select a club", 32)
+		clubSelectionPageButton := widget.NewButton(T("select_a_club"), func() {
+			pageTitle := setTitle(T("create_a_new_player_select_a_club"), 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			// Sort clubs for an alphabetical order button display
@@ -45,55 +46,55 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				club := c.Value
 				clubButton := widget.NewButton(club.Name, func() {
 					// After club selection
-					clubLabel := widget.NewLabel(fmt.Sprintf("You are going to create a player for %v\n", club.Name))
+					clubLabel := widget.NewLabel(fmt.Sprintf(T("you_are_going_to_create_a_player_for"), club.Name))
 
 					// We can now create the player
 					firstnameEntry := widget.NewEntry()
-					entryFirstnameHolder := "Firstname ..."
+					entryFirstnameHolder := T("firstname") + " ..."
 					firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
 
 					lastnameEntry := widget.NewEntry()
-					entryLastnameHolder := "Lastname ..."
+					entryLastnameHolder := T("lastname") + " ..."
 					lastnameEntry.SetPlaceHolder(entryLastnameHolder)
 
 					// Here are optional informations that can be added to the player
 					ageEntry := widget.NewEntry()
-					entryAgeHolder := "Age ..."
+					entryAgeHolder := T("age") + " ..."
 					ageEntry.SetPlaceHolder(entryAgeHolder)
 
 					rankingEntry := widget.NewEntry()
-					entryRankingHolder := "Ranking ..."
+					entryRankingHolder := T("ranking") + " ..."
 					rankingEntry.SetPlaceHolder(entryRankingHolder)
 
 					forehandEntry := widget.NewEntry()
-					entryForehandHolder := "Forehand ..."
+					entryForehandHolder := T("forehand") + " ..."
 					forehandEntry.SetPlaceHolder(entryForehandHolder)
 
 					backhandEntry := widget.NewEntry()
-					entryBackhandHolder := "Backhand ..."
+					entryBackhandHolder := T("backhand") + " ..."
 					backhandEntry.SetPlaceHolder(entryBackhandHolder)
 
 					bladeEntry := widget.NewEntry()
-					entryBladeHolder := "Blade ..."
+					entryBladeHolder := T("blade") + " ..."
 					bladeEntry.SetPlaceHolder(entryBladeHolder)
 
-					validatationButton := widget.NewButton("Create", func() {
+					validatationButton := widget.NewButton(T("create"), func() {
 						age := -1
 						ranking := -1
 
 						// Check player name
 						if firstnameEntry.Text == "" {
-							dialog.ShowError(fmt.Errorf("firstname must not be empty"), w)
+							dialog.ShowError(errors.New(T("firstname.must_not_be_empty")), w)
 							return
 						} else if !IsLettersOnly(firstnameEntry.Text) {
-							dialog.ShowError(fmt.Errorf("firstname must be letters only"), w)
+							dialog.ShowError(errors.New(T("firstname.must_be_letters_only")), w)
 							return
 						}
 						if lastnameEntry.Text == "" {
-							dialog.ShowError(fmt.Errorf("lastname must not be empty"), w)
+							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
 							return
 						} else if !IsLettersOnly(lastnameEntry.Text) {
-							dialog.ShowError(fmt.Errorf("lastname must be letters only"), w)
+							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
 							return
 						}
 						// Set player age
@@ -102,7 +103,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							if errAge != nil {
 								// Check if the age is a number
 								if !IsNumbersOnly(ageEntry.Text) {
-									dialog.ShowError(fmt.Errorf("age must be a number"), w)
+									dialog.ShowError(errors.New(T("err_age_must_be_number")), w)
 									return
 								} else {
 									dialog.ShowError(errAge, w)
@@ -119,7 +120,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							if errRanking != nil {
 								// Check if the ranking is a number
 								if !IsNumbersOnly(rankingEntry.Text) {
-									dialog.ShowError(fmt.Errorf("ranking must be a number"), w)
+									dialog.ShowError(errors.New(T("err_ranking_must_be_number")), w)
 									return
 								} else {
 									dialog.ShowError(errRanking, w)
@@ -132,13 +133,13 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 						// Set player material
 						if forehandEntry.Text == "" {
-							forehandEntry.SetText("Unknown")
+							forehandEntry.SetText(T("unknown"))
 						}
 						if backhandEntry.Text == "" {
-							backhandEntry.SetText("Unknown")
+							backhandEntry.SetText(T("unknown"))
 						}
 						if bladeEntry.Text == "" {
-							bladeEntry.SetText("Unknown")
+							bladeEntry.SetText(T("unknown"))
 						}
 
 						// Create the player
@@ -162,9 +163,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							return
 						} else {
 							// Player creation + link to club success
-							successMsg := fmt.Sprintf("Player %v %v has been successfully created\n", firstname, lastname)
+							successMsg := fmt.Sprintf(T("player_has_been_successfully_created"), firstname, lastname)
 							fmt.Println(successMsg)
-							dialog.ShowInformation("Succes", successMsg, w)
+							dialog.ShowInformation(T("success"), successMsg, w)
 
 							// Set the flag to true to indicate that the database has changed
 							HasChanged = true
@@ -181,7 +182,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 					})
 					// Create a player in this club page
-					pageTitle := setTitle("Create new player: add player information", 32)
+					pageTitle := setTitle(T("create_a_new_player_add_info"), 32)
 
 					w.SetContent(container.NewVBox(
 						pageTitle,
@@ -213,33 +214,33 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	})
 
 	// Team
-	teamButton := widget.NewButton("Create a new team", func() {
+	teamButton := widget.NewButton(T("create_a_new_team"), func() {
 
 		// Club Selection
-		pageTitle := setTitle("Create new team: select a club", 32)
+		pageTitle := setTitle(T("create_a_new_team_select_a_club"), 32)
 
 		// clubSelectionPage
-		clubSelectionPageButton := widget.NewButton("Select a club", func() {
-			pageTitle := setTitle("Create new team: select a club", 32)
+		clubSelectionPageButton := widget.NewButton(T("select_a_club"), func() {
+			pageTitle := setTitle(T("create_a_new_team_select_a_club"), 32)
 			listOfClubs := []fyne.CanvasObject{}
 
 			for _, club := range db.Clubs {
 				clubButton := widget.NewButton(club.Name, func() {
 					// After club selection
-					clubLabel := widget.NewLabel(fmt.Sprintf("You are going to create a team for %v\n", club.Name))
+					clubLabel := widget.NewLabel(fmt.Sprintf(T("you_are_going_to_create_a_team_for"), club.Name))
 
 					// We can now create the team
 					nameEntry := widget.NewEntry()
-					entryHolder := "Enter your team name here..."
+					entryHolder := T("enter_your_team_name_here")
 					nameEntry.SetPlaceHolder(entryHolder)
 
-					validatationButton := widget.NewButton("Create", func() {
+					validatationButton := widget.NewButton(T("create"), func() {
 						name := nameEntry.Text
 
 						// If team name already exists, do not create the team
 						for _, value := range db.Teams {
 							if value.Name == name {
-								err := fmt.Errorf("team %v already exists in %v", name, club.Name)
+								err := fmt.Errorf(T("team_already_exists_in"), name, club.Name)
 								dialog.ShowError(err, w)
 								// Reinit the text
 								nameEntry.SetText("")
@@ -261,9 +262,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 								return
 							} else {
 								// team creation + link to club success
-								successMsg := fmt.Sprintf("Team %v has been successfully created\n", name)
+								successMsg := fmt.Sprintf(T("team_has_been_successfully_created"), name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -275,7 +276,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 					})
 					// Create a team in this club page
-					pageTitle := setTitle("Create new team", 32)
+					pageTitle := setTitle(T("create_new_team"), 32)
 					w.SetContent(container.NewVBox(
 						pageTitle,
 						clubLabel,
@@ -301,12 +302,12 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	})
 	// Club
-	clubButton := widget.NewButton("Create a new club", func() {
+	clubButton := widget.NewButton(T("create_a_new_club"), func() {
 		nameEntry := widget.NewEntry()
-		entryHolder := "Enter your club name here..."
+		entryHolder := T("enter_your_club_name_here")
 		nameEntry.SetPlaceHolder(entryHolder)
 
-		validatationButton := widget.NewButton("Create", func() {
+		validatationButton := widget.NewButton(T("create"), func() {
 			name := nameEntry.Text
 			_, err := mf.NewClub(name, db)
 
@@ -314,9 +315,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				dialog.ShowError(err, w)
 				return
 			} else {
-				successMsg := fmt.Sprintf("Club %v has been successfully created\n", name)
+				successMsg := fmt.Sprintf(T("club_has_been_successfully_created"), name)
 				fmt.Println(successMsg)
-				dialog.ShowInformation("Succes", successMsg, w)
+				dialog.ShowInformation(T("success"), successMsg, w)
 
 				// Set the flag to true to indicate that the database has changed
 				HasChanged = true
@@ -327,7 +328,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			}
 		})
 		// Create a club page
-		pageTitle := setTitle("Create new club", 32)
+		pageTitle := setTitle(T("create_new_club"), 32)
 		w.SetContent(container.NewVBox(
 			pageTitle,
 			nameEntry,
@@ -341,7 +342,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// If there is no club, a club must first be created
 
 	if len(db.Clubs) < 1 {
-		label := widget.NewLabel("You currently have 0 club available, please create a club first.")
+		label := widget.NewLabel(T("you_currently_have_0_club_available_please_create"))
 
 		createPage := container.NewVBox(
 			pageTitle,

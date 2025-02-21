@@ -6,11 +6,10 @@ import (
 	"regexp"
 )
 
-const DefaultMaterial = "Unknown"
-
 // DefaultPlayerMaterial returns a slice of strings representing the default material for a player.
 func DefaultPlayerMaterial() []string {
-	return []string{DefaultMaterial, DefaultMaterial, DefaultMaterial}
+	defaultMaterial := ""
+	return []string{defaultMaterial, defaultMaterial, defaultMaterial}
 }
 
 // GetName returns the name of the given entity (Player, Team, or Club).

@@ -24,22 +24,24 @@ func StarterPage() fyne.App {
 
 	mainWindow := a.NewWindow("TT Companion")
 	mainWindow.Resize(fyne.NewSize(600, 400))
+	mainWindow.CenterOnScreen() // Center the window on the monitor
 
-	// Center the window on the monitor
-	mainWindow.CenterOnScreen()
+	// Know if light mode is activated or not
+	loadTheme(a)
 
-	// Welcome page
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	welcomeText := canvas.NewText("Welcome to TT Companion", themeColor)
-	welcomeText.Alignment = fyne.TextAlignCenter
-	welcomeText.TextSize = 32
-	welcomePage := container.NewCenter(welcomeText)
+	// Set language
+	loadLanguage("en")
+
+	// Starter page
+	pageTitle := setTitle(T("welcome_to_tt_companion"), 32)
+	starterPage := container.NewCenter(pageTitle)
 
 	// Fade
 	go func() {
 		time.Sleep(1 * time.Second)
 		if appStartOption == "local" {
-			fadeText(welcomeText, themeColor)
+			themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+			fadeText(pageTitle, themeColor)
 			// go to main page with delay so that the menu is not directly shown
 			log.Println("Transitioning to identification page")
 			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
@@ -52,7 +54,7 @@ func StarterPage() fyne.App {
 
 	}()
 	log.Println("Displaying welcome page")
-	mainWindow.SetContent(welcomePage)
+	mainWindow.SetContent(starterPage)
 	mainWindow.SetMainMenu(nil)
 	mainWindow.ShowAndRun()
 	return a

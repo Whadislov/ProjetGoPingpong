@@ -18,17 +18,17 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 	var textP string
 
 	if len(team.ClubID) == 0 {
-		textC = "This team has no club."
+		textC = T("team_0_club")
 	} else {
 		clubs := []string{}
 		for _, club := range team.ClubID {
 			clubs = append(clubs, club)
 		}
-		textC = fmt.Sprintln("Club:		" + strHelper(clubs))
+		textC = strHelper(clubs)
 	}
 
 	if len(team.PlayerIDs) == 0 {
-		textP = "This team has no player.\n"
+		textP = T("team_0_player")
 	} else {
 		// Sort players alphabetically
 		players := []string{}
@@ -38,25 +38,28 @@ func TeamInfos(team *mt.Team) *fyne.Container {
 		slices.Sort(players)
 
 		// string that contains player names to display
-		textP = "Players:	"
 		for _, player := range players {
 			textP += fmt.Sprintln(player)
-			textP += "		"
 		}
 	}
-	text := textC + textP
-	text = text[:len(text)-1] // remove the last \n
+	textP = textP[:len(textP)-1] // remove the last \n
 
-	item := container.NewVBox(
-		widget.NewLabel(text),
-	)
+	clubsLabel1 := widget.NewLabel(T("club") + ":")
+	clubsLabel2 := widget.NewLabel(textC)
+	clubsContent := container.NewGridWithColumns(2, clubsLabel1, clubsLabel2)
 
-	return item
+	playersLabel1 := widget.NewLabel(T("players") + ":")
+	playersLabel2 := widget.NewLabel(textP)
+	playersContent := container.NewGridWithColumns(2, playersLabel1, playersLabel2)
+
+	teamInfosContent := container.NewVBox(clubsContent, playersContent)
+
+	return teamInfosContent
 }
 
 // TeamPage sets up the page for displaying team info.
 func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Teams", 32)
+	pageTitle := setTitle(T("teams"), 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
@@ -69,7 +72,7 @@ func TeamPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		ac.Append(item)
 	}
 
-	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+	returnToDatabasePageButton := widget.NewButton(T("return_to_database"), func() {
 		databasePage := DatabasePage(db, w, a)
 		w.SetContent(databasePage)
 	})

@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -14,9 +15,9 @@ import (
 )
 
 func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Edit player information", 32)
+	pageTitle := setTitle(T("edit_player_information"), 32)
 
-	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
+	returnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
 	// When the player is not yet selected, display nothing
 	rightContent := container.NewVBox()
@@ -44,13 +45,13 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 }
 
 func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Edit player information", 32)
+	pageTitle := setTitle(T("edit_player_information"), 32)
 
-	returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() { w.SetContent(FunctionalityPage(db, w, a)) })
+	returnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() { w.SetContent(FunctionalityPage(db, w, a)) })
 
-	cancelButton := widget.NewButton("Cancel", func() { AddInfoToPlayerPage(db, w, a) })
+	cancelButton := widget.NewButton(T("cancel"), func() { AddInfoToPlayerPage(db, w, a) })
 
-	playerLabel := widget.NewLabel(fmt.Sprintf("You have selected %v %v.", p.Firstname, p.Lastname))
+	playerLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v %v.", p.Firstname, p.Lastname))
 
 	// Here are optional informations that can be added to the player
 	ageEntry := widget.NewEntry()
@@ -79,14 +80,14 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 	var isBackhandModified bool
 	var isBladeModified bool
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		// Check player age
 		if ageEntry.Text != "" {
 			a, errAge := strconv.Atoi(ageEntry.Text)
 			if errAge != nil {
 				// Check if the age is a number
 				if !IsNumbersOnly(ageEntry.Text) {
-					dialog.ShowError(fmt.Errorf("age must be a number"), w)
+					dialog.ShowError(errors.New(T("err_age_must_be_number")), w)
 					return
 				} else {
 					dialog.ShowError(errAge, w)
@@ -106,7 +107,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 			if errRanking != nil {
 				// Check if the ranking is a number
 				if !IsNumbersOnly(rankingEntry.Text) {
-					dialog.ShowError(fmt.Errorf("ranking must be a number"), w)
+					dialog.ShowError(errors.New(T("err_ranking_must_be_number")), w)
 					return
 				} else {
 					dialog.ShowError(errRanking, w)
@@ -137,10 +138,10 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		// Has something changed ?
 		if isAgeModified || isRankingModified || isForehandModified || isBackhandModified || isBladeModified {
 			HasChanged = true
-			dialog.ShowInformation("Succes", fmt.Sprintf("%v %v has been modified", p.Firstname, p.Lastname), w)
+			dialog.ShowInformation(T("success"), fmt.Sprintf("%v %v "+T("has_been_modified"), p.Firstname, p.Lastname), w)
 			AddInfoToPlayerPage(db, w, a)
 		} else {
-			dialog.ShowInformation("Information", fmt.Sprintf("%v %v has not been modified", p.Firstname, p.Lastname), w)
+			dialog.ShowInformation(T("information"), fmt.Sprintf("%v %v "+T("has_not_been_modified"), p.Firstname, p.Lastname), w)
 		}
 
 	})
@@ -157,11 +158,11 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 	leftContent := container.NewVBox(playerButtons...)
 
 	formLayout := container.New(layout.NewFormLayout(),
-		widget.NewLabel("Age:"), ageEntry,
-		widget.NewLabel("Ranking:"), rankingEntry,
-		widget.NewLabel("Forehand:"), forehandEntry,
-		widget.NewLabel("Backhand:"), backhandEntry,
-		widget.NewLabel("Blade:"), bladeEntry,
+		widget.NewLabel(T("age")+":"), ageEntry,
+		widget.NewLabel(T("ranking")+":"), rankingEntry,
+		widget.NewLabel(T("forehand")+":"), forehandEntry,
+		widget.NewLabel(T("backhand")+":"), backhandEntry,
+		widget.NewLabel(T("blade")+":"), bladeEntry,
 	)
 
 	rightContent := container.NewVBox(

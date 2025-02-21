@@ -16,7 +16,7 @@ func Quit(db *mt.Database, w fyne.Window, a fyne.App, HasChanged bool) {
 	// Check for unsaved changes before quitting
 
 	if HasChanged {
-		dialog.ShowConfirm("Unsaved Changes", "You have unsaved changes. Do you want to save them before quitting?", func(confirm bool) {
+		dialog.ShowConfirm(T("unsaved_changes"), T("save_before_quit"), func(confirm bool) {
 			if confirm {
 				if appStartOption == "local" {
 					err := mdb.SaveDB(db)

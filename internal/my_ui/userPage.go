@@ -1,7 +1,7 @@
 package myapp
 
 import (
-	"fmt"
+	"errors"
 
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
@@ -17,16 +17,17 @@ import (
 
 // UserPage sets up the page for displaying user info.
 func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Your informations", 32)
+	//pageTitle := setTitle("Your informations", 32)
+	pageTitle := setTitle(T("your_informations"), 32)
 	if HasChanged {
-		pageTitle = setTitle("Your informations* (in edition)", 32)
+		pageTitle = setTitle(T("your_informations_in_edition"), 32)
 	} else {
 		// Display the correct user info after modifications even before saving
 		currentUsername = user.Name
 		currentEmail = user.Email
 	}
 
-	usernameLabel1 := widget.NewLabel("👤 Username:")
+	usernameLabel1 := widget.NewLabel(T("username") + ":")
 	usernameLabel2 := widget.NewLabel(currentUsername)
 	usernameContent := container.NewGridWithColumns(2, usernameLabel1, usernameLabel2)
 
@@ -34,32 +35,32 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	emailLabel2 := widget.NewLabel(currentEmail)
 	emailContent := container.NewGridWithColumns(2, emailLabel1, emailLabel2)
 
-	passwordLabel := widget.NewLabel("🔒 Password:")
+	passwordLabel := widget.NewLabel(T("password") + ":")
 
-	createdAtLabel1 := widget.NewLabel("📅 User since(yyyy-mm-dd): ")
+	createdAtLabel1 := widget.NewLabel(T("user_since") + ":")
 	// Example format: 2025-02-03T09:58:59Z
 	// [:10] -> only show the date and not the hours
 	readableCreatedAt := user.CreatedAt[:10]
 	createdAtLabel2 := widget.NewLabel(readableCreatedAt)
 	createdAtContent := container.NewGridWithColumns(2, createdAtLabel1, createdAtLabel2)
 
-	changeUsernameButton := widget.NewButton("Edit username", func() {
+	changeUsernameButton := widget.NewButton(T("edit_username"), func() {
 		ChangeUsernamePage(user, db, w, a)
 	})
 
-	changeEmailButton := widget.NewButton("Edit email", func() {
+	changeEmailButton := widget.NewButton(T("edit_email"), func() {
 		ChangeEmailPage(user, db, w, a)
 	})
 
-	changePasswordButton := widget.NewButton("Edit password", func() {
+	changePasswordButton := widget.NewButton(T("edit_password"), func() {
 		ChangePasswordPage(user, db, w, a)
 	})
 
 	passwordContent := container.NewGridWithColumns(2, passwordLabel)
 
-	saveChangesButton := widget.NewButton("Save changes", func() {
+	saveChangesButton := widget.NewButton(T("save_changes"), func() {
 		if !HasChanged {
-			dialog.ShowInformation("Information", "There is nothing new to save", w)
+			dialog.ShowInformation(T("information"), T("there_is_nothing_new_to_save"), w)
 			return
 		} else {
 			var err error
@@ -72,16 +73,16 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 			if err != nil {
 				dialog.ShowError(err, w)
 			} else {
-				dialog.ShowInformation("Success", "Changes successfully saved", w)
+				dialog.ShowInformation(T("success"), T("changes_saved"), w)
 				HasChanged = false
 			}
 			UserPage(user, db, w, a)
 		}
 	})
 
-	returnToMainPageButton := widget.NewButton("Return to main page", func() {
+	returnToMainPageButton := widget.NewButton(T("return_to_main_page"), func() {
 		if HasChanged {
-			dialog.ShowConfirm("Unsaved Changes", "You have unsaved changes. Do you want to save them before returning to the main page?", func(confirm bool) {
+			dialog.ShowConfirm(T("unsaved_changes"), T("you_have_unsaved_changes_alt"), func(confirm bool) {
 				if confirm {
 					if appStartOption == "local" {
 						err := mdb.SaveDB(db)
@@ -121,19 +122,19 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 // ChangeUsernamePage sets up the page to change user's username.
 func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Editing 👤 username", 32)
+	pageTitle := setTitle(T("editing_username"), 32)
 
-	usernameLabel := widget.NewLabel("Your current username: " + user.Name)
+	usernameLabel := widget.NewLabel(T("current_username") + user.Name)
 	editUsernameEntry := widget.NewEntry()
-	editUsernameEntry.SetPlaceHolder("Enter your new username")
+	editUsernameEntry.SetPlaceHolder(T("enter_new_username"))
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		err := mf.ChangeUsername(user.Name, editUsernameEntry.Text, db)
 		if err != nil {
 			dialog.ShowError(err, w)
-			editUsernameEntry.SetPlaceHolder("Enter your new username")
+			editUsernameEntry.SetPlaceHolder(T("enter_new_username"))
 		} else {
-			dialog.ShowInformation("Success", "Username successfully changed", w)
+			dialog.ShowInformation(T("success"), T("username_successfully_changed"), w)
 			HasChanged = true
 			currentUsername = editUsernameEntry.Text
 			UserPage(user, db, w, a)
@@ -141,7 +142,7 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		UserPage(user, db, w, a)
 	})
 
@@ -158,19 +159,19 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 // ChangeEmailPage sets up the page to change user's email.
 func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Editing ✉️ email", 32)
+	pageTitle := setTitle(T("editing_email"), 32)
 
-	emailLabel := widget.NewLabel("Your current email: " + user.Email)
+	emailLabel := widget.NewLabel(T("current_email") + user.Email)
 	editEmailEntry := widget.NewEntry()
-	editEmailEntry.SetPlaceHolder("Enter your new email. Example: abc@def.com")
+	editEmailEntry.SetPlaceHolder(T("enter_new_email"))
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		err := mf.ChangeEmail(editEmailEntry.Text, user)
 		if err != nil {
 			dialog.ShowError(err, w)
-			editEmailEntry.SetPlaceHolder("Enter your new email. Example: abc@def.com")
+			editEmailEntry.SetPlaceHolder(T("enter_new_email"))
 		} else {
-			dialog.ShowInformation("Success", "Email successfully changed", w)
+			dialog.ShowInformation(T("success"), T("email_successfully_changed"), w)
 			HasChanged = true
 			currentEmail = editEmailEntry.Text
 			UserPage(user, db, w, a)
@@ -178,7 +179,7 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		UserPage(user, db, w, a)
 	})
 
@@ -195,26 +196,26 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 // ChangePasswordPage sets up the page to change user's email.
 func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle("Editing 🔒 password", 32)
+	pageTitle := setTitle(T("editing_password"), 32)
 
-	passwordLabel := widget.NewLabel("Enter your current password")
+	passwordLabel := widget.NewLabel(T("enter_current_password"))
 
 	currentPasswordEntry := widget.NewPasswordEntry()
 	editPasswordEntry := widget.NewPasswordEntry()
 	confirmEditPasswordEntry := widget.NewPasswordEntry()
-	editPasswordLabel := widget.NewLabel("Enter your new password")
-	confirmEditPasswordLabel := widget.NewLabel("Confirm your new password")
+	editPasswordLabel := widget.NewLabel(T("enter_new_password"))
+	confirmEditPasswordLabel := widget.NewLabel(T("confirm_your_new_password"))
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(currentPasswordEntry.Text))
 		if err != nil {
 			// Password is wrong
-			dialog.ShowError(fmt.Errorf("wrong password"), w)
+			dialog.ShowError(errors.New(T("wrong_password")), w)
 			currentPasswordEntry.SetText("")
 			editPasswordEntry.SetText("")
 			confirmEditPasswordEntry.SetText("")
 		} else if editPasswordEntry.Text != confirmEditPasswordEntry.Text {
-			dialog.ShowError(fmt.Errorf("new passwords do not match"), w)
+			dialog.ShowError(errors.New(T("new_passwords_do_not_match")), w)
 			currentPasswordEntry.SetText("")
 			editPasswordEntry.SetText("")
 			confirmEditPasswordEntry.SetText("")
@@ -226,14 +227,14 @@ func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 				editPasswordEntry.SetText("")
 				confirmEditPasswordEntry.SetText("")
 			} else {
-				dialog.ShowInformation("Success", "Password successfully changed", w)
+				dialog.ShowInformation(T("success"), T("password_successfully_changed"), w)
 				HasChanged = true
 				UserPage(user, db, w, a)
 			}
 		}
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		UserPage(user, db, w, a)
 	})
 

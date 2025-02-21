@@ -20,13 +20,13 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// Rebuild UI on modifications
 	rebuildUI = func() {
 
-		pageTitle := setTitle("Delete", 32)
+		pageTitle := setTitle(T("delete"), 32)
 
-		pLabel := widget.NewLabel("Players")
-		tLabel := widget.NewLabel("Teams")
-		cLabel := widget.NewLabel("Clubs")
+		pLabel := widget.NewLabel(T("players"))
+		tLabel := widget.NewLabel(T("teams"))
+		cLabel := widget.NewLabel(T("clubs"))
 
-		returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
+		returnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 			fonctionalityPage := FunctionalityPage(db, w, a)
 			w.SetContent(fonctionalityPage)
 		})
@@ -47,7 +47,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				fmt.Sprintf("%v %v", p.Firstname, p.Lastname),
 				container.NewVBox(
 					PlayerInfos(p),
-					widget.NewButton("Delete", func() {
+					widget.NewButton(T("delete"), func() {
 						ShowConfirmationDialog(w, fmt.Sprintf("Delete player %v %v?", p.Firstname, p.Lastname), func() {
 							err := mf.DeletePlayer(p, db)
 							if err != nil {
@@ -55,7 +55,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v %v has been successfully deleted\n", p.Firstname, p.Lastname)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -81,7 +81,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				t.Name,
 				container.NewVBox(
 					TeamInfos(t),
-					widget.NewButton("Delete", func() {
+					widget.NewButton(T("delete"), func() {
 						ShowConfirmationDialog(w, fmt.Sprintf("Delete team %v?", t.Name), func() {
 							err := mf.DeleteTeam(t, db)
 							if err != nil {
@@ -89,7 +89,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v has been successfully deleted\n", t.Name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -115,7 +115,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				c.Name,
 				container.NewVBox(
 					ClubInfos(c),
-					widget.NewButton("Delete", func() {
+					widget.NewButton(T("delete"), func() {
 						teamNames := ""
 						for _, teamName := range c.TeamIDs {
 							teamNames += teamName + ", "
@@ -145,7 +145,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v has been successfully deleted\n", c.Name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
