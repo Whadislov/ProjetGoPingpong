@@ -156,6 +156,7 @@ func loadLanguage(lang string) {
 
 	b.LoadMessageFile("locales/en.json")
 	b.LoadMessageFile("locales/fr.json")
+	b.LoadMessageFile("locales/de.json")
 
 	localizer = i18n.NewLocalizer(b, lang)
 }

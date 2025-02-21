@@ -106,7 +106,7 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	pageTitle := setTitle("Remove: select a club", 32)
 
 	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
-	cLabel := widget.NewLabel("Club current selection 🏠")
+	cLabel := widget.NewLabel(T("club_current_selection_house_emoji"))
 
 	// User can click on the selected player to return to the list of player
 	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
@@ -124,7 +124,7 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	}
 
 	// Now select a club
-	selectClubButton := widget.NewButton("Select a club", func() {
+	selectClubButton := widget.NewButton(T("select_a_club"), func() {
 		w.SetContent(selectClubPageCfromP(player, db, w, a))
 	})
 
@@ -150,11 +150,11 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Remove: select a club", 32)
 
-	returnToClubSelectionPageCfromPButton := widget.NewButton("Return to club selection", func() {
+	returnToClubSelectionPageCfromPButton := widget.NewButton(T("return_to_club_selection"), func() {
 		w.SetContent(selectedPlayerPageCfromP(player, db, w, a))
 	})
 
-	cLabel := widget.NewLabel("Clubs 🏠")
+	cLabel := widget.NewLabel(T("clubs_house_emoji"))
 	clubButtons := []fyne.CanvasObject{}
 	selectedClub := make(map[uuid.UUID]*mt.Club)
 
@@ -224,7 +224,7 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UU
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	})
 
-	cLabel := widget.NewLabel("Clubs 🏠")
+	cLabel := widget.NewLabel(T("clubs_house_emoji"))
 	clubButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of clubs" for a better button display
@@ -246,7 +246,7 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UU
 	}
 
 	if len(clubButtons) == 0 {
-		dialog.ShowInformation(T("information"), "There is no more club to add", w)
+		dialog.ShowInformation(T("information"), T("there_is_no_more_club_to_add"), w)
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	}
 
@@ -308,7 +308,7 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Cl
 	}
 
 	// Add another club in the club selection
-	addAnotherclubButton := widget.NewButton("Add another club", func() {
+	addAnotherclubButton := widget.NewButton(T("add_another_club"), func() {
 		w.SetContent(addAnotherclubPageCfromP(player, selectedClub, db, w, a))
 	})
 

@@ -4,7 +4,9 @@ import (
 	"log"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
@@ -18,7 +20,12 @@ func MainMenu(db *mt.Database, w fyne.Window, a fyne.App) *fyne.MainMenu {
 
 	menu1Item1 := fyne.NewMenuItem(T("main_page"), func() { w.SetContent(mainPage) })
 	menu1Item2 := fyne.NewMenuItem(T("my_profile"), func() { UserPage(userOfSession, db, w, a) })
-	menu1Item3 := fyne.NewMenuItem(T("options"), func() { w.SetContent(OptionPage(db, w, a)) })
+	menu1Item3 := fyne.NewMenuItem(T("options"), func() {
+		returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
+			w.SetContent(MainPage(db, w, a))
+		})
+		w.SetContent(container.NewVBox(OptionPage(db, w, a), returnToMainMenuButton))
+	})
 	menu1Item4 := fyne.NewMenuItem(T("save_changes"), func() {
 		if !HasChanged {
 			dialog.ShowInformation(T("information"), T("there_is_nothing_new_to_save"), w)
