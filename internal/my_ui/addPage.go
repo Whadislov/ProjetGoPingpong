@@ -12,12 +12,12 @@ import (
 func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	pageTitle := setTitle(T("add"), 32)
 
-	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
+	ReturnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
 
-	addTtoPButton := widget.NewButton("Add team(s) to a player", func() {
+	addTtoPButton := widget.NewButton(T("add_team_to_a_player"), func() {
 		w.SetContent(
 			currentSelectionPageTtoP(
 				SelectionPageTtoP(db, w, a),
@@ -27,7 +27,7 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		)
 	})
 
-	addPtoTButton := widget.NewButton("Add player(s) to a team", func() {
+	addPtoTButton := widget.NewButton(T("add_player_to_a_team"), func() {
 		w.SetContent(
 			currentSelectionPagePtoT(
 				SelectionPagePtoT(db, w, a),
@@ -38,7 +38,7 @@ func AddPage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	})
 
-	addCtoPButton := widget.NewButton("Add club(s) to a player", func() {
+	addCtoPButton := widget.NewButton(T("add_club_to_a_player"), func() {
 		w.SetContent(
 			currentSelectionPagePtoT(
 				SelectionPageCtoP(db, w, a),

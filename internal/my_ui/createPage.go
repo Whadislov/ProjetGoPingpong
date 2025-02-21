@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -18,7 +19,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	pageTitle := setTitle(T("create"), 32)
 
-	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
+	ReturnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
@@ -102,7 +103,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							if errAge != nil {
 								// Check if the age is a number
 								if !IsNumbersOnly(ageEntry.Text) {
-									dialog.ShowError(fmt.Errorf("age must be a number"), w)
+									dialog.ShowError(errors.New(T("err_age_must_be_number")), w)
 									return
 								} else {
 									dialog.ShowError(errAge, w)
@@ -119,7 +120,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							if errRanking != nil {
 								// Check if the ranking is a number
 								if !IsNumbersOnly(rankingEntry.Text) {
-									dialog.ShowError(fmt.Errorf("ranking must be a number"), w)
+									dialog.ShowError(errors.New(T("err_ranking_must_be_number")), w)
 									return
 								} else {
 									dialog.ShowError(errRanking, w)
@@ -164,7 +165,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							// Player creation + link to club success
 							successMsg := fmt.Sprintf("Player %v %v has been successfully created\n", firstname, lastname)
 							fmt.Println(successMsg)
-							dialog.ShowInformation("Succes", successMsg, w)
+							dialog.ShowInformation(T("success"), successMsg, w)
 
 							// Set the flag to true to indicate that the database has changed
 							HasChanged = true
@@ -263,7 +264,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 								// team creation + link to club success
 								successMsg := fmt.Sprintf("Team %v has been successfully created\n", name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -316,7 +317,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			} else {
 				successMsg := fmt.Sprintf("Club %v has been successfully created\n", name)
 				fmt.Println(successMsg)
-				dialog.ShowInformation("Succes", successMsg, w)
+				dialog.ShowInformation(T("success"), successMsg, w)
 
 				// Set the flag to true to indicate that the database has changed
 				HasChanged = true

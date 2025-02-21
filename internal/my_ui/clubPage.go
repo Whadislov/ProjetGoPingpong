@@ -39,7 +39,7 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	}
 
 	if len(club.TeamIDs) == 0 {
-		tCanvasObjet = widget.NewLabel("There is currently 0 team in this club")
+		tCanvasObjet = widget.NewLabel(T("currently_0_team_available"))
 	} else {
 
 		// Sort teams alphabetically

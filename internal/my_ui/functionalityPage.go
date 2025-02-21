@@ -12,7 +12,7 @@ import (
 func FunctionalityPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle(T("functionalities"), 32)
 
-	returnToMainMenuButton := widget.NewButton("Return main page", func() {
+	returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
 		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
 	})

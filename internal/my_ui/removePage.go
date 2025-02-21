@@ -13,12 +13,12 @@ func RemovePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	pageTitle := setTitle(T("remove"), 32)
 
-	ReturnToFonctionalityPageButton := widget.NewButton("Return to the functionalities", func() {
+	ReturnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
 		w.SetContent(fonctionalityPage)
 	})
 
-	removeTfromPButton := widget.NewButton("Remove team(s) from a player", func() {
+	removeTfromPButton := widget.NewButton(T("remove_team_from_a_player"), func() {
 		w.SetContent(
 			currentSelectionPageTfromP(
 				SelectionPageTfromP(db, w, a),
@@ -28,7 +28,7 @@ func RemovePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		)
 	})
 
-	removePfromTButton := widget.NewButton("Remove player(s) from a team", func() {
+	removePfromTButton := widget.NewButton(T("remove_player_from_a_team"), func() {
 		w.SetContent(
 			currentSelectionPagePfromT(
 				SelectionPagePfromT(db, w, a),
@@ -39,7 +39,7 @@ func RemovePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
 	})
 
-	removeCfromPButton := widget.NewButton("Remove club(s) from a player", func() {
+	removeCfromPButton := widget.NewButton(T("remove_club_from_a_player"), func() {
 		w.SetContent(
 			currentSelectionPagePfromT(
 				SelectionPageCfromP(db, w, a),

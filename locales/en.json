@@ -266,29 +266,26 @@
     "return_to_database": {
         "other": "Return to database"
     },
-    "players_with_space": {
+    "players_with_dd": {
         "other": "Players:  "
     },
-    "club_with_space": {
-        "other": "Club:     "
+    "club": {
+        "other": "Club"
     },
-    "clubs_with_space": {
-        "other": "Clubs:          "
+    "club_with_dd": {
+        "other": "Clubs: "
     },
-    "teams_with_space": {
-        "other": "Teams:         "
+    "firstname": {
+        "other": "Firstname"
     },
-    "firstname_with_space": {
-        "other": "Firstname:    "
+    "lastname": {
+        "other": "Lastname"
     },
-    "lastname_with_space": {
-        "other": "Lastname:         "
+    "age": {
+        "other": "Age"
     },
-    "age_with_space": {
-        "other": "Age:              "
-    },
-    "ranking_with_space": {
-        "other": "Ranking:      "
+    "ranking": {
+        "other": "Ranking"
     },
     "forehand": {
         "other": "Forehand"
@@ -322,5 +319,131 @@
     },
     "main_menu": {
         "other": "Main menu"
+    },
+    "return_to_remove_menu": {
+        "other": "Return to remove menu"
+    },
+    "remove_select_a_player": {
+        "other": "Remove: select a player"
+    },
+    "select_a_player": {
+        "other": "Select a player"
+    },
+    "players_with_racket_emoji": {
+        "other": "Players 🏓"
+    },
+    "remove_select_a_team": {
+        "other": "Remove: select a team"
+    },
+    "you_have_selected": {
+        "other": "You have selected"
+    },
+    "team_current_selection_emoji": {
+        "other": "Team current selection 🤝"
+    },
+    "has_no_team": {
+        "other": "has no team"
+    },
+    "select_a_team": {
+        "other": "Select a team"
+    },
+    "return_to_team_selection": {
+        "other": "Return to team selection"
+    },
+    "team_with_hands_emoji": {
+        "other": "Teams 🤝"
+    },
+    "currently_0_team_available": {
+        "other": "There is currently 0 team available"
+    },
+    "there_is_no_more_team_to_add": {
+        "other": "There is no more team to add"
+    },
+    "remove_confirm_selection": {
+        "other": "Remove: confirm selection"
+    },
+    "no_longer_plays_in_team": {
+        "other": "no longer plays in team(s)"
+    },
+    "add_another_team": {
+        "other": "Add another team"
+    },
+    "player_current_selection_emoji": {
+        "other": "Player current selection 🏓"
+    },
+    "is_empty": {
+        "other": "is empty"
+    },
+    "return_to_player_selection": {
+        "other": "Return to player selection"
+    },
+    "currently_0_player_available": {
+        "other": "There is currently 0 player available"
+    },
+    "there_is_no_more_player_to_add": {
+        "other": "There is no more player to add"
+    },
+    "are_no_longer_playing_in": {
+        "other": "are no longer playing in"
+    },
+    "is_no_longer_playing_in": {
+        "other": "is no longer playing in"
+    },
+    "add_another_player": {
+        "other": "Add another player"
+    },
+    "return_to_functionalities": {
+        "other": "Return to functionalities"
+    },
+    "remove_team_from_a_player": {
+        "other": "Remove team(s) from a player"
+    },
+    "remove_player_from_a_team": {
+        "other": "Remove player(s) from a team"
+    },
+    "remove_club_from_a_player": {
+        "other": "Remove club(s) from a player"
+    },
+    "change_theme_color": {
+        "other": "Change theme color"
+    },
+    "change_language": {
+        "other": "Change language"
+    },
+    "your_players": {
+        "other": "Your players"
+    },
+    "your_teams": {
+        "other": "Your teams"
+    },
+    "your_clubs": {
+        "other": "Your clubs"
+    },
+    "add_team_to_a_player": {
+        "other": "Add team(s) to a player"
+    },
+    "add_player_to_a_team": {
+        "other": "Add player(s) to a team"
+    },
+    "add_club_to_a_player": {
+        "other": "Add club(s) to a player"
+    },
+    "err_age_must_be_number": {
+        "other": "age must be a number"
+    },
+    "err_ranking_must_be_number": {
+        "other": "ranking must be a number"
+    },
+    "has_been_modified": {
+        "other": "has been modified"
+    },
+    "has_not_been_modified": {
+        "other": "has not been modified"
+    },
+    "your_clubs": {
+        "other": "Your clubs"
+    },
+    "your_clubs": {
+        "other": "Your clubs"
     }
 }

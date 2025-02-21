@@ -26,7 +26,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		tLabel := widget.NewLabel(T("teams"))
 		cLabel := widget.NewLabel(T("clubs"))
 
-		returnToFonctionalityPageButton := widget.NewButton("Return to functionalities", func() {
+		returnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 			fonctionalityPage := FunctionalityPage(db, w, a)
 			w.SetContent(fonctionalityPage)
 		})
@@ -55,7 +55,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v %v has been successfully deleted\n", p.Firstname, p.Lastname)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -89,7 +89,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v has been successfully deleted\n", t.Name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true
@@ -145,7 +145,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							} else {
 								successMsg := fmt.Sprintf("%v has been successfully deleted\n", c.Name)
 								fmt.Println(successMsg)
-								dialog.ShowInformation("Succes", successMsg, w)
+								dialog.ShowInformation(T("success"), successMsg, w)
 
 								// Set the flag to true to indicate that the database has changed
 								HasChanged = true

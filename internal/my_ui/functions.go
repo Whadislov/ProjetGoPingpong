@@ -70,7 +70,7 @@ func SortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
 
 // Create a confirmation dialog
 func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
-	d := dialog.NewConfirm("Confirm deletion", message, func(confirm bool) {
+	d := dialog.NewConfirm(T("confirm"), message, func(confirm bool) {
 		if confirm {
 			onConfirm()
 		}

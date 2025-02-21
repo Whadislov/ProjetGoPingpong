@@ -8,11 +8,11 @@ import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
-// DatabasePage sets up the page for showing players, teams, and clubs.
+// OptionPage sets up the page in which the user can change the theme color, the language
 func OptionPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Options", 32)
+	pageTitle := setTitle(T("options"), 32)
 
-	themeButton := widget.NewButton("Change theme color", func() {
+	themeButton := widget.NewButton(T("change_theme_color"), func() {
 		returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
 			w.SetContent(MainPage(db, w, a))
 		})
@@ -30,7 +30,7 @@ func OptionPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		}
 	})
 
-	changeLanguageButton := widget.NewButton("Change language", func() { w.SetContent(ChangeLanguagePage(db, w, a)) })
+	changeLanguageButton := widget.NewButton(T("change_language"), func() { w.SetContent(ChangeLanguagePage(db, w, a)) })
 
 	optionPage := container.NewVBox(
 		pageTitle,

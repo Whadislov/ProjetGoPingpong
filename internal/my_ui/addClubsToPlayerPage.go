@@ -44,7 +44,7 @@ func SelectionPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contain
 
 	pageTitle := setTitle("Add: select a player", 32)
 
-	playerSelectionPageCtoPButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageCtoP(db, w, a)) })
+	playerSelectionPageCtoPButton := widget.NewButton(T("select_a_player"), func() { w.SetContent(selectPlayerPageCtoP(db, w, a)) })
 	content := container.NewVBox(
 		pageTitle,
 		playerSelectionPageCtoPButton)
@@ -64,7 +64,7 @@ func selectPlayerPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 		)
 	})
 
-	pLabel := widget.NewLabel("Players 🏓")
+	pLabel := widget.NewLabel(T("players_with_racket_emoji"))
 	playerButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of players" for a better button display
@@ -88,7 +88,7 @@ func selectPlayerPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 // selectedPlayerPageCtoP sets up the page for a selected player and allows club selection.
 func selectedPlayerPageCtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
+	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 	cLabel := widget.NewLabel("Club current selection 🏠")
 
 	// User can click on the selected player to return to the list of player
@@ -255,7 +255,7 @@ func selectedClubPageCtoP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club
 		AddPage(db, w, a)
 	})
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
+	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 
 	// "Sort the map of selectedClub" for a better button display
 	sortedselectedClub := SortMap(selectedClub)
@@ -275,7 +275,7 @@ func selectedClubPageCtoP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club
 
 		successMsg := fmt.Sprintf("Player %v now plays in club(s) %v", fmt.Sprintf("%v %v", player.Firstname, player.Lastname), strHelper(clubNames))
 		fmt.Println(successMsg)
-		dialog.ShowInformation("Succes", successMsg, w)
+		dialog.ShowInformation(T("success"), successMsg, w)
 
 		// Set the flag to true to indicate that the database has changed
 		HasChanged = true
