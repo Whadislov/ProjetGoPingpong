@@ -75,7 +75,7 @@ func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, club := range sortedClubs {
 		item := widget.NewAccordionItem(club.Value.Name,

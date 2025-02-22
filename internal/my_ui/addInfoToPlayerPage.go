@@ -22,7 +22,7 @@ func AddInfoToPlayerPage(db *mt.Database, w fyne.Window, a fyne.App) {
 	// When the player is not yet selected, display nothing
 	rightContent := container.NewVBox()
 
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := sortMap(db.Players)
 	playerButtons := []fyne.CanvasObject{}
 
 	for _, p := range sortedPlayers {
@@ -85,8 +85,9 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		if ageEntry.Text != "" {
 			a, errAge := strconv.Atoi(ageEntry.Text)
 			if errAge != nil {
+				ageEntry.SetPlaceHolder(entryAgeHolder)
 				// Check if the age is a number
-				if !IsNumbersOnly(ageEntry.Text) {
+				if !isNumbersOnly(ageEntry.Text) {
 					dialog.ShowError(errors.New(T("err_age_must_be_number")), w)
 					return
 				} else {
@@ -105,8 +106,9 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		if rankingEntry.Text != "" {
 			r, errRanking := strconv.Atoi(rankingEntry.Text)
 			if errRanking != nil {
+				rankingEntry.SetPlaceHolder(entryRankingHolder)
 				// Check if the ranking is a number
-				if !IsNumbersOnly(rankingEntry.Text) {
+				if !isNumbersOnly(rankingEntry.Text) {
 					dialog.ShowError(errors.New(T("err_ranking_must_be_number")), w)
 					return
 				} else {
@@ -123,16 +125,40 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 		// Check player material
 		if forehandEntry.Text != "" {
-			isForehandModified = true
-			p.SetPlayerMaterial(forehandEntry.Text, p.Material[1], p.Material[2])
+			forehandEntry.Text = standardizeSpaces(forehandEntry.Text)
+			b, err := isValidString(forehandEntry.Text)
+			if !b {
+				dialog.ShowError(err, w)
+				forehandEntry.SetPlaceHolder(entryForehandHolder)
+				return
+			} else {
+				isForehandModified = true
+				p.SetPlayerMaterial(forehandEntry.Text, p.Material[1], p.Material[2])
+			}
 		}
 		if backhandEntry.Text != "" {
-			isBackhandModified = true
-			p.SetPlayerMaterial(p.Material[0], backhandEntry.Text, p.Material[2])
+			backhandEntry.Text = standardizeSpaces(backhandEntry.Text)
+			b, err := isValidString(backhandEntry.Text)
+			if !b {
+				dialog.ShowError(err, w)
+				backhandEntry.SetPlaceHolder(entryBackhandHolder)
+				return
+			} else {
+				isBackhandModified = true
+				p.SetPlayerMaterial(p.Material[0], backhandEntry.Text, p.Material[2])
+			}
 		}
 		if bladeEntry.Text != "" {
-			isBladeModified = true
-			p.SetPlayerMaterial(p.Material[0], p.Material[1], bladeEntry.Text)
+			bladeEntry.Text = standardizeSpaces(bladeEntry.Text)
+			b, err := isValidString(bladeEntry.Text)
+			if !b {
+				dialog.ShowError(err, w)
+				bladeEntry.SetPlaceHolder(entryBladeHolder)
+				return
+			} else {
+				isBladeModified = true
+				p.SetPlayerMaterial(p.Material[0], p.Material[1], bladeEntry.Text)
+			}
 		}
 
 		// Has something changed ?
@@ -146,7 +172,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 
 	})
 
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := sortMap(db.Players)
 	playerButtons := []fyne.CanvasObject{}
 
 	for _, p := range sortedPlayers {

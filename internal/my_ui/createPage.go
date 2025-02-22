@@ -40,7 +40,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 			listOfClubs := []fyne.CanvasObject{}
 
 			// Sort clubs for an alphabetical order button display
-			sortedClubs := SortMap(db.Clubs)
+			sortedClubs := sortMap(db.Clubs)
 
 			for _, c := range sortedClubs {
 				club := c.Value
@@ -85,24 +85,29 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						// Check player name
 						if firstnameEntry.Text == "" {
 							dialog.ShowError(errors.New(T("firstname.must_not_be_empty")), w)
+							firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
 							return
 						} else if !IsLettersOnly(firstnameEntry.Text) {
 							dialog.ShowError(errors.New(T("firstname.must_be_letters_only")), w)
+							firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
 							return
 						}
 						if lastnameEntry.Text == "" {
 							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
+							lastnameEntry.SetPlaceHolder(entryLastnameHolder)
 							return
 						} else if !IsLettersOnly(lastnameEntry.Text) {
 							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
+							lastnameEntry.SetPlaceHolder(entryLastnameHolder)
 							return
 						}
 						// Set player age
 						if ageEntry.Text != "" {
 							a, errAge := strconv.Atoi(ageEntry.Text)
 							if errAge != nil {
+								ageEntry.SetPlaceHolder(entryAgeHolder)
 								// Check if the age is a number
-								if !IsNumbersOnly(ageEntry.Text) {
+								if !isNumbersOnly(ageEntry.Text) {
 									dialog.ShowError(errors.New(T("err_age_must_be_number")), w)
 									return
 								} else {
@@ -118,8 +123,9 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						if rankingEntry.Text != "" {
 							r, errRanking := strconv.Atoi(rankingEntry.Text)
 							if errRanking != nil {
+								rankingEntry.SetPlaceHolder(entryRankingHolder)
 								// Check if the ranking is a number
-								if !IsNumbersOnly(rankingEntry.Text) {
+								if !isNumbersOnly(rankingEntry.Text) {
 									dialog.ShowError(errors.New(T("err_ranking_must_be_number")), w)
 									return
 								} else {
@@ -131,14 +137,41 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							}
 						}
 
-						// Set player material
-						if forehandEntry.Text == "" {
+						// Check player material
+						if forehandEntry.Text != "" {
+							forehandEntry.Text = standardizeSpaces(forehandEntry.Text)
+							b, err := isValidString(forehandEntry.Text)
+							if !b {
+								dialog.ShowError(err, w)
+								forehandEntry.SetPlaceHolder(entryForehandHolder)
+								return
+							}
+						} else {
+							// Set default player material
 							forehandEntry.SetText(T("unknown"))
 						}
-						if backhandEntry.Text == "" {
+						if backhandEntry.Text != "" {
+							backhandEntry.Text = standardizeSpaces(backhandEntry.Text)
+							b, err := isValidString(backhandEntry.Text)
+							if !b {
+								dialog.ShowError(err, w)
+								backhandEntry.SetPlaceHolder(entryBackhandHolder)
+								return
+							}
+						} else {
+							// Set default player material
 							backhandEntry.SetText(T("unknown"))
 						}
-						if bladeEntry.Text == "" {
+						if bladeEntry.Text != "" {
+							bladeEntry.Text = standardizeSpaces(bladeEntry.Text)
+							b, err := isValidString(bladeEntry.Text)
+							if !b {
+								dialog.ShowError(err, w)
+								bladeEntry.SetPlaceHolder(entryBladeHolder)
+								return
+							}
+						} else {
+							// Set default player material
 							bladeEntry.SetText(T("unknown"))
 						}
 
@@ -170,14 +203,14 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							// Set the flag to true to indicate that the database has changed
 							HasChanged = true
 
-							// Reinit the entry text
-							ReinitWidgetEntryText(firstnameEntry, entryFirstnameHolder)
-							ReinitWidgetEntryText(lastnameEntry, entryLastnameHolder)
-							ReinitWidgetEntryText(ageEntry, entryAgeHolder)
-							ReinitWidgetEntryText(rankingEntry, entryRankingHolder)
-							ReinitWidgetEntryText(forehandEntry, entryForehandHolder)
-							ReinitWidgetEntryText(backhandEntry, entryBackhandHolder)
-							ReinitWidgetEntryText(bladeEntry, entryBladeHolder)
+							// Reinit the entry texts
+							reinitWidgetEntryText(firstnameEntry, entryFirstnameHolder)
+							reinitWidgetEntryText(lastnameEntry, entryLastnameHolder)
+							reinitWidgetEntryText(ageEntry, entryAgeHolder)
+							reinitWidgetEntryText(rankingEntry, entryRankingHolder)
+							reinitWidgetEntryText(forehandEntry, entryForehandHolder)
+							reinitWidgetEntryText(backhandEntry, entryBackhandHolder)
+							reinitWidgetEntryText(bladeEntry, entryBladeHolder)
 						}
 
 					})

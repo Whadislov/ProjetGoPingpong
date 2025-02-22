@@ -15,11 +15,13 @@ func TestNewPlayer(t *testing.T) {
 	expectedLen := 1
 	expectedError1 := "player name cannot be empty"
 	expectedError2 := "player name can only contain letters"
+	expectedError3 := "string is too long"
 
 	t.Run("Delete Player", func(t *testing.T) {
 		_, err1 := mf.NewPlayer("", "", &d)
 		_, err2 := mf.NewPlayer("firstname2", "lastname2", &d)
-		_, err3 := mf.NewPlayer("firstname", "lastname", &d)
+		_, err3 := mf.NewPlayer("firstnameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "lastname", &d)
+		_, err4 := mf.NewPlayer("firstname", "lastname", &d)
 
 		if err1 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError1, err1)
@@ -27,8 +29,11 @@ func TestNewPlayer(t *testing.T) {
 		if err2 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError2, err2)
 		}
-		if err3 != nil || len(d.Players) != expectedLen {
-			t.Errorf("Expected error %v, got %v", nil, err2)
+		if err3 == nil {
+			t.Errorf("Expected error %v, got %v", expectedError3, err3)
+		}
+		if err4 != nil || len(d.Players) != expectedLen {
+			t.Errorf("Expected error %v, got %v", nil, err4)
 		}
 	})
 }

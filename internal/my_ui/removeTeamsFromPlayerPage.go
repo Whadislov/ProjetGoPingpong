@@ -77,7 +77,7 @@ func selectPlayerPageTfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 	playerButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := sortMap(db.Players)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
@@ -174,7 +174,7 @@ func selectTeamPageTfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 	}
 
 	// "Sort the map of teams" for a better button display
-	sortedTeams := SortMap(db.Teams)
+	sortedTeams := sortMap(db.Teams)
 
 	for _, t := range sortedTeams {
 		team := t.Value
@@ -228,7 +228,7 @@ func addAnotherTeamPageTfromP(player *mt.Player, alreadySelectedTeams map[uuid.U
 	teamButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of teams" for a better button display
-	sortedTeams := SortMap(db.Teams)
+	sortedTeams := sortMap(db.Teams)
 
 	for _, t := range sortedTeams {
 		team := t.Value
@@ -271,7 +271,7 @@ func selectedTeamPageTfromP(player *mt.Player, selectedTeams map[uuid.UUID]*mt.T
 	//tLabel := widget.NewLabel(T("team_current_selection_emoji"))
 
 	// "Sort the map of selectedTeams" for a better button display
-	sortedSelectedTeams := SortMap(selectedTeams)
+	sortedSelectedTeams := sortMap(selectedTeams)
 
 	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error

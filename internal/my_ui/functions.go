@@ -2,7 +2,10 @@ package myapp
 
 import (
 	"encoding/json"
+	"fmt"
+	"regexp"
 	"sort"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -29,7 +32,7 @@ func strHelper(list []string) string {
 	return str
 }
 
-func SortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
+func sortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
 	Key   uuid.UUID
 	Value V
 } {
@@ -69,7 +72,7 @@ func SortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
 }
 
 // Create a confirmation dialog
-func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
+func showConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 	d := dialog.NewConfirm(T("confirm"), message, func(confirm bool) {
 		if confirm {
 			onConfirm()
@@ -79,7 +82,7 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 }
 
 // Reinit the text of a widget entry
-func ReinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
+func reinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
 	entry.SetText("")
 	entry.SetPlaceHolder(entryHolder)
 }
@@ -95,13 +98,37 @@ func IsLettersOnly(s string) bool {
 }
 
 // Verify if the string is numbers only
-func IsNumbersOnly(s string) bool {
+func isNumbersOnly(s string) bool {
 	for _, r := range s {
 		if r < '0' || r > '9' {
 			return false
 		}
 	}
 	return true
+}
+
+// isValidString verifies that the string is not empty and only contain letters, figures and some spaces
+func isValidString(s string) (bool, error) {
+	if s == "" {
+		return false, fmt.Errorf("string cannot be empty")
+	}
+
+	sRegex := `^[a-zA-Z0-9      ]+$`
+
+	// Compile the regex
+	re := regexp.MustCompile(sRegex)
+
+	// Verify if the string is a regex
+	if re.MatchString(s) {
+		return re.MatchString(s), nil
+	} else {
+		return re.MatchString(s), fmt.Errorf("string must be valid (letters, figures and one space are allowed)")
+	}
+}
+
+// standardizeSpaces removes spaces at the beginning and end of the string and replaces multiple spaces by one
+func standardizeSpaces(s string) string {
+	return strings.Join(strings.Fields(s), " ")
 }
 
 // setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size

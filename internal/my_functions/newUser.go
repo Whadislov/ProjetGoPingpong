@@ -25,6 +25,10 @@ func NewUser(username string, email string, password string, confirmPassword str
 	if !b {
 		return nil, err
 	}
+	b, err = IsStrTooLong(username, 30)
+	if b {
+		return nil, err
+	}
 	log.Println("User creation : Username is valid.")
 
 	for _, user := range db.Users {
