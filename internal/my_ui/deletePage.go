@@ -32,9 +32,9 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		})
 
 		// "Sort" maps
-		sortedPlayers := SortMap(db.Players)
-		sortedTeams := SortMap(db.Teams)
-		sortedClubs := SortMap(db.Clubs)
+		sortedPlayers := sortMap(db.Players)
+		sortedTeams := sortMap(db.Teams)
+		sortedClubs := sortMap(db.Clubs)
 
 		// Players
 		acp := widget.NewAccordion()
@@ -48,7 +48,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				container.NewVBox(
 					PlayerInfos(p),
 					widget.NewButton(T("delete"), func() {
-						ShowConfirmationDialog(w, fmt.Sprintf("Delete player %v %v?", p.Firstname, p.Lastname), func() {
+						showConfirmationDialog(w, fmt.Sprintf("Delete player %v %v?", p.Firstname, p.Lastname), func() {
 							err := mf.DeletePlayer(p, db)
 							if err != nil {
 								dialog.ShowError(err, w)
@@ -82,7 +82,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				container.NewVBox(
 					TeamInfos(t),
 					widget.NewButton(T("delete"), func() {
-						ShowConfirmationDialog(w, fmt.Sprintf("Delete team %v?", t.Name), func() {
+						showConfirmationDialog(w, fmt.Sprintf("Delete team %v?", t.Name), func() {
 							err := mf.DeleteTeam(t, db)
 							if err != nil {
 								dialog.ShowError(err, w)
@@ -125,7 +125,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							teamNames = teamNames[:len(teamNames)-2]
 						}
 
-						ShowConfirmationDialog(w, fmt.Sprintf("Delete club %v? You are also going to delete the following teams: %v", c.Name, teamNames), func() {
+						showConfirmationDialog(w, fmt.Sprintf("Delete club %v? You are also going to delete the following teams: %v", c.Name, teamNames), func() {
 							// Get teamIDs without the link with the club (to avoid slice modification while iterating)
 							var teamIDs []uuid.UUID
 							for teamID := range c.TeamIDs {

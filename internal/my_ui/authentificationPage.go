@@ -222,7 +222,7 @@ func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 		log.Println("Login failed : Username and password mismatch")
 		dialog.ShowError(errors.New(T("username_and_password_missmatch")), w)
 		// Reset entries
-		ReinitWidgetEntryText(usernameEntry, "")
+		reinitWidgetEntryText(usernameEntry, "")
 		passwordEntry.SetText("")
 
 	})

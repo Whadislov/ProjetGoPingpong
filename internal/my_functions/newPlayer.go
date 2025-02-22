@@ -18,8 +18,18 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 		return nil, err
 	}
 
+	b, err = IsStrTooLong(firstname, 30)
+	if b {
+		return nil, err
+	}
+
 	b, err = IsValidName(lastname)
 	if !b {
+		return nil, err
+	}
+
+	b, err = IsStrTooLong(lastname, 30)
+	if b {
 		return nil, err
 	}
 

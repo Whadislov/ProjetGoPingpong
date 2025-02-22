@@ -29,6 +29,7 @@ func TestNewUser(t *testing.T) {
 	expectedError7 := "password cannot be empty"
 	expectedError8 := "password must be valid (spaces are not allowed)"
 	expectedError9 := "passwords do not match"
+	expectedError10 := "string is too long"
 
 	t.Run("New user", func(t *testing.T) {
 		password := "b"
@@ -41,7 +42,8 @@ func TestNewUser(t *testing.T) {
 		_, err7 := mf.NewUser("u2", "a2@a2.com", "", "", &d)
 		_, err8 := mf.NewUser("u2", "a2@a2.com", " ", "", &d)
 		_, err9 := mf.NewUser("u2", "a2@a2.com", password, "", &d)
-		_, err10 := mf.NewUser("u2", "a2@a2.com", password, password, &d)
+		_, err10 := mf.NewUser("ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "a2@a2.com", password, "", &d)
+		_, err11 := mf.NewUser("u2", "a2@a2.com", password, password, &d)
 
 		if err1 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError1, err1)
@@ -70,7 +72,10 @@ func TestNewUser(t *testing.T) {
 		if err9 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError9, err9)
 		}
-		if err10 != nil || len(d.Users) != expectedLen {
+		if err10 == nil {
+			t.Errorf("Expected error %v, got %v", expectedError10, err9)
+		}
+		if err11 != nil || len(d.Users) != expectedLen {
 			t.Errorf("Expected error %v, got %v", nil, err6)
 			t.Errorf("Expected length %v, got %v", 2, len(d.Users))
 		}

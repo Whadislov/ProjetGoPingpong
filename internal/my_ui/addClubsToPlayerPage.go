@@ -68,7 +68,7 @@ func selectPlayerPageCtoP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Cont
 	playerButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := sortMap(db.Players)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
@@ -159,7 +159,7 @@ func selectClubPageCtoP(player *mt.Player, db *mt.Database, w fyne.Window, a fyn
 	}
 
 	// "Sort the map of clubs" for a better button display
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, c := range sortedClubs {
 		club := c.Value
@@ -214,7 +214,7 @@ func addAnotherclubPageCtoP(player *mt.Player, alreadyselectedClub map[uuid.UUID
 	clubButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of clubs" for a better button display
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, c := range sortedClubs {
 		club := c.Value
@@ -258,7 +258,7 @@ func selectedClubPageCtoP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club
 	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 
 	// "Sort the map of selectedClub" for a better button display
-	sortedselectedClub := SortMap(selectedClub)
+	sortedselectedClub := sortMap(selectedClub)
 
 	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error

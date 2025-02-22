@@ -14,6 +14,10 @@ func ChangeUsername(currentUsername string, newUsername string, db *mt.Database)
 	if !b {
 		return err
 	}
+	b, err = IsStrTooLong(newUsername, 30)
+	if b {
+		return err
+	}
 	log.Println("User modification : New username is valid.")
 
 	var u *mt.User
