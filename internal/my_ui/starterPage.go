@@ -15,17 +15,6 @@ import (
 func StarterPage() fyne.App {
 	a := app.NewWithID("com.onrender.TTCompanion")
 
-	// Set the icon
-	iconData, err := iconFile.ReadFile("Icon.png")
-	if err != nil {
-		panic(err)
-	}
-
-	a.SetIcon(&fyne.StaticResource{
-		StaticName:    "Icon.png",
-		StaticContent: iconData,
-	})
-
 	icon, err := fyne.LoadResourceFromPath("Icon.png")
 	if err != nil {
 		log.Printf("Failed to load icon: %v", err)

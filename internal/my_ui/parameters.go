@@ -26,5 +26,4 @@ var bundle *i18n.Bundle
 var currentSelectedLanguage string = "English"
 
 var translations embed.FS
-var iconFile embed.FS
 var translated []language.Tag

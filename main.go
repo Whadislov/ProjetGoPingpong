@@ -20,9 +20,6 @@ import (
 //go:embed translation/*
 var translations embed.FS
 
-//go:embed Icon.png
-var iconFile embed.FS
-
 func loadConfig(filename string) (*api.Config, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -44,9 +41,6 @@ func initWASM() {
 
 	// Load translations
 	mu.InitTranslations(translations)
-
-	// Load icon and themeFile
-	mu.InitIcon(iconFile)
 }
 
 func main() {
@@ -54,10 +48,9 @@ func main() {
 	// Start app locally or on a browser ?
 	appStartOption := "browser"
 
-	initWASM()
-
 	// Start app on a browser
 	if appStartOption == "browser" {
+		initWASM()
 		// Load env variables
 		err := godotenv.Load("credentials.env")
 		if err != nil {

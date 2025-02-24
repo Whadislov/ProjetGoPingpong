@@ -1,7 +1,6 @@
 package myapp
 
 import (
-	"embed"
 	"fmt"
 	"regexp"
 	"sort"
@@ -176,8 +175,4 @@ func loadTheme(a fyne.App) {
 // loadTheme sets the flags for the light Theme and the dark Theme, browser
 func loadThemeWeb() {
 	darkTheme.IsActivated = true
-}
-
-func InitIcon(iconF embed.FS) {
-	iconFile = iconF
 }
