@@ -16,21 +16,35 @@ func StarterPage() fyne.App {
 	a := app.NewWithID("com.onrender.TTCompanion")
 
 	// Set the icon
+	iconData, err := iconFile.ReadFile("Icon.png")
+	if err != nil {
+		panic(err)
+	}
+
+	a.SetIcon(&fyne.StaticResource{
+		StaticName:    "Icon.png",
+		StaticContent: iconData,
+	})
+
 	icon, err := fyne.LoadResourceFromPath("Icon.png")
 	if err != nil {
 		log.Printf("Failed to load icon: %v", err)
 	}
 	a.SetIcon(icon)
 
+	// Set language
+	AddTranslationsFS(translations, "translation")
+
 	mainWindow := a.NewWindow("TT Companion")
 	mainWindow.Resize(fyne.NewSize(600, 400))
 	mainWindow.CenterOnScreen() // Center the window on the monitor
 
-	// Know if light mode is activated or not
-	loadTheme(a)
-
-	// Set language
-	loadLanguage("en")
+	if appStartOption == "local" {
+		// Know if light mode is activated or not
+		loadTheme(a)
+	} else if appStartOption == "browser" {
+		loadThemeWeb()
+	}
 
 	// Starter page
 	pageTitle := setTitle(T("welcome_to_tt_companion"), 32)

@@ -49,7 +49,7 @@ func ChangeLanguagePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 	languageSelector := widget.NewSelect([]string{"Deutsch", "English", "Français"}, func(selected string) {
 		switch selected {
 		case "English":
-			loadLanguage("en")
+			setLanguage("en")
 			currentSelectedLanguage = "English"
 			// Refresh
 			returnToMainMenuButton = widget.NewButton(T("return_to_main_page"), func() {
@@ -58,7 +58,7 @@ func ChangeLanguagePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 			w.SetContent(container.NewVBox(OptionPage(db, w, a), returnToMainMenuButton))
 			w.SetMainMenu(MainMenu(db, w, a))
 		case "Français":
-			loadLanguage("fr")
+			setLanguage("fr")
 			currentSelectedLanguage = "Français"
 			// Refresh
 			returnToMainMenuButton = widget.NewButton(T("return_to_main_page"), func() {
@@ -67,7 +67,7 @@ func ChangeLanguagePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 			w.SetContent(container.NewVBox(OptionPage(db, w, a), returnToMainMenuButton))
 			w.SetMainMenu(MainMenu(db, w, a))
 		case "Deutsch":
-			loadLanguage("de")
+			setLanguage("de")
 			currentSelectedLanguage = "Deutsch"
 			// Refresh
 			returnToMainMenuButton = widget.NewButton(T("return_to_main_page"), func() {

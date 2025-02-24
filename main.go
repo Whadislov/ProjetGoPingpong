@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -15,6 +16,12 @@ import (
 	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
+
+//go:embed translation/*
+var translations embed.FS
+
+//go:embed Icon.png
+var iconFile embed.FS
 
 func loadConfig(filename string) (*api.Config, error) {
 	file, err := os.Open(filename)
@@ -33,10 +40,21 @@ func loadConfig(filename string) (*api.Config, error) {
 	return config, nil
 }
 
+func initWASM() {
+
+	// Load translations
+	mu.InitTranslations(translations)
+
+	// Load icon and themeFile
+	mu.InitIcon(iconFile)
+}
+
 func main() {
 
 	// Start app locally or on a browser ?
-	appStartOption := "local"
+	appStartOption := "browser"
+
+	initWASM()
 
 	// Start app on a browser
 	if appStartOption == "browser" {
