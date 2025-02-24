@@ -38,7 +38,6 @@ func loadConfig(filename string) (*api.Config, error) {
 }
 
 func initWASM() {
-
 	// Load translations
 	mu.InitTranslations(translations)
 }
@@ -50,7 +49,6 @@ func main() {
 
 	// Start app on a browser
 	if appStartOption == "browser" {
-		initWASM()
 		// Load env variables
 		err := godotenv.Load("credentials.env")
 		if err != nil {
@@ -102,6 +100,7 @@ func main() {
 
 	// Start app locally
 	if appStartOption == "local" {
+		initWASM()
 		// Load env variables
 		err := godotenv.Load("credentials.env")
 		if err != nil {

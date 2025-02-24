@@ -225,7 +225,7 @@
         "other": "Coup droit"
     },
     "forgot_password": {
-        "other": "Votre mot de passe oublié?"
+        "other": "Mot de passe oublié?"
     },
     "functionalities": {
         "other": "Fonctionnalités"
@@ -264,7 +264,7 @@
         "other": "Se connecter"
     },
     "log_out": {
-        "other": "Déconnecter"
+        "other": "Se déconnecter"
     },
     "login": {
         "other": "Se connecter"
