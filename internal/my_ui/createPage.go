@@ -17,7 +17,7 @@ import (
 // CreatePage sets up the page for creating players, teams, and clubs.
 func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 
-	pageTitle := setTitle(T("create"), 32)
+	pageTitle := setTitle(T("confirm"), 32)
 
 	ReturnToFonctionalityPageButton := widget.NewButton(T("return_to_functionalities"), func() {
 		fonctionalityPage := FunctionalityPage(db, w, a)
@@ -78,7 +78,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 					entryBladeHolder := T("blade") + " ..."
 					bladeEntry.SetPlaceHolder(entryBladeHolder)
 
-					validatationButton := widget.NewButton(T("create"), func() {
+					validatationButton := widget.NewButton(T("confirm"), func() {
 						age := -1
 						ranking := -1
 
@@ -267,7 +267,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 					entryHolder := T("enter_your_team_name_here")
 					nameEntry.SetPlaceHolder(entryHolder)
 
-					validatationButton := widget.NewButton(T("create"), func() {
+					validatationButton := widget.NewButton(T("confirm"), func() {
 						name := nameEntry.Text
 
 						// If team name already exists, do not create the team
@@ -340,7 +340,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 		entryHolder := T("enter_your_club_name_here")
 		nameEntry.SetPlaceHolder(entryHolder)
 
-		validatationButton := widget.NewButton(T("create"), func() {
+		validatationButton := widget.NewButton(T("confirm"), func() {
 			name := nameEntry.Text
 			_, err := mf.NewClub(name, db)
 
