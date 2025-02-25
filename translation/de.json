@@ -264,7 +264,7 @@
         "other": "Einloggen"
     },
     "log_out": {
-        "other": "Melden Sie sich aus"
+        "other": "Ausloggen"
     },
     "login": {
         "other": "Login"
@@ -368,6 +368,9 @@
     "reset_your_password": {
         "other": "Setzen Sie Ihr Passwort zurück"
     },
+    "return_to_authentification_page": {
+        "other": "Zurück zur Authentifizierung"
+    },
     "return_to_club_selection": {
         "other": "Zurück zur Vereinauswahl"
     },
@@ -423,10 +426,10 @@
         "other": "Teams zeigen"
     },
     "sign_up": {
-        "other": "Melden Sie sich an"
+        "other": "Registrieren"
     },
     "signup": {
-        "other": "Melden Sie sich an"
+        "other": "Registrieren"
     },
     "success": {
         "other": "Erfolg"

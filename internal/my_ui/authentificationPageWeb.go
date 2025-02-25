@@ -37,11 +37,23 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		w.SetContent(signUpPageWeb(w, a))
 	})
 
+	returnToAuthentificationPageWebButton := widget.NewButton(T("return_to_authentification_page"), func() {
+		w.SetContent(AuthentificationPageWeb(w, a))
+	})
+
+	optionPageButton := widget.NewButton(T("options"), func() {
+		w.SetContent(container.NewVBox(
+			OptionAuthPageWeb(w, a),
+			returnToAuthentificationPageWebButton,
+		))
+	})
+
 	authentificationPageWeb := container.NewVBox(
 		pageTitle,
 		authLabel,
 		logInButton,
 		signUpButton,
+		optionPageButton,
 	)
 
 	w.SetContent(authentificationPageWeb)
@@ -66,7 +78,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	confirmPasswordLabel := widget.NewLabel(T("confirm_password"))
 	confirmPasswordEntry := widget.NewPasswordEntry()
 
-	validationButton := widget.NewButton(T("create"), func() {
+	validationButton := widget.NewButton(T("confirm"), func() {
 		log.Println("Creating new User")
 		_, err := mf.IsValidEmail(emailEntry.Text)
 		_, err2 := mf.IsValidUsername(usernameEntry.Text)

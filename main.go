@@ -6,13 +6,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sync"
-	"time"
 
 	"github.com/joho/godotenv"
 
 	"github.com/Whadislov/TTCompanion/api"
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
 	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -20,7 +19,7 @@ import (
 //go:embed translation/*
 var translations embed.FS
 
-func loadConfig(filename string) (*api.Config, error) {
+func loadConfig(filename string) (*mfr.Config, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -28,11 +27,13 @@ func loadConfig(filename string) (*api.Config, error) {
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
-	config := &api.Config{}
+	config := &mfr.Config{}
 	err = decoder.Decode(config)
 	if err != nil {
 		return nil, err
 	}
+
+	mfr.SetConfig(config)
 
 	return config, nil
 }
@@ -59,42 +60,21 @@ func main() {
 		mdb.SetDBName(os.Getenv("DB_NAME"))
 		api.SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 
-		var wg sync.WaitGroup
+		config, err := loadConfig("config_app.json")
+		if err != nil {
+			log.Fatalf("Cannot read config file: %v", err)
+		}
 
-		// API server (8001)
-		apiReady := make(chan struct{})
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			configApi, err := loadConfig("config_api.json")
-			if err != nil {
-				log.Fatalf("Cannot read config file: %v", err)
-			}
-			// Start API
-			go api.RunApi(configApi)
-			// Wait for the API to be ready
-			time.Sleep(1 * time.Second)
-			close(apiReady)
-		}()
-
-		// Web App (8000)
-		wg.Add(1)
-
-		go func() {
-			<-apiReady
-			defer wg.Done()
-			configApp, err := loadConfig("config_app.json")
-			if err != nil {
-				log.Fatalf("Cannot read config file: %v", err)
-			}
-			log.Printf("Starting app server on: %v:%v", configApp.ServerAddress, configApp.ServerPort)
-			err = http.ListenAndServe(configApp.ServerAddress+":"+configApp.ServerPort, http.FileServer(http.Dir("./wasm")))
-			if err != nil {
-				log.Fatalf("App server error: %v", err)
-			}
-		}()
-
-		wg.Wait()
+		// API
+		api.RunApi()
+		// App
+		log.Printf("Starting app server on: %v:%v", config.ServerAddress, config.ServerPort)
+		fs := http.FileServer(http.Dir("./wasm"))
+		http.Handle("/", fs)
+		err = http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil)
+		if err != nil {
+			log.Fatalf("App server error: %v", err)
+		}
 
 	}
 

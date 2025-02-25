@@ -29,7 +29,7 @@ func Login(username string, password string) (*mt.Database, string, error) {
 		return nil, "", fmt.Errorf("failed to marshal credentials: %w", err)
 	}
 
-	resp, err := http.Post("http://localhost:8001/api/login", "application/json", bytes.NewBuffer(credentialsToCheck))
+	resp, err := http.Post(config+"api/login", "application/json", bytes.NewBuffer(credentialsToCheck))
 	if err != nil {
 		return nil, "", fmt.Errorf("failed to post credentials: %w", err)
 	}
@@ -57,7 +57,7 @@ func Login(username string, password string) (*mt.Database, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("error decoding JSON: %w", err)
 	} else {
-		log.Println("Succeed to log user %w in", username)
+		log.Printf("Succeed to log user %v in", username)
 		db, err := LoadDB(response.CredToken)
 		if err != nil {
 			return nil, "", fmt.Errorf("failed to load database: %w", err)
