@@ -368,6 +368,9 @@
     "reset_your_password": {
         "other": "Réinitialisez votre mot de passe"
     },
+    "return_to_authentification_page": {
+        "other": "Retour à l'authentification"
+    },
     "return_to_club_selection": {
         "other": "Retour à la sélection des clubs"
     },

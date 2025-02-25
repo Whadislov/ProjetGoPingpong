@@ -6,7 +6,7 @@ import (
 
 // IsApiReady posts a message if the API is started
 func IsApiReady() bool {
-	resp, err := http.Get("http://localhost:8001/")
+	resp, err := http.Get(config)
 	if err != nil {
 		return false
 	}

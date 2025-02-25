@@ -14,7 +14,7 @@ import (
 func LoadDB(credToken string) (*mt.Database, error) {
 	var golangDB *mt.Database
 
-	req, err := http.NewRequest("GET", "http://localhost:8001/api/load-database", nil)
+	req, err := http.NewRequest("GET", config+"api/load-database", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
@@ -51,13 +51,12 @@ func SaveDB(credToken string, golangDB *mt.Database) error {
 		return fmt.Errorf("failed to marshal database: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", "http://localhost:8001/api/save-database", bytes.NewBuffer(dataToSave))
+	req, err := http.NewRequest("POST", config+"api/save-database", bytes.NewBuffer(dataToSave))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 
 	// Add the token in the Authorization header
-	log.Println("cred_token=", credToken)
 	req.Header.Set("Authorization", "Bearer "+credToken)
 	req.Header.Set("Content-Type", "application/json")
 

@@ -12,7 +12,6 @@ import (
 
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
-	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -31,47 +30,38 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 	authLabel := widget.NewLabel(T("please_authenticate"))
 	authLabel.Alignment = fyne.TextAlignCenter
 
-	var db *mt.Database
-	var err error
-	db, err = mdb.LoadUsersOnly()
-
-	if err != nil {
-		panic(err)
-	}
 	logInButton := widget.NewButton(T("log_in"), func() {
-		w.SetContent(loginPage(db, w, a))
+		w.SetContent(loginPage(w, a))
 	})
 
 	signUpButton := widget.NewButton(T("sign_up"), func() {
-		w.SetContent(signUpPage(db, w, a))
+		w.SetContent(signUpPage(w, a))
 	})
 
-	if len(db.Users) > 0 {
-		authentificationPage := container.NewVBox(
-			pageTitle,
-			authLabel,
-			logInButton,
-			signUpButton,
-		)
-		return authentificationPage
-	} else {
+	returnToAuthentificationPageButton := widget.NewButton(T("return_to_authentification_page"), func() {
+		w.SetContent(AuthentificationPage(w, a))
+	})
 
-		quitButtonInSignUpPage := widget.NewButton(T("quit"), func() {
-			a.Quit()
-			log.Println("Application exited.")
-		})
-		content := container.NewVBox(
-			signUpPage(db, w, a),
-			quitButtonInSignUpPage,
-		)
-		// No user in the database, go directly to sign up page
-		w.SetContent(content)
-		return signUpPage(db, w, a)
-	}
+	optionPageButton := widget.NewButton(T("options"), func() {
+		w.SetContent(container.NewVBox(
+			OptionAuthPage(w, a),
+			returnToAuthentificationPageButton,
+		))
+	})
+
+	authentificationPage := container.NewVBox(
+		pageTitle,
+		authLabel,
+		logInButton,
+		signUpButton,
+		optionPageButton,
+	)
+	return authentificationPage
+
 }
 
 // signUpPage returns a page that contains a create username and a create password field. Adds a new user in the database
-func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func signUpPage(w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle(T("create_your_account"), 32)
 
 	emailLabel := widget.NewLabel("✉️ E-mail")
@@ -87,7 +77,13 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	confirmPasswordLabel := widget.NewLabel(T("confirm_password"))
 	confirmPasswordEntry := widget.NewPasswordEntry()
 
-	validationButton := widget.NewButton(T("create"), func() {
+	db, err := mdb.LoadUsersOnly()
+	if err != nil {
+		panic(err)
+	}
+
+	validationButton := widget.NewButton(T("confirm"), func() {
+
 		log.Println("Creating new User")
 		newUser, err := mf.NewUser(usernameEntry.Text, emailEntry.Text, passwordEntry.Text, confirmPasswordEntry.Text, db)
 		if err != nil {
@@ -134,7 +130,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 			default:
 				log.Println("unknown error")
 				dialog.ShowError(errors.New(T("unknown_error")), w)
-				w.SetContent(signUpPage(db, w, a))
+				w.SetContent(signUpPage(w, a))
 			}
 		} else {
 			var err error
@@ -180,7 +176,7 @@ func signUpPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 }
 
 // loginPage returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
-func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func loginPage(w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle(T("login"), 32)
 
 	usernameLabel := widget.NewLabel(T("username"))
@@ -189,7 +185,13 @@ func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	passwordLabel := widget.NewLabel(T("password"))
 	passwordEntry := widget.NewPasswordEntry()
 
+	db, err := mdb.LoadUsersOnly()
+	if err != nil {
+		panic(err)
+	}
+
 	validationButton := widget.NewButton(T("connect"), func() {
+
 		// Verify if username and password match
 		log.Println("Verifying username and password")
 		for _, user := range db.Users {
@@ -228,7 +230,7 @@ func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	})
 
 	forgotPasswordButton := widget.NewButtonWithIcon(T("forgot_password"), nil, func() {
-		w.SetContent(reinitPasswordPage(db, w, a))
+		w.SetContent(reinitPasswordPage(w, a))
 	})
 	forgotPasswordButton.Importance = widget.LowImportance
 
@@ -250,7 +252,7 @@ func loginPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 }
 
 // reinitPasswordPage offers the user the ability to be sent an Email for a password reset
-func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func reinitPasswordPage(w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle(T("forgot_password"), 32)
 	pageText := sexText(T("text.forgot_password"), 12)
 	emailString := T("enter_email_address")
@@ -258,11 +260,16 @@ func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder(emailString)
 
+	db, err := mdb.LoadUsersOnly()
+	if err != nil {
+		panic(err)
+	}
+
 	validationButton := widget.NewButton(T("reset_your_password"), func() {
 		b, err := mf.IsValidEmail(emailEntry.Text)
 		if !b {
 			dialog.ShowError(err, w)
-			w.SetContent(reinitPasswordPage(db, w, a))
+			w.SetContent(reinitPasswordPage(w, a))
 		} else {
 			for _, user := range db.Users {
 				if emailEntry.Text == user.Email {
@@ -272,7 +279,7 @@ func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 					//resetEmailMessage := widget.NewLabel(fmt.Sprintf("A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
 					returnToLoginPage := widget.NewButton(T("return_to_login_screen"), func() {
 						resetEmailDialogSuccess.Hide()
-						w.SetContent(loginPage(db, w, a))
+						w.SetContent(loginPage(w, a))
 					})
 					resetEmailContent := container.NewVBox(
 						resetEmailMessage,
@@ -287,11 +294,11 @@ func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 			var resetEmailDialogFail *dialog.CustomDialog
 			goToSignupPage := widget.NewButton(T("create_your_account"), func() {
 				resetEmailDialogFail.Hide()
-				w.SetContent(signUpPage(db, w, a))
+				w.SetContent(signUpPage(w, a))
 			})
 			returnToLoginPage := widget.NewButton(T("try_again"), func() {
 				resetEmailDialogFail.Hide()
-				w.SetContent(reinitPasswordPage(db, w, a))
+				w.SetContent(reinitPasswordPage(w, a))
 			})
 			resetEmailMessageFail := widget.NewLabel(fmt.Sprintf(T("message.email_sent"), emailEntry.Text))
 			resetEmailContentFail := container.NewVBox(
@@ -307,7 +314,7 @@ func reinitPasswordPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Contai
 	})
 
 	cancelButton := widget.NewButton(T("cancel"), func() {
-		w.SetContent(loginPage(db, w, a))
+		w.SetContent(loginPage(w, a))
 	})
 
 	reinitPasswordPage := container.NewVBox(

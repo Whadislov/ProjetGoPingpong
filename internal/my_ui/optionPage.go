@@ -8,7 +8,7 @@ import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
-// OptionPage sets up the page in which the user can change the theme color, the language
+// OptionPage sets up the option page, in which the user can change the theme color, the language
 func OptionPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle(T("options"), 32)
 
