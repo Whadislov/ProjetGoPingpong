@@ -5,36 +5,51 @@ import (
 	"log"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
-// SavePlayers saves players in the database.
-func (db *Database) SaveUsers(users map[int]*mt.User) error {
+// SaveUsers saves users in the database.
+func (db *Database) SaveUsers(users map[uuid.UUID]*mt.User) error {
 	for _, user := range users {
-		query := `
-        INSERT INTO users (id, username, email, password_hash, created_at)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (id) DO UPDATE SET
-            username = EXCLUDED.username,
-            email = EXCLUDED.email,
-            password_hash = EXCLUDED.password_hash;
+		if user.IsNew {
+			// Let postgresql creates its own ID for a new user
+			var postgresUserID uuid.UUID
+			query := `
+        INSERT INTO users (username, email, password_hash, created_at)
+        VALUES ($1, $2, $3, $4)
+		RETURNING id;
         `
-		_, err := db.Conn.Exec(query, user.ID, user.Name, user.Email, user.PasswordHash, user.CreatedAt)
-		if err != nil {
-			return fmt.Errorf("failed to save user: %w", err)
+			err := db.Conn.QueryRow(query, user.Name, user.Email, user.PasswordHash, user.CreatedAt).Scan(&postgresUserID)
+			if err != nil {
+				return fmt.Errorf("failed to save user: %w", err)
+			}
+			// Change the ID for the relationship tables
+			user.ID = postgresUserID
+			userIDOfSession = user.ID
+		} else {
+			query := `
+        UPDATE users
+		SET username = $1, email = $2, password_hash = $3, created_at = $4
+		WHERE id = $5;
+        `
+			_, err := db.Conn.Exec(query, user.Name, user.Email, user.PasswordHash, user.CreatedAt, user.ID)
+			if err != nil {
+				return fmt.Errorf("failed to save user: %w", err)
+			}
 		}
 	}
 	return nil
 }
 
 // SavePlayers saves players in the database.
-func (db *Database) SavePlayers(players map[int]*mt.Player) error {
+func (db *Database) SavePlayers(players map[uuid.UUID]*mt.Player) error {
 	for _, player := range players {
-		if player.ID < 0 {
+		if player.IsNew {
 			// Let postgresql creates its own ID for a new player
-			var postgresPlayerID int
+			var postgresPlayerID uuid.UUID
 			query := `
-			INSERT INTO players (id, firstname, lastname, age, ranking, forehand, backhand, blade, user_id)
-			VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)
+			INSERT INTO players (firstname, lastname, age, ranking, forehand, backhand, blade, user_id)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], userIDOfSession).Scan(&postgresPlayerID)
@@ -48,7 +63,7 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 			query := `
 			UPDATE players 
 			SET firstname = $1, lastname = $2, age = $3, ranking = $4, forehand = $5, backhand = $6, blade = $7
-			WHERE id = $7;
+			WHERE id = $8;
 			`
 			_, err := db.Conn.Exec(query, player.Firstname, player.Lastname, player.Age, player.Ranking, player.Material[0], player.Material[1], player.Material[2], player.ID)
 			if err != nil {
@@ -60,14 +75,14 @@ func (db *Database) SavePlayers(players map[int]*mt.Player) error {
 }
 
 // SaveTeams saves teams in the database.
-func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
+func (db *Database) SaveTeams(teams map[uuid.UUID]*mt.Team) error {
 	for _, team := range teams {
-		if team.ID < 0 {
+		if team.IsNew {
 			// Let postgresql creates its own ID for a new team
-			var postgresTeamID int
+			var postgresTeamID uuid.UUID
 			query := `
-			INSERT INTO teams (id, name, user_id)
-			VALUES (DEFAULT, $1, $2)
+			INSERT INTO teams (name, user_id)
+			VALUES ($1, $2)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, team.Name, userIDOfSession).Scan(&postgresTeamID)
@@ -93,14 +108,14 @@ func (db *Database) SaveTeams(teams map[int]*mt.Team) error {
 }
 
 // SaveClubs saves clubs in the database.
-func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
+func (db *Database) SaveClubs(clubs map[uuid.UUID]*mt.Club) error {
 	for _, club := range clubs {
-		if club.ID < 0 {
+		if club.IsNew {
 			// Let postgresql creates its own ID for a new club
-			var postgresClubID int
+			var postgresClubID uuid.UUID
 			query := `
-			INSERT INTO clubs (id, name, user_id)
-			VALUES (DEFAULT, $1, $2)
+			INSERT INTO clubs (name, user_id)
+			VALUES ($1, $2)
 			RETURNING id;
 			`
 			err := db.Conn.QueryRow(query, club.Name, userIDOfSession).Scan(&postgresClubID)
@@ -126,7 +141,7 @@ func (db *Database) SaveClubs(clubs map[int]*mt.Club) error {
 }
 
 // SavePlayerClubs saves the player-club relationships in the database.
-func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
+func (db *Database) SavePlayerClubs(players map[uuid.UUID]*mt.Player) error {
 	for _, player := range players {
 		for clubID := range player.ClubIDs {
 			query := `
@@ -144,7 +159,7 @@ func (db *Database) SavePlayerClubs(players map[int]*mt.Player) error {
 }
 
 // SavePlayerTeams saves the player-team relationships in the database.
-func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
+func (db *Database) SavePlayerTeams(players map[uuid.UUID]*mt.Player) error {
 	for _, player := range players {
 		for teamID := range player.TeamIDs {
 			query := `
@@ -162,7 +177,7 @@ func (db *Database) SavePlayerTeams(players map[int]*mt.Player) error {
 }
 
 // SaveTeamClubs saves the team-club relationships in the database.
-func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
+func (db *Database) SaveTeamClubs(teams map[uuid.UUID]*mt.Team) error {
 	for _, team := range teams {
 		for clubID := range team.ClubID {
 			query := `
@@ -180,7 +195,7 @@ func (db *Database) SaveTeamClubs(teams map[int]*mt.Team) error {
 }
 
 // SaveDeletions saves the deletion that have been made by the user in the database.
-func (db *Database) SaveDeletions(DElements map[string][]int) error {
+func (db *Database) SaveDeletions(DElements map[string][]uuid.UUID) error {
 	for table, ids := range DElements {
 		if table != "users" && table != "players" && table != "teams" && table != "clubs" {
 			return fmt.Errorf("invalid table name: %s", table)

@@ -2,15 +2,16 @@ package my_functions
 
 import (
 	"fmt"
-	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"regexp"
-)
+	"strings"
 
-const DefaultMaterial = "Unknown"
+	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+)
 
 // DefaultPlayerMaterial returns a slice of strings representing the default material for a player.
 func DefaultPlayerMaterial() []string {
-	return []string{DefaultMaterial, DefaultMaterial, DefaultMaterial}
+	defaultMaterial := ""
+	return []string{defaultMaterial, defaultMaterial, defaultMaterial}
 }
 
 // GetName returns the name of the given entity (Player, Team, or Club).
@@ -99,7 +100,7 @@ func IsValidEmail(email string) (bool, error) {
 	}
 }
 
-// isValidEmail verifies that the password is not empty and does no contain spaces
+// IsValidPassword verifies that the password is not empty and does no contain spaces
 func IsValidPassword(password string) (bool, error) {
 	if password == "" {
 		return false, fmt.Errorf("password cannot be empty")
@@ -112,4 +113,36 @@ func IsValidPassword(password string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// IsValidTeamClubName verifies that the team name or club name is not empty and only contain letters and figures
+func IsValidTeamClubName(name string) (bool, error) {
+	if name == "" {
+		return false, fmt.Errorf("name cannot be empty")
+	}
+
+	nameRegex := `^[a-zA-Z0-9 ]+$`
+
+	// Compile the regex
+	re := regexp.MustCompile(nameRegex)
+
+	// Verify if the string is a regex
+	if re.MatchString(name) {
+		return re.MatchString(name), nil
+	} else {
+		return re.MatchString(name), fmt.Errorf("name must be valid (letters, figures and one space are allowed)")
+	}
+}
+
+// IsStrTooLong verifies that the string is not too long
+func IsStrTooLong(s string, maxLength int) (bool, error) {
+	if len(s) > maxLength {
+		return true, fmt.Errorf("string is too long")
+	}
+	return false, nil
+}
+
+// standardizeSpaces removes spaces at the beginning and end of the string and replaces multiple spaces by one
+func standardizeSpaces(s string) string {
+	return strings.Join(strings.Fields(s), " ")
 }

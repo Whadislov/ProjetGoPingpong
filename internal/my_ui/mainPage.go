@@ -2,7 +2,6 @@ package myapp
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -15,47 +14,45 @@ var HasChanged bool
 // MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	// Database page
-	databasePage := DatabasePage(db, w, a)
+	var mainPage *fyne.Container
+	pageTitle := setTitle("TT Companion", 32)
 
-	// Functionality page
-	functionalityPage := FunctionalityPage(db, w, a)
-
-	// Main page design
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	mainText := canvas.NewText("TT Companion", themeColor)
-	mainText.Alignment = fyne.TextAlignCenter
-	mainText.TextSize = 32
-
-	showDBButton := widget.NewButton("Your database", func() {
-		w.SetContent(databasePage)
+	showDBButton := widget.NewButton(T("your_database"), func() {
+		w.SetContent(DatabasePage(db, w, a))
 	})
 
-	showFuncButton := widget.NewButton("Functionalities", func() {
-		w.SetContent(functionalityPage)
+	showFuncButton := widget.NewButton(T("functionalities"), func() {
+		w.SetContent(FunctionalityPage(db, w, a))
 	})
 
-	quitButton := widget.NewButton("Quit", func() {
+	// Options button
+	OptionButton := widget.NewButton(T("options"), func() {
+		returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
+			w.SetContent(MainPage(db, w, a))
+		})
+		w.SetContent(container.NewVBox(OptionPage(db, w, a), returnToMainMenuButton))
+	})
+
+	quitButton := widget.NewButton(T("quit"), func() {
 		Quit(db, w, a, HasChanged)
 	})
 
-	// Initialize
-	var mainPage *fyne.Container
-
 	if appStartOption == "local" {
 		mainPage = container.NewVBox(
-			mainText,
+			pageTitle,
 			showDBButton,
 			showFuncButton,
+			OptionButton,
 			quitButton,
 		)
 
 	} else if appStartOption == "browser" {
 		// Remove the quit button
 		mainPage = container.NewVBox(
-			mainText,
+			pageTitle,
 			showDBButton,
 			showFuncButton,
+			OptionButton,
 		)
 	}
 

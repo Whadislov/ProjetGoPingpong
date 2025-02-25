@@ -17,7 +17,7 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 	var tCanvasObjet fyne.CanvasObject
 
 	if len(club.PlayerIDs) == 0 {
-		pCanvasObjet = widget.NewLabel("There is currently 0 player in this club")
+		pCanvasObjet = widget.NewLabel(T("currently_0_player"))
 	} else {
 		// Sort players alphabetically
 		players := []string{}
@@ -32,14 +32,14 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 			pText += fmt.Sprintln(player)
 		}
 		pText = pText[:len(pText)-1] // remove the last \n
-		itemp := widget.NewAccordionItem("Show players",
+		itemp := widget.NewAccordionItem(T("show_players"),
 			container.NewVBox(widget.NewLabel(pText)),
 		)
 		pCanvasObjet = widget.NewAccordion(itemp)
 	}
 
 	if len(club.TeamIDs) == 0 {
-		tCanvasObjet = widget.NewLabel("There is currently 0 team in this club")
+		tCanvasObjet = widget.NewLabel(T("currently_0_team_available"))
 	} else {
 
 		// Sort teams alphabetically
@@ -55,7 +55,7 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 			tText += fmt.Sprintln(team)
 		}
 		tText = tText[:len(tText)-1] // remove the last \n
-		itemt := widget.NewAccordionItem("Show teams",
+		itemt := widget.NewAccordionItem(T("show_teams"),
 			container.NewVBox(widget.NewLabel(tText)),
 		)
 		tCanvasObjet = widget.NewAccordion(itemt)
@@ -71,11 +71,11 @@ func ClubInfos(club *mt.Club) *fyne.Container {
 
 // ClubPage sets up the page for displaying players and teams of a club.
 func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
-	pageTitle := setTitle("Clubs", 32)
+	pageTitle := setTitle(T("clubs"), 32)
 	ac := widget.NewAccordion()
 
 	// "Sort the map"
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, club := range sortedClubs {
 		item := widget.NewAccordionItem(club.Value.Name,
@@ -84,7 +84,7 @@ func ClubPage(db *mt.Database, w fyne.Window, a fyne.App) {
 		ac.Append(item)
 	}
 
-	returnToDatabasePageButton := widget.NewButton("Return to database", func() {
+	returnToDatabasePageButton := widget.NewButton(T("return_to_database"), func() {
 		databasePage := DatabasePage(db, w, a)
 		w.SetContent(databasePage)
 	})

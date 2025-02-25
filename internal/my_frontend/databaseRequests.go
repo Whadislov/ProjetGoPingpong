@@ -11,7 +11,7 @@ import (
 )
 
 // LoadDB loads the database.
-func LoadDB(authToken string) (*mt.Database, error) {
+func LoadDB(credToken string) (*mt.Database, error) {
 	var golangDB *mt.Database
 
 	req, err := http.NewRequest("GET", "http://localhost:8001/api/load-database", nil)
@@ -20,7 +20,7 @@ func LoadDB(authToken string) (*mt.Database, error) {
 	}
 
 	// Add the token in the Authorization header
-	req.Header.Set("Authorization", "Bearer "+authToken)
+	req.Header.Set("Authorization", "Bearer "+credToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -44,7 +44,7 @@ func LoadDB(authToken string) (*mt.Database, error) {
 }
 
 // SaveDB saves the database.
-func SaveDB(authToken string, golangDB *mt.Database) error {
+func SaveDB(credToken string, golangDB *mt.Database) error {
 
 	dataToSave, err := json.Marshal(golangDB)
 	if err != nil {
@@ -57,8 +57,8 @@ func SaveDB(authToken string, golangDB *mt.Database) error {
 	}
 
 	// Add the token in the Authorization header
-	log.Println("authToken=", authToken)
-	req.Header.Set("Authorization", "Bearer "+authToken)
+	log.Println("cred_token=", credToken)
+	req.Header.Set("Authorization", "Bearer "+credToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

@@ -2,10 +2,11 @@ package my_types
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 )
 
 // SetClubID sets the ID of the club.
-func (c *Club) SetClubID(id int) {
+func (c *Club) SetClubID(id uuid.UUID) {
 	c.ID = id
 }
 
@@ -22,7 +23,7 @@ func (c *Club) AddPlayer(player *Player) error {
 	}
 
 	if c.PlayerIDs == nil {
-		c.PlayerIDs = make(map[int]string)
+		c.PlayerIDs = make(map[uuid.UUID]string)
 	}
 
 	c.PlayerIDs[player.ID] = player.Firstname + player.Lastname
@@ -37,7 +38,7 @@ func (c *Club) AddTeam(team *Team) error {
 	}
 
 	if c.TeamIDs == nil {
-		c.TeamIDs = make(map[int]string)
+		c.TeamIDs = make(map[uuid.UUID]string)
 	}
 
 	c.TeamIDs[team.ID] = team.Name

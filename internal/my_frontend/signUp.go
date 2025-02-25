@@ -10,7 +10,7 @@ import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
-// SignUp requests a new user creation, if everything is fine, the database of the new user and the token are returned
+// SignUp requests a new user creation, if everything is fine, the database of the new user and the credential token are returned
 func SignUp(username string, password string, email string) (*mt.Database, string, error) {
 	var data struct {
 		Username string `json:"username"`
@@ -18,7 +18,7 @@ func SignUp(username string, password string, email string) (*mt.Database, strin
 		Email    string `json:"email"`
 	}
 	var response struct {
-		Token string `json:"token"`
+		CredToken string `json:"cred_token"`
 	}
 
 	var db *mt.Database
@@ -64,10 +64,10 @@ func SignUp(username string, password string, email string) (*mt.Database, strin
 		return db, "", fmt.Errorf("error decoding JSON: %w", err)
 	} else {
 		log.Println("Succeed to sign user %w in", username)
-		db, err := LoadDB(response.Token)
+		db, err := LoadDB(response.CredToken)
 		if err != nil {
 			return db, "", fmt.Errorf("failed to load database: %w", err)
 		}
-		return db, response.Token, nil
+		return db, response.CredToken, nil
 	}
 }

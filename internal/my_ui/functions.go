@@ -1,14 +1,19 @@
 package myapp
 
 import (
+	"fmt"
+	"regexp"
 	"sort"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // strHelper is a helper fonction that takes from example ["ok1", "ok2" , "ok3"] and returns "ok1, ok2, ok3"
@@ -24,8 +29,8 @@ func strHelper(list []string) string {
 	return str
 }
 
-func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
-	Key   int
+func sortMap[T ~map[uuid.UUID]V, V mt.Entity](m T) []struct {
+	Key   uuid.UUID
 	Value V
 } {
 	// This function takes as parameter a variable of type : mt.Player or mt.Team or mt.Club
@@ -34,7 +39,7 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 	// Tip: it does not return a map, because maps can't be sorted
 
 	// Get keys from the map
-	keys := make([]int, 0, len(m))
+	keys := make([]uuid.UUID, 0, len(m))
 	for key := range m {
 		keys = append(keys, key)
 	}
@@ -46,13 +51,13 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 
 	// Build a new slice with the pair key/value
 	sorted := make([]struct {
-		Key   int
+		Key   uuid.UUID
 		Value V
 	}, len(keys))
 	// The new slice is sorted thanks to the slice keys
 	for i, k := range keys {
 		sorted[i] = struct {
-			Key   int
+			Key   uuid.UUID
 			Value V
 		}{
 			Key:   k,
@@ -64,8 +69,8 @@ func SortMap[T ~map[int]V, V mt.Entity](m T) []struct {
 }
 
 // Create a confirmation dialog
-func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
-	d := dialog.NewConfirm("Confirm deletion", message, func(confirm bool) {
+func showConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
+	d := dialog.NewConfirm(T("confirm"), message, func(confirm bool) {
 		if confirm {
 			onConfirm()
 		}
@@ -74,7 +79,7 @@ func ShowConfirmationDialog(w fyne.Window, message string, onConfirm func()) {
 }
 
 // Reinit the text of a widget entry
-func ReinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
+func reinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
 	entry.SetText("")
 	entry.SetPlaceHolder(entryHolder)
 }
@@ -90,7 +95,7 @@ func IsLettersOnly(s string) bool {
 }
 
 // Verify if the string is numbers only
-func IsNumbersOnly(s string) bool {
+func isNumbersOnly(s string) bool {
 	for _, r := range s {
 		if r < '0' || r > '9' {
 			return false
@@ -99,10 +104,41 @@ func IsNumbersOnly(s string) bool {
 	return true
 }
 
+// isValidString verifies that the string is not empty and only contain letters, figures and some spaces
+func isValidString(s string) (bool, error) {
+	if s == "" {
+		return false, fmt.Errorf("string cannot be empty")
+	}
+
+	sRegex := `^[a-zA-Z0-9      ]+$`
+
+	// Compile the regex
+	re := regexp.MustCompile(sRegex)
+
+	// Verify if the string is a regex
+	if re.MatchString(s) {
+		return re.MatchString(s), nil
+	} else {
+		return re.MatchString(s), fmt.Errorf("string must be valid (letters, figures and one space are allowed)")
+	}
+}
+
+// standardizeSpaces removes spaces at the beginning and end of the string and replaces multiple spaces by one
+func standardizeSpaces(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}
+
 // setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size
 func setTitle(s string, size float32) *canvas.Text {
 	a := fyne.CurrentApp()
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	themeColor := a.Settings().Theme().Color("foreground",
+		func() fyne.ThemeVariant {
+			if darkTheme.IsActivated {
+				return theme.VariantDark
+			} else {
+				return theme.VariantLight
+			}
+		}())
 	title := canvas.NewText(s, themeColor)
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size
@@ -112,9 +148,31 @@ func setTitle(s string, size float32) *canvas.Text {
 // setText sets the string as a text for the page. The string respects dark/light mode and has its size
 func sexText(s string, size float32) *canvas.Text {
 	a := fyne.CurrentApp()
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+	themeColor := a.Settings().Theme().Color("foreground",
+		func() fyne.ThemeVariant {
+			if darkTheme.IsActivated {
+				return theme.VariantDark
+			} else {
+				return theme.VariantLight
+			}
+		}())
 	title := canvas.NewText(s, themeColor)
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size
 	return title
+}
+
+// loadTheme sets the flags for the light Theme and the dark Theme
+func loadTheme(a fyne.App) {
+	if a.Settings().ThemeVariant() == 1 {
+		lightTheme.IsActivated = true
+	} else {
+		// Dark Theme on default
+		darkTheme.IsActivated = true
+	}
+}
+
+// loadTheme sets the flags for the light Theme and the dark Theme, browser
+func loadThemeWeb() {
+	darkTheme.IsActivated = true
 }

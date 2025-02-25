@@ -5,9 +5,6 @@ import (
 	"log"
 	"time"
 
-	//mdb "github.com/Whadislov/TTCompanion/internal/my_db"
-	//mt "github.com/Whadislov/TTCompanion/internal/my_types"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -18,34 +15,36 @@ import (
 func StarterPage() fyne.App {
 	a := app.NewWithID("com.onrender.TTCompanion")
 
-	// Set the icon
 	icon, err := fyne.LoadResourceFromPath("Icon.png")
 	if err != nil {
 		log.Printf("Failed to load icon: %v", err)
 	}
 	a.SetIcon(icon)
 
+	// Set language
+	AddTranslationsFS(translations, "translation")
+
 	mainWindow := a.NewWindow("TT Companion")
 	mainWindow.Resize(fyne.NewSize(600, 400))
+	mainWindow.CenterOnScreen() // Center the window on the monitor
 
-	// Center the window on the monitor
-	mainWindow.CenterOnScreen()
+	if appStartOption == "local" {
+		// Know if light mode is activated or not
+		loadTheme(a)
+	} else if appStartOption == "browser" {
+		loadThemeWeb()
+	}
 
-	// Welcome page
-	themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
-	welcomeText := canvas.NewText("Welcome to TT Companion", themeColor)
-	welcomeText.Alignment = fyne.TextAlignCenter
-	welcomeText.TextSize = 32
-	welcomePage := container.NewCenter(welcomeText)
-
-	// Main page
-	//mainPage := MainPage(db, mainWindow, a)
+	// Starter page
+	pageTitle := setTitle(T("welcome_to_tt_companion"), 32)
+	starterPage := container.NewCenter(pageTitle)
 
 	// Fade
 	go func() {
 		time.Sleep(1 * time.Second)
 		if appStartOption == "local" {
-			fadeText(welcomeText, themeColor)
+			themeColor := a.Settings().Theme().Color("foreground", a.Settings().ThemeVariant())
+			fadeText(pageTitle, themeColor)
 			// go to main page with delay so that the menu is not directly shown
 			log.Println("Transitioning to identification page")
 			mainWindow.SetContent(AuthentificationPage(mainWindow, a))
@@ -58,7 +57,7 @@ func StarterPage() fyne.App {
 
 	}()
 	log.Println("Displaying welcome page")
-	mainWindow.SetContent(welcomePage)
+	mainWindow.SetContent(starterPage)
 	mainWindow.SetMainMenu(nil)
 	mainWindow.ShowAndRun()
 	return a

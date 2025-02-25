@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -15,6 +16,9 @@ import (
 	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
+
+//go:embed translation/*
+var translations embed.FS
 
 func loadConfig(filename string) (*api.Config, error) {
 	file, err := os.Open(filename)
@@ -31,6 +35,11 @@ func loadConfig(filename string) (*api.Config, error) {
 	}
 
 	return config, nil
+}
+
+func initWASM() {
+	// Load translations
+	mu.InitTranslations(translations)
 }
 
 func main() {
@@ -91,6 +100,7 @@ func main() {
 
 	// Start app locally
 	if appStartOption == "local" {
+		initWASM()
 		// Load env variables
 		err := godotenv.Load("credentials.env")
 		if err != nil {

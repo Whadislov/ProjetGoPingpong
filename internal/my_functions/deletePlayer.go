@@ -4,13 +4,14 @@ import (
 	"fmt"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // DeletePlayer removes a player from the database and updates all related team and club records.
 // Returns an error if there is an issue with the operation.
 func DeletePlayer(p *mt.Player, db *mt.Database) error {
 	// Remove club depedences
-	var clubIDs []int
+	var clubIDs []uuid.UUID
 	if len(p.ClubIDs) > 0 {
 		for clubID := range p.ClubIDs {
 			clubIDs = append(clubIDs, clubID)
@@ -28,7 +29,7 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 	}
 
 	// Remove team depedences
-	var teamIDs []int
+	var teamIDs []uuid.UUID
 	if len(p.TeamIDs) > 0 {
 		for teamID := range p.TeamIDs {
 			teamIDs = append(teamIDs, teamID)
@@ -53,7 +54,7 @@ func DeletePlayer(p *mt.Player, db *mt.Database) error {
 		return fmt.Errorf("error when deleting player %s %s: %w", p.Firstname, p.Lastname, err)
 	} else {
 		// If already in postgres, store the ID to be deleted
-		if IDtoDelete >= 0 {
+		if !p.IsNew {
 			db.AddDeletedPlayer(IDtoDelete)
 		}
 	}

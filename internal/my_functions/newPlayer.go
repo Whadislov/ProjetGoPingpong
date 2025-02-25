@@ -7,6 +7,7 @@ import (
 	"unicode/utf8"
 
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 )
 
 // NewPlayer creates a new player with the given name and adds it to the database.
@@ -17,8 +18,18 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 		return nil, err
 	}
 
+	b, err = IsStrTooLong(firstname, 30)
+	if b {
+		return nil, err
+	}
+
 	b, err = IsValidName(lastname)
 	if !b {
+		return nil, err
+	}
+
+	b, err = IsStrTooLong(lastname, 30)
+	if b {
 		return nil, err
 	}
 
@@ -35,18 +46,17 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 	}
 
 	p := &mt.Player{
-		ID:        NewPlayerCount,
+		ID:        uuid.New(),
 		Firstname: firstname,
 		Lastname:  lastname,
 		Age:       -1,
 		Ranking:   -1,
 		Material:  DefaultPlayerMaterial(),
-		TeamIDs:   make(map[int]string),
-		ClubIDs:   make(map[int]string),
+		TeamIDs:   make(map[uuid.UUID]string),
+		ClubIDs:   make(map[uuid.UUID]string),
+		IsNew:     true,
 	}
 
-	// Be ready for next player
-	NewPlayerCount--
 	db.AddPlayer(p)
 	log.Printf("Player %v sucessfully created.", firstname+lastname)
 	return p, nil

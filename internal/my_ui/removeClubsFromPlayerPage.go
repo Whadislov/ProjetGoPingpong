@@ -3,6 +3,7 @@ package myapp
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 
 	"fmt"
 
@@ -15,7 +16,7 @@ import (
 // currentSelectionPageCfromP sets up the page for selecting players and clubs.
 func currentSelectionPageCfromP(playerContent *fyne.Container, clubContent *fyne.Container, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
+	returnToRemovePageButton := widget.NewButton(T("return_to_remove_menu"), func() {
 		RemovePage(db, w, a)
 	})
 
@@ -46,25 +47,25 @@ func SelectionPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Conta
 	}
 
 	if playersInClub > 0 {
-		pageTitle := setTitle("Remove: select a player", 32)
-		playerSelectionPageButton := widget.NewButton("Select a player", func() { w.SetContent(selectPlayerPageCfromP(db, w, a)) })
+		pageTitle := setTitle(T("remove_select_a_player"), 32)
+		playerSelectionPageButton := widget.NewButton(T("select_a_player"), func() { w.SetContent(selectPlayerPageCfromP(db, w, a)) })
 		return container.NewVBox(
 			pageTitle,
 			playerSelectionPageButton)
 	} else {
-		pageTitle := setTitle("Remove", 32)
+		pageTitle := setTitle(T("remove"), 32)
 		return container.NewVBox(
 			pageTitle,
-			widget.NewLabel("There is currently 0 player in any club"))
+			widget.NewLabel(T("currently_0_player_available")))
 	}
 }
 
 // selectPlayerPageCfromP sets up the page for selecting a player from the database.
 func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	pageTitle := setTitle("Remove: select a player", 32)
+	pageTitle := setTitle(T("remove_select_a_player"), 32)
 
-	returnToPlayerSelectionPageCfromPButton := widget.NewButton("Cancel", func() {
+	returnToPlayerSelectionPageCfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(
 			currentSelectionPageCfromP(
 				SelectionPageCfromP(db, w, a), nil, db, w, a,
@@ -72,11 +73,11 @@ func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 		)
 	})
 
-	pLabel := widget.NewLabel("Players 🏓")
+	pLabel := widget.NewLabel(T("players_with_racket_emoji"))
 	playerButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of players" for a better button display
-	sortedPlayers := SortMap(db.Players)
+	sortedPlayers := sortMap(db.Players)
 
 	for _, p := range sortedPlayers {
 		player := p.Value
@@ -85,7 +86,7 @@ func selectPlayerPageCfromP(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Co
 		if len(player.ClubIDs) == 0 {
 			continue
 		} else {
-			playerButton := widget.NewButton(player.Firstname+player.Lastname, func() { w.SetContent(selectedPlayerPageCfromP(player, db, w, a)) })
+			playerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() { w.SetContent(selectedPlayerPageCfromP(player, db, w, a)) })
 			playerButtons = append(playerButtons, playerButton)
 		}
 	}
@@ -104,11 +105,11 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 
 	pageTitle := setTitle("Remove: select a club", 32)
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
-	cLabel := widget.NewLabel("Club current selection 🏠")
+	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
+	cLabel := widget.NewLabel(T("club_current_selection_house_emoji"))
 
 	// User can click on the selected player to return to the list of player
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageCfromP(db, w, a))
 	})
 
@@ -118,12 +119,12 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 	)
 
 	if len(player.ClubIDs) == 0 {
-		dialog.ShowInformation("Information", fmt.Sprintf("%v has no club", player.Firstname+player.Lastname), w)
+		dialog.ShowInformation(T("information"), fmt.Sprintf("%v has no club", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)), w)
 		return selectPlayerPageCfromP(db, w, a)
 	}
 
 	// Now select a club
-	selectClubButton := widget.NewButton("Select a club", func() {
+	selectClubButton := widget.NewButton(T("select_a_club"), func() {
 		w.SetContent(selectClubPageCfromP(player, db, w, a))
 	})
 
@@ -149,13 +150,13 @@ func selectedPlayerPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window,
 func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 	pageTitle := setTitle("Remove: select a club", 32)
 
-	returnToClubSelectionPageCfromPButton := widget.NewButton("Return to club selection", func() {
+	returnToClubSelectionPageCfromPButton := widget.NewButton(T("return_to_club_selection"), func() {
 		w.SetContent(selectedPlayerPageCfromP(player, db, w, a))
 	})
 
-	cLabel := widget.NewLabel("Clubs 🏠")
+	cLabel := widget.NewLabel(T("clubs_house_emoji"))
 	clubButtons := []fyne.CanvasObject{}
-	selectedClub := make(map[int]*mt.Club)
+	selectedClub := make(map[uuid.UUID]*mt.Club)
 
 	// Nothing to remove
 	if len(db.Players) == 0 {
@@ -174,7 +175,7 @@ func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 	}
 
 	// "Sort the map of clubs" for a better button display
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, c := range sortedClubs {
 		club := c.Value
@@ -198,7 +199,7 @@ func selectClubPageCfromP(player *mt.Player, db *mt.Database, w fyne.Window, a f
 }
 
 // createClubButtonsCfromP creates buttons for each selected club.
-func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[int]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
+func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, selectedClub map[uuid.UUID]*mt.Club, selectedclubButtons []fyne.CanvasObject, w fyne.Window, a fyne.App) []fyne.CanvasObject {
 	// User can click on the selected club to remove the club from the selected club list
 	selectedclubButton := widget.NewButton(club.Name, func() {
 		delete(selectedClub, club.ID)
@@ -217,17 +218,17 @@ func createClubButtonsCfromP(player *mt.Player, club *mt.Club, db *mt.Database, 
 }
 
 // addAnotherclubPageCfromP sets up the page for adding another club to the selected player.
-func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 
-	returnToClubSelectionPageCfromPButton := widget.NewButton("Cancel", func() {
+	returnToClubSelectionPageCfromPButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	})
 
-	cLabel := widget.NewLabel("Clubs 🏠")
+	cLabel := widget.NewLabel(T("clubs_house_emoji"))
 	clubButtons := []fyne.CanvasObject{}
 
 	// "Sort the map of clubs" for a better button display
-	sortedClubs := SortMap(db.Clubs)
+	sortedClubs := sortMap(db.Clubs)
 
 	for _, c := range sortedClubs {
 		club := c.Value
@@ -245,7 +246,7 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[int]*mt
 	}
 
 	if len(clubButtons) == 0 {
-		dialog.ShowInformation("Information", "There is no more club to add", w)
+		dialog.ShowInformation(T("information"), T("there_is_no_more_club_to_add"), w)
 		w.SetContent(selectedClubPageCfromP(player, alreadyselectedClub, db, w, a))
 	}
 
@@ -259,19 +260,19 @@ func addAnotherclubPageCfromP(player *mt.Player, alreadyselectedClub map[int]*mt
 }
 
 // selectedClubPageCfromP sets up the page for confirming the selected clubs for a player.
-func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Remove: confirm selection", 32)
+func selectedClubPageCfromP(player *mt.Player, selectedClub map[uuid.UUID]*mt.Club, db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
+	pageTitle := setTitle(T("remove_confirm_selection"), 32)
 
-	returnToRemovePageButton := widget.NewButton("Return to the remove menu", func() {
+	returnToRemovePageButton := widget.NewButton(T("return_to_remove_menu"), func() {
 		RemovePage(db, w, a)
 	})
 
-	pLabel := widget.NewLabel(fmt.Sprintf("You have selected %v 🏓", player.Firstname+player.Lastname))
+	pLabel := widget.NewLabel(fmt.Sprintf(T("you_have_selected")+" %v 🏓", fmt.Sprintf("%v %v", player.Firstname, player.Lastname)))
 
 	// "Sort the map of selectedClub" for a better button display
-	sortedselectedClub := SortMap(selectedClub)
+	sortedselectedClub := sortMap(selectedClub)
 
-	confirmButton := widget.NewButton("Confirm", func() {
+	confirmButton := widget.NewButton(T("confirm"), func() {
 		var err error
 		clubNames := []string{}
 		for _, c := range sortedselectedClub {
@@ -284,9 +285,9 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 			}
 		}
 
-		successMsg := fmt.Sprintf("%v is no longer playing in %v", player.Firstname+player.Lastname, strHelper(clubNames))
+		successMsg := fmt.Sprintf("%v is no longer playing in %v", fmt.Sprintf("%v %v", player.Firstname, player.Lastname), strHelper(clubNames))
 		fmt.Println(successMsg)
-		dialog.ShowInformation("Success", successMsg, w)
+		dialog.ShowInformation(T("success"), successMsg, w)
 
 		// Set the flag to true to indicate that the database has changed
 		HasChanged = true
@@ -307,12 +308,12 @@ func selectedClubPageCfromP(player *mt.Player, selectedClub map[int]*mt.Club, db
 	}
 
 	// Add another club in the club selection
-	addAnotherclubButton := widget.NewButton("Add another club", func() {
+	addAnotherclubButton := widget.NewButton(T("add_another_club"), func() {
 		w.SetContent(addAnotherclubPageCfromP(player, selectedClub, db, w, a))
 	})
 
 	// User can click on the selected player to return the list of players
-	selectedPlayerButton := widget.NewButton(player.Firstname+player.Lastname, func() {
+	selectedPlayerButton := widget.NewButton(fmt.Sprintf("%v %v", player.Firstname, player.Lastname), func() {
 		w.SetContent(selectPlayerPageCfromP(db, w, a))
 	})
 

@@ -2,23 +2,24 @@ package databasemethods_test
 
 import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestAddPlayer(t *testing.T) {
 	d := mt.Database{
-		Clubs:   map[int]*mt.Club{},
-		Teams:   map[int]*mt.Team{},
-		Players: map[int]*mt.Player{},
+		Clubs:   map[uuid.UUID]*mt.Club{},
+		Teams:   map[uuid.UUID]*mt.Team{},
+		Players: map[uuid.UUID]*mt.Player{},
 	}
 
 	p1 := mt.Player{
-		ID:        0,
+		ID:        uuid.New(),
 		Firstname: "p1",
 	}
 
 	p2 := mt.Player{
-		ID:        1,
+		ID:        uuid.New(),
 		Firstname: "p2",
 	}
 

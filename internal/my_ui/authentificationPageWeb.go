@@ -1,6 +1,7 @@
 package myapp
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -16,16 +17,23 @@ import (
 // AuthentificationPageWeb returns a page that contains a log in button and a sign up button
 func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
+	// Know if light mode is activated or not
+	if a.Settings().ThemeVariant() == 1 {
+		lightTheme.IsActivated = true
+	} else {
+		darkTheme.IsActivated = true
+	}
+
 	pageTitle := setTitle("TT Companion", 32)
 
-	authLabel := widget.NewLabel("Please authenticate")
+	authLabel := widget.NewLabel(T("please_authenticate"))
 	authLabel.Alignment = fyne.TextAlignCenter
 
-	logInButton := widget.NewButton("Log in", func() {
+	logInButton := widget.NewButton(T("log_in"), func() {
 		w.SetContent(loginPageWeb(w, a))
 	})
 
-	signUpButton := widget.NewButton("Sign up", func() {
+	signUpButton := widget.NewButton(T("sign_up"), func() {
 		w.SetContent(signUpPageWeb(w, a))
 	})
 
@@ -43,51 +51,51 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 // signUpPageWeb returns a page that contains a create username and a create password field. Adds a new user in the database
 func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Create your account", 32)
+	pageTitle := setTitle(T("create_your_account"), 32)
 
 	emailLabel := widget.NewLabel("✉️ E-mail")
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder("abc@def.com")
 
-	usernameLabel := widget.NewLabel("👤 Username")
+	usernameLabel := widget.NewLabel(T("username"))
 	usernameEntry := widget.NewEntry()
 
-	passwordLabel := widget.NewLabel("🔒 Password")
+	passwordLabel := widget.NewLabel(T("password"))
 	passwordEntry := widget.NewPasswordEntry()
 
-	confirmPasswordLabel := widget.NewLabel("Confirm Password")
+	confirmPasswordLabel := widget.NewLabel(T("confirm_password"))
 	confirmPasswordEntry := widget.NewPasswordEntry()
 
-	validationButton := widget.NewButton("Create", func() {
+	validationButton := widget.NewButton(T("create"), func() {
 		log.Println("Creating new User")
 		_, err := mf.IsValidEmail(emailEntry.Text)
 		_, err2 := mf.IsValidUsername(usernameEntry.Text)
 		_, err3 := mf.IsValidPassword(passwordEntry.Text)
 
 		if err != nil {
-			dialog.ShowError(err, w)
+			dialog.ShowError(errors.New(T("email.must_be_valid")), w)
 			log.Println("e-mail is not valid:", err)
 			w.SetContent(signUpPageWeb(w, a))
 		} else if err2 != nil {
-			dialog.ShowError(err, w)
+			dialog.ShowError(errors.New(T("username.must_be_valid")), w)
 			log.Println("username is not valid:", err)
 			w.SetContent(signUpPageWeb(w, a))
 		} else if err3 != nil {
-			dialog.ShowError(err, w)
+			dialog.ShowError(errors.New(T("password.must_be_valid")), w)
 			log.Println("password is not valid:", err)
 			w.SetContent(signUpPageWeb(w, a))
 		} else if passwordEntry.Text != confirmPasswordEntry.Text {
-			dialog.ShowError(fmt.Errorf("passwords do not match"), w)
+			dialog.ShowError(errors.New(T("password.not_matching")), w)
 			log.Println("passwords do not match:")
 			w.SetContent(signUpPageWeb(w, a))
 		} else {
 			db, token, err := mfr.SignUp(usernameEntry.Text, passwordEntry.Text, emailEntry.Text)
-			jsonWebToken = token
+			credToken = token
 			// Last check if username or email already exist
 			if err != nil {
 				// Need to recheck this err
-				log.Println("Username or e-mail already exist")
-				dialog.ShowError(fmt.Errorf("failed to sign up: %v", err), w)
+				log.Println("Username or e-mail already exists")
+				dialog.ShowError(errors.New(T("failed_to_sign_up")), w)
 				w.SetContent(signUpPageWeb(w, a))
 			} else {
 				log.Println("Sign up is successfull")
@@ -96,7 +104,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 					if user.Name == usernameEntry.Text {
 						userOfSession = user
 					} else {
-						dialog.ShowError(fmt.Errorf("failed to load your profile: "), w)
+						dialog.ShowError(errors.New(T("failed_to_load_profile")), w)
 					}
 				}
 				w.SetContent(MainPage(db, w, a))
@@ -105,7 +113,7 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		}
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(AuthentificationPageWeb(w, a))
 	})
 
@@ -128,19 +136,19 @@ func signUpPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 // logInPageWeb returns a page that contains a enter username and a enter password field. Checks if the user is in the database. If yes, sets the variable user_id for the rest of the program
 func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Login", 32)
+	pageTitle := setTitle(T("login"), 32)
 
-	usernameLabel := widget.NewLabel("👤 Username")
+	usernameLabel := widget.NewLabel(T("username"))
 	usernameEntry := widget.NewEntry()
 
-	passwordLabel := widget.NewLabel("🔒 Password")
+	passwordLabel := widget.NewLabel(T("password"))
 	passwordEntry := widget.NewPasswordEntry()
 
-	validationButton := widget.NewButton("Connect", func() {
+	validationButton := widget.NewButton(T("connect"), func() {
 		db, token, err := mfr.Login(usernameEntry.Text, passwordEntry.Text)
-		jsonWebToken = token
+		credToken = token
 		if err != nil {
-			dialog.ShowError(fmt.Errorf("failed to login: %v", err), w)
+			dialog.ShowError(fmt.Errorf(T("failed_to_log_in"), " %v", err), w)
 			w.SetContent(loginPageWeb(w, a))
 		} else {
 			log.Println("Login is successfull")
@@ -149,7 +157,7 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 				if user.Name == usernameEntry.Text {
 					userOfSession = user
 				} else {
-					dialog.ShowError(fmt.Errorf("failed to load your profile: "), w)
+					dialog.ShowError(errors.New(T("failed_to_load_profile")), w)
 				}
 			}
 			w.SetContent(MainPage(db, w, a))
@@ -157,12 +165,12 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		}
 	})
 
-	forgotPasswordButton := widget.NewButtonWithIcon("Forgot your password?", nil, func() {
+	forgotPasswordButton := widget.NewButtonWithIcon(T("forgot_password"), nil, func() {
 		w.SetContent(reinitPasswordPageWeb(w, a))
 	})
 	forgotPasswordButton.Importance = widget.LowImportance
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(AuthentificationPageWeb(w, a))
 	})
 
@@ -181,14 +189,14 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 // reinitPasswordPage offers the user the ability to be sent an Email for a password reset
 func reinitPasswordPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Forgot your password ?", 32)
-	pageText := sexText("Enter your e-mail address and click on the button below to reset your password", 12)
-	emailString := "Enter your e-mail address"
+	pageTitle := setTitle(T("forgot_password"), 32)
+	pageText := sexText(T("text.forgot_password"), 12)
+	emailString := T("enter_email_address")
 
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder(emailString)
 
-	validationButton := widget.NewButton("Reset your password", func() {
+	validationButton := widget.NewButton(T("reset_your_password"), func() {
 		b, err := mf.IsValidEmail(emailEntry.Text)
 		if !b {
 			dialog.ShowError(err, w)
@@ -197,9 +205,9 @@ func reinitPasswordPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 
 			// E-mail found
 			var resetEmailDialogSuccess *dialog.CustomDialog
-			cautionMessage := "⚠️ This feature is currently not working ⚠️\n\n"
-			resetEmailMessage := widget.NewLabel(fmt.Sprintf(cautionMessage+"A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in.", emailEntry.Text))
-			returnToLoginPageWeb := widget.NewButton("Return to the login screen", func() {
+			cautionMessage := T("caution_message")
+			resetEmailMessage := widget.NewLabel(fmt.Sprintf(cautionMessage+T("message.email_sent"), emailEntry.Text))
+			returnToLoginPageWeb := widget.NewButton(T("return_to_login_screen"), func() {
 				resetEmailDialogSuccess.Hide()
 				w.SetContent(loginPageWeb(w, a))
 			})
@@ -208,13 +216,13 @@ func reinitPasswordPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 				returnToLoginPageWeb,
 			)
 
-			resetEmailDialogSuccess = dialog.NewCustomWithoutButtons("Success", resetEmailContent, w)
+			resetEmailDialogSuccess = dialog.NewCustomWithoutButtons(T("success"), resetEmailContent, w)
 			resetEmailDialogSuccess.Show()
 		}
 
 	})
 
-	cancelButton := widget.NewButton("Cancel", func() {
+	cancelButton := widget.NewButton(T("cancel"), func() {
 		w.SetContent(loginPageWeb(w, a))
 	})
 

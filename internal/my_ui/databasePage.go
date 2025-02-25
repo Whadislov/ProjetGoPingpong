@@ -10,16 +10,16 @@ import (
 
 // DatabasePage sets up the page for showing players, teams, and clubs.
 func DatabasePage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
-	pageTitle := setTitle("Your database", 32)
+	pageTitle := setTitle(T("your_database"), 32)
 
-	returnToMainMenuButton := widget.NewButton("Return to main page", func() {
+	returnToMainMenuButton := widget.NewButton(T("return_to_main_page"), func() {
 		mainPage := MainPage(db, w, a)
 		w.SetContent(mainPage)
 	})
 
-	playerButton := widget.NewButton("Your players", func() { PlayerPage(db, w, a) })
-	teamButton := widget.NewButton("Your teams", func() { TeamPage(db, w, a) })
-	clubButton := widget.NewButton("Your clubs", func() { ClubPage(db, w, a) })
+	playerButton := widget.NewButton(T("your_players"), func() { PlayerPage(db, w, a) })
+	teamButton := widget.NewButton(T("your_teams"), func() { TeamPage(db, w, a) })
+	clubButton := widget.NewButton(T("your_clubs"), func() { ClubPage(db, w, a) })
 
 	databasePage := container.NewVBox(
 		pageTitle,

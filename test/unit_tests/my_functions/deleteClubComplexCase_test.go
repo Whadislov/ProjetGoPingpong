@@ -3,37 +3,44 @@ package myfunctions_test
 import (
 	mf "github.com/Whadislov/TTCompanion/internal/my_functions"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
+	"github.com/google/uuid"
 	"testing"
 )
 
 func TestDeleteClubComplexCase(t *testing.T) {
+	p1ID := uuid.New()
+	t1Id := uuid.New()
+	c1Id := uuid.New()
+	p1Name := "p1"
+	t1Name := "t1"
+	c1Name := "c1"
 
 	p1 := mt.Player{
-		ID:        0,
-		Firstname: "p1",
-		TeamIDs:   map[int]string{0: "t1"},
-		ClubIDs:   map[int]string{0: "c1"},
+		ID:        p1ID,
+		Firstname: p1Name,
+		TeamIDs:   map[uuid.UUID]string{t1Id: t1Name},
+		ClubIDs:   map[uuid.UUID]string{c1Id: c1Name},
 	}
 
 	t1 := mt.Team{
-		ID:        0,
-		Name:      "t1",
-		PlayerIDs: map[int]string{0: "p1"},
-		ClubID:    map[int]string{0: "c1"},
+		ID:        t1Id,
+		Name:      t1Name,
+		PlayerIDs: map[uuid.UUID]string{p1ID: p1Name},
+		ClubID:    map[uuid.UUID]string{c1Id: c1Name},
 	}
 
 	c1 := mt.Club{
-		ID:        0,
-		Name:      "c1",
-		PlayerIDs: map[int]string{p1.ID: p1.Firstname},
-		TeamIDs:   map[int]string{t1.ID: t1.Name},
+		ID:        c1Id,
+		Name:      c1Name,
+		PlayerIDs: map[uuid.UUID]string{p1.ID: p1Name},
+		TeamIDs:   map[uuid.UUID]string{t1.ID: t1Name},
 	}
 
 	d := mt.Database{
-		Clubs:           map[int]*mt.Club{0: &c1},
-		Teams:           map[int]*mt.Team{0: &t1},
-		Players:         map[int]*mt.Player{0: &p1},
-		DeletedElements: map[string][]int{},
+		Clubs:           map[uuid.UUID]*mt.Club{c1.ID: &c1},
+		Teams:           map[uuid.UUID]*mt.Team{t1.ID: &t1},
+		Players:         map[uuid.UUID]*mt.Player{p1.ID: &p1},
+		DeletedElements: map[string][]uuid.UUID{},
 	}
 
 	expectedLenDClubs := 0
