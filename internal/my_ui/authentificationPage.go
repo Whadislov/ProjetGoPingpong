@@ -190,7 +190,7 @@ func loginPage(w fyne.Window, a fyne.App) *fyne.Container {
 		panic(err)
 	}
 
-	validationButton := widget.NewButton(T("connect"), func() {
+	validationButton := widget.NewButton(T("login"), func() {
 
 		// Verify if username and password match
 		log.Println("Verifying username and password")

@@ -156,7 +156,7 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	passwordLabel := widget.NewLabel(T("password"))
 	passwordEntry := widget.NewPasswordEntry()
 
-	validationButton := widget.NewButton(T("connect"), func() {
+	validationButton := widget.NewButton(T("login"), func() {
 		db, token, err := mfr.Login(usernameEntry.Text, passwordEntry.Text)
 		credToken = token
 		if err != nil {

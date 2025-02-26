@@ -1,2 +1,3 @@
 credentials.env
-TTCompanion.exe
+builds
+fyne-cross
