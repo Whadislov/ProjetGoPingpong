@@ -7,4 +7,4 @@ type Config struct {
 	ServerPort    string `json:"server_port"`
 }
 
-var apiConfig string = "localhost:8001"
+var apiConfig string = "http://localhost:8001/"
