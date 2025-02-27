@@ -31,7 +31,7 @@ func SignUp(username string, password string, email string) (*mt.Database, strin
 		return db, "", err
 	}
 
-	resp, err := http.Post(config+"api/signup", "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(apiConfig+"/api/signup", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return db, "", err
 	}

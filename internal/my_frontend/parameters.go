@@ -7,8 +7,4 @@ type Config struct {
 	ServerPort    string `json:"server_port"`
 }
 
-var config string
-
-func SetConfig(c *Config) {
-	config = c.ServerAddress + ":" + c.ServerPort + "/"
-}
+var apiConfig string = "localhost:8001"

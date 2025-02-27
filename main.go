@@ -3,9 +3,12 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
 
@@ -33,8 +36,6 @@ func loadConfig(filename string) (*mfr.Config, error) {
 		return nil, err
 	}
 
-	mfr.SetConfig(config)
-
 	return config, nil
 }
 
@@ -51,30 +52,55 @@ func main() {
 	// Start app on a browser
 	if appStartOption == "browser" {
 		// Load env variables
+		fmt.Println("hello")
 		err := godotenv.Load("credentials.env")
 		if err != nil {
 			log.Fatal("Cannot load variables from .env")
 		}
+		fmt.Println("hello cred")
 
+		api.SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 		mdb.SetPsqlInfo(os.Getenv("WEB_DB_LINK"))
 		mdb.SetDBName(os.Getenv("DB_NAME"))
-		api.SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 
-		config, err := loadConfig("config_app.json")
-		if err != nil {
-			log.Fatalf("Cannot read config file: %v", err)
-		}
+		var wg sync.WaitGroup
 
 		// API
-		api.RunApi()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			api.RunApi()
+		}()
+
+		// Verify that the API is ready
+		apiURL := "http://localhost:8001/api/healthz"
+		mfr.WaitForAPI(apiURL, 10, 500*time.Millisecond)
+
 		// App
-		log.Printf("Starting app server on: %v:%v", config.ServerAddress, config.ServerPort)
-		fs := http.FileServer(http.Dir("./wasm"))
-		http.Handle("/", fs)
-		err = http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil)
-		if err != nil {
-			log.Fatalf("App server error: %v", err)
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			config, err := loadConfig("config_app.json")
+			if err != nil {
+				log.Fatalf("Cannot read config file: %v", err)
+			}
+			log.Printf("Starting app server on %v:%v", config.ServerAddress, config.ServerPort)
+
+			err = http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, http.FileServer(http.Dir("./wasm")))
+			if err != nil {
+				log.Fatalf("App server error: %v", err)
+			}
+			/*
+				fs := http.FileServer(http.Dir("./wasm")) // Mix
+				http.Handle("/", fs)
+				err = http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil)
+				if err != nil {
+					log.Fatalf("App server error: %v", err)
+				}
+			*/
+		}()
+
+		wg.Wait()
 
 	}
 

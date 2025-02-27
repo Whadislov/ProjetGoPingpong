@@ -33,8 +33,6 @@ func loadConfig(filename string) (*mfr.Config, error) {
 		return nil, err
 	}
 
-	mfr.SetConfig(config)
-
 	return config, nil
 }
 
@@ -60,14 +58,13 @@ func main() {
 		mdb.SetDBName(os.Getenv("DB_NAME"))
 		api.SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 
+		// API
+		api.RunApi()
+		// App
 		config, err := loadConfig("config_app.json")
 		if err != nil {
 			log.Fatalf("Cannot read config file: %v", err)
 		}
-
-		// API
-		api.RunApi()
-		// App
 		log.Printf("Starting app server on: %v:%v", config.ServerAddress, config.ServerPort)
 		fs := http.FileServer(http.Dir("./wasm"))
 		http.Handle("/", fs)
