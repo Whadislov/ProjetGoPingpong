@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	//mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	//"github.com/joho/godotenv"
 )
 
 func RunApi() {
@@ -13,6 +14,21 @@ func RunApi() {
 	//SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 	//mdb.SetPsqlInfo(os.Getenv("WEB_DB_LINK"))
 	//mdb.SetDBName(os.Getenv("DB_NAME"))
+	/*
+		// Load env variables
+		dir, _ := os.Getwd()
+		log.Println("Current working directory:", dir)
+		log.Println("loading .env")
+		err := godotenv.Load("credentials.env")
+		if err != nil {
+			log.Fatal("Cannot load variables from .env")
+		}
+		log.Println("finished loading .env")
+
+		SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
+		mdb.SetPsqlInfo(os.Getenv("WEB_DB_LINK"))
+		mdb.SetDBName(os.Getenv("DB_NAME"))
+	*/
 
 	http.Handle("/api/healthz", CorsMiddleware(http.HandlerFunc(IsApiReady)))
 	http.Handle("/api/load-database", CorsMiddleware(authMiddleware(http.HandlerFunc(loadUserDatabaseHandler))))

@@ -3,7 +3,6 @@ package main
 import (
 	"embed"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/Whadislov/TTCompanion/api"
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
-	mfr "github.com/Whadislov/TTCompanion/internal/my_frontend"
 	mu "github.com/Whadislov/TTCompanion/internal/my_ui"
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -22,26 +20,39 @@ import (
 //go:embed translation/*
 var translations embed.FS
 
-func loadConfig(filename string) (*mfr.Config, error) {
+func loadConfig(filename string) (string, string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
 	defer file.Close()
 
-	decoder := json.NewDecoder(file)
-	config := &mfr.Config{}
-	err = decoder.Decode(config)
-	if err != nil {
-		return nil, err
+	type Config struct {
+		ServerAddress string `json:"server_address"`
+		ServerPort    string `json:"server_port"`
 	}
 
-	return config, nil
+	decoder := json.NewDecoder(file)
+	config := &Config{}
+	err = decoder.Decode(config)
+	if err != nil {
+		return "", "", err
+	}
+
+	return config.ServerAddress, config.ServerPort, nil
 }
 
-func initWASM() {
-	// Load translations
-	mu.InitTranslations(translations)
+func waitForAPI(url string, retries int, delay time.Duration) {
+	for i := 0; i < retries; i++ {
+		resp, err := http.Get(url)
+		if err == nil && resp.StatusCode == http.StatusOK {
+			log.Println("API is ready!")
+			return
+		}
+		log.Println("Waiting for API to be ready...")
+		time.Sleep(delay)
+	}
+	log.Fatal("API did not start in time")
 }
 
 func main() {
@@ -51,13 +62,12 @@ func main() {
 
 	// Start app on a browser
 	if appStartOption == "browser" {
+
 		// Load env variables
-		fmt.Println("hello")
 		err := godotenv.Load("credentials.env")
 		if err != nil {
 			log.Fatal("Cannot load variables from .env")
 		}
-		fmt.Println("hello cred")
 
 		api.SetJWTSecretKey(os.Getenv("JWT_SECRET_KEY"))
 		mdb.SetPsqlInfo(os.Getenv("WEB_DB_LINK"))
@@ -74,19 +84,19 @@ func main() {
 
 		// Verify that the API is ready
 		apiURL := "http://localhost:8001/api/healthz"
-		mfr.WaitForAPI(apiURL, 10, 500*time.Millisecond)
+		waitForAPI(apiURL, 10, 500*time.Millisecond)
 
 		// App
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			config, err := loadConfig("config_app.json")
+			serverAddress, serverPort, err := loadConfig("config_app.json")
 			if err != nil {
 				log.Fatalf("Cannot read config file: %v", err)
 			}
-			log.Printf("Starting app server on %v:%v", config.ServerAddress, config.ServerPort)
+			log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
 
-			err = http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, http.FileServer(http.Dir("./wasm")))
+			err = http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
 			if err != nil {
 				log.Fatalf("App server error: %v", err)
 			}
@@ -106,7 +116,9 @@ func main() {
 
 	// Start app locally
 	if appStartOption == "local" {
-		initWASM()
+		// Load translations
+		mu.InitTranslations(translations)
+
 		// Load env variables
 		err := godotenv.Load("credentials.env")
 		if err != nil {
