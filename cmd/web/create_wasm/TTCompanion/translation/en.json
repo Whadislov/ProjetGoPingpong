@@ -1,0 +1,575 @@
+{
+    "add": {
+        "other": "Add"
+    },
+    "add_another_club": {
+        "other": "Add another club"
+    },
+    "add_another_player": {
+        "other": "Add another player"
+    },
+    "add_another_team": {
+        "other": "Add another team"
+    },
+    "add_club_to_a_player": {
+        "other": "Add club(s) to a player"
+    },
+    "add_confirm": {
+        "other": "Add: confirm"
+    },
+    "add_player_to_a_team": {
+        "other": "Add player(s) to a team"
+    },
+    "add_select_a_club": {
+        "other": "Add: select a club"
+    },
+    "add_select_a_player": {
+        "other": "Add: select a player"
+    },
+    "add_select_a_team": {
+        "other": "Add: select a team"
+    },
+    "add_team_to_a_player": {
+        "other": "Add team(s) to a player"
+    },
+    "age": {
+        "other": "Age"
+    },
+    "are_no_longer_playing_in": {
+        "other": "are no longer playing in"
+    },
+    "attention": {
+        "other": "Attention"
+    },
+    "authentification": {
+        "other": "Authentification"
+    },
+    "backhand": {
+        "other": "Backhand"
+    },
+    "blade": {
+        "other": "Blade"
+    },
+    "cancel": {
+        "other": "Cancel"
+    },
+    "caution_message": {
+        "other": "⚠️ This feature is currently not working ⚠️\n\n"
+    },
+    "change_language": {
+        "other": "Change language"
+    },
+    "change_theme_color": {
+        "other": "Change theme color"
+    },
+    "changes_saved": {
+        "other": "Changes saved"
+    },
+    "club": {
+        "other": "Club"
+    },
+    "club_current_selection_house_emoji": {
+        "other": "Club current selection 🏠"
+    },
+    "club_has_been_successfully_created": {
+        "other": "Club %v has been successfully created\n"
+    },
+    "clubs": {
+        "other": "Clubs"
+    },
+    "clubs_house_emoji": {
+        "other": "Clubs 🏠"
+    },
+    "confirm": {
+        "other": "Confirm"
+    },
+    "confirm_password": {
+        "other": "Confirm Password"
+    },
+    "confirm_your_new_password": {
+        "other": "Confirm your new password"
+    },
+    "connect": {
+        "other": "Connect"
+    },
+    "create": {
+        "other": "Create"
+    },
+    "create_a_new_club": {
+        "other": "Create a new club"
+    },
+    "create_a_new_player": {
+        "other": "Create a new player"
+    },
+    "create_a_new_player_add_info": {
+        "other": "Create new player: add player information"
+    },
+    "create_a_new_player_select_a_club": {
+        "other": "Create new player: select a club"
+    },
+    "create_a_new_team": {
+        "other": "Create a new team"
+    },
+    "create_a_new_team_select_a_club": {
+        "other": "Create new team: select a club"
+    },
+    "create_new_club": {
+        "other": "Create new club"
+    },
+    "create_new_team": {
+        "other": "Create new team"
+    },
+    "create_your_account": {
+        "other": "Create your account"
+    },
+    "current_email": {
+        "other": "Your current email: "
+    },
+    "current_username": {
+        "other": "Your current username: "
+    },
+    "currently_0_player": {
+        "other": "There is currently 0 player in this club"
+    },
+    "currently_0_player_available": {
+        "other": "There is currently 0 player available"
+    },
+    "currently_0_team_available": {
+        "other": "There is currently 0 team available"
+    },
+    "database": {
+        "other": "Database"
+    },
+    "delete": {
+        "other": "Delete"
+    },
+    "edit_email": {
+        "other": "Edit email"
+    },
+    "edit_password": {
+        "other": "Edit password"
+    },
+    "edit_player_information": {
+        "other": "Edit player information"
+    },
+    "edit_username": {
+        "other": "Edit username"
+    },
+    "editing_email": {
+        "other": "Editing ✉️ email"
+    },
+    "editing_password": {
+        "other": "Editing 🔒 password"
+    },
+    "editing_username": {
+        "other": "Editing 👤 username"
+    },
+    "email.already_used": {
+        "other": "e-mail is already used"
+    },
+    "email.cannot_be_empty": {
+        "other": "e-mail cannot be empty"
+    },
+    "email.must_be_valid": {
+        "other": "e-mail must be valid. Example: abc@def.com"
+    },
+    "email_successfully_changed": {
+        "other": "Email successfully changed"
+    },
+    "enter_current_password": {
+        "other": "Enter your current password"
+    },
+    "enter_email_address": {
+        "other": "Enter your e-mail address"
+    },
+    "enter_new_email": {
+        "other": "Enter your new email. Example: abc@def.com"
+    },
+    "enter_new_password": {
+        "other": "Enter your new password"
+    },
+    "enter_new_username": {
+        "other": "Enter your new username"
+    },
+    "enter_your_club_name_here": {
+        "other": "Enter your club name here ..."
+    },
+    "enter_your_team_name_here": {
+        "other": "Enter your team name here ..."
+    },
+    "err_age_must_be_number": {
+        "other": "age must be a number"
+    },
+    "err_ranking_must_be_number": {
+        "other": "ranking must be a number"
+    },
+    "failed_to_load_profile": {
+        "other": "Failed to load your profile"
+    },
+    "failed_to_log_in": {
+        "other": "Failed to log in: "
+    },
+    "failed_to_sign_up": {
+        "other": "Failed to sign up: Username or e-mail already exists"
+    },
+    "firstname": {
+        "other": "Firstname"
+    },
+    "firstname.must_be_letters_only": {
+        "other": "firstname must be letters only"
+    },
+    "firstname.must_not_be_empty": {
+        "other": "firstname must not be empty"
+    },
+    "forehand": {
+        "other": "Forehand"
+    },
+    "forgot_password": {
+        "other": "Forgot your password?"
+    },
+    "functionalities": {
+        "other": "Functionalities"
+    },
+    "has_been_modified": {
+        "other": "has been modified"
+    },
+    "has_no_team": {
+        "other": "has no team"
+    },
+    "has_not_been_modified": {
+        "other": "has not been modified"
+    },
+    "information": {
+        "other": "Information"
+    },
+    "internal_error": {
+        "other": "Internal error"
+    },
+    "is_empty": {
+        "other": "is empty"
+    },
+    "is_no_longer_playing_in": {
+        "other": "is no longer playing in"
+    },
+    "lastname": {
+        "other": "Lastname"
+    },
+    "lastname.must_be_letters_only": {
+        "other": "lastname must be letters only"
+    },
+    "lastname.must_not_be_empty": {
+        "other": "lastname must not be empty"
+    },
+    "log_in": {
+        "other": "Log in"
+    },
+    "log_out": {
+        "other": "Log out"
+    },
+    "login": {
+        "other": "Login"
+    },
+    "main_menu": {
+        "other": "Main menu"
+    },
+    "main_page": {
+        "other": "Main page"
+    },
+    "message.account_created": {
+        "other": "Your user account has been created!"
+    },
+    "message.email_not_found": {
+        "other": "Your e-mail {email} has not been found in our database.\nPlease check that you have correctly entered the e-mail address you used to log in."
+    },
+    "message.email_sent": {
+        "other": "A message has been sent to {email}.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in."
+    },
+    "my_profile": {
+        "other": "My profile"
+    },
+    "new_passwords_do_not_match": {
+        "other": "new passwords do not match"
+    },
+    "no": {
+        "other": "No"
+    },
+    "no_longer_plays_in_team": {
+        "other": "no longer plays in team(s)"
+    },
+    "options": {
+        "other": "Options"
+    },
+    "password": {
+        "other": "🔒 Password"
+    },
+    "password.cannot_be_empty": {
+        "other": "password cannot be empty"
+    },
+    "password.must_be_valid": {
+        "other": "password must be valid (only letters and figures are allowed, spaces are not allowed)"
+    },
+    "password.not_matching": {
+        "other": "passwords do not match"
+    },
+    "password_successfully_changed": {
+        "other": "Password successfully changed"
+    },
+    "player_current_selection_emoji": {
+        "other": "Player current selection 🏓"
+    },
+    "player_has_been_successfully_created": {
+        "other": "Player %v %v has been successfully created\n"
+    },
+    "player_now_plays_in_club": {
+        "other": "Player %v now plays in club(s) %v"
+    },
+    "player_now_plays_in_team": {
+        "other": "Player %v now plays in team(s) %v"
+    },
+    "players": {
+        "other": "Players"
+    },
+    "players_with_dd": {
+        "other": "Players:  "
+    },
+    "players_with_racket_emoji": {
+        "other": "Players 🏓"
+    },
+    "please_authenticate": {
+        "other": "Please authenticate"
+    },
+    "quit": {
+        "other": "Quit"
+    },
+    "ranking": {
+        "other": "Ranking"
+    },
+    "remove": {
+        "other": "Remove"
+    },
+    "remove_club_from_a_player": {
+        "other": "Remove club(s) from a player"
+    },
+    "remove_confirm_selection": {
+        "other": "Remove: confirm selection"
+    },
+    "remove_player_from_a_team": {
+        "other": "Remove player(s) from a team"
+    },
+    "remove_select_a_player": {
+        "other": "Remove: select a player"
+    },
+    "remove_select_a_team": {
+        "other": "Remove: select a team"
+    },
+    "remove_team_from_a_player": {
+        "other": "Remove team(s) from a player"
+    },
+    "reset_your_password": {
+        "other": "Reset your password"
+    },
+    "return_to_authentification_page": {
+        "other": "Return to authentification"
+    },
+    "return_to_club_selection": {
+        "other": "Return to club selection"
+    },
+    "return_to_database": {
+        "other": "Return to database"
+    },
+    "return_to_functionalities": {
+        "other": "Return to functionalities"
+    },
+    "return_to_login_screen": {
+        "other": "Return to the login screen"
+    },
+    "return_to_main_page": {
+        "other": "Return to main page"
+    },
+    "return_to_player_selection": {
+        "other": "Return to player selection"
+    },
+    "return_to_remove_menu": {
+        "other": "Return to remove menu"
+    },
+    "return_to_team_selection": {
+        "other": "Return to team selection"
+    },
+    "return_to_the_add_menu": {
+        "other": "Return to the add menu"
+    },
+    "return_to_the_create_menu": {
+        "other": "Return to the create menu"
+    },
+    "save_before_quit": {
+        "other": "You have unsaved changes. Do you want to save them before quitting?"
+    },
+    "save_changes": {
+        "other": "Save changes"
+    },
+    "select_a_club": {
+        "other": "Select a club"
+    },
+    "select_a_player": {
+        "other": "Select a player"
+    },
+    "select_a_team": {
+        "other": "Select a team"
+    },
+    "show_clubs": {
+        "other": "Show clubs"
+    },
+    "show_players": {
+        "other": "Show players"
+    },
+    "show_teams": {
+        "other": "Show teams"
+    },
+    "sign_up": {
+        "other": "Sign up"
+    },
+    "signup": {
+        "other": "Signup"
+    },
+    "success": {
+        "other": "Success"
+    },
+    "team_0_club": {
+        "other": "This team has no club."
+    },
+    "team_0_player": {
+        "other": "This team has no player.\n"
+    },
+    "team_already_exists_in": {
+        "other": "team %v already exists in %v"
+    },
+    "team_current_selection_emoji": {
+        "other": "Team current selection 🤝"
+    },
+    "team_has_been_successfully_created": {
+        "other": "Team %v has been successfully created\n"
+    },
+    "team_name.must_be_letters_or_figures_only": {
+        "other": "team name must be letters or figures only"
+    },
+    "team_name.must_not_be_empty": {
+        "other": "team name must not be empty"
+    },
+    "team_now_has_player": {
+        "other": "Team %v now has player(s) %v"
+    },
+    "team_with_hands_emoji": {
+        "other": "Teams 🤝"
+    },
+    "teams": {
+        "other": "Teams"
+    },
+    "text.forgot_password": {
+        "other": "Enter your e-mail address and click on the button below to reset your password"
+    },
+    "there_is_currently_0_club_available_do_you_want_create": {
+        "other": "There is currently 0 club available. Do you want to create a new club first ?"
+    },
+    "there_is_currently_0_player_available_do_you_want_create": {
+        "other": "There is currently 0 player available. Do you want to create a new player first ?"
+    },
+    "there_is_currently_0_team_available_do_you_want_create": {
+        "other": "There is currently 0 team available. Do you want to create a new team first ?"
+    },
+    "there_is_no_more_club_to_add": {
+        "other": "There is no more club to add"
+    },
+    "there_is_no_more_player_to_add": {
+        "other": "There is no more player to add"
+    },
+    "there_is_no_more_team_to_add": {
+        "other": "There is no more team to add"
+    },
+    "there_is_nothing_new_to_save": {
+        "other": "There is nothing new to save"
+    },
+    "title.forgot_password_page": {
+        "other": "Forgot your password?"
+    },
+    "try_again": {
+        "other": "Try again"
+    },
+    "unknown": {
+        "other": "Unknown"
+    },
+    "unknown_error": {
+        "other": "unknown error"
+    },
+    "unsaved_changes": {
+        "other": "Unsaved changes"
+    },
+    "user_since": {
+        "other": "📅 User since(aaaa-mm-jj)"
+    },
+    "username": {
+        "other": "👤 Username"
+    },
+    "username.already_used": {
+        "other": "username is already taken"
+    },
+    "username.cannot_be_empty": {
+        "other": "username cannot be empty"
+    },
+    "username.must_be_valid": {
+        "other": "username must be valid (only letters and figures are allowed, spaces are not allowed)"
+    },
+    "username_and_password_missmatch": {
+        "other": "Username and password mismatch"
+    },
+    "username_successfully_changed": {
+        "other": "Username successfully changed"
+    },
+    "welcome_to_tt_companion": {
+        "other": "Welcome to TT Companion"
+    },
+    "wrong_password": {
+        "other": "wrong password"
+    },
+    "yes": {
+        "other": "Yes"
+    },
+    "you_are_going_to_create_a_player_for": {
+        "other": "You are going to create a player for %v\n"
+    },
+    "you_are_going_to_create_a_team_for": {
+        "other": "You are going to create a player for %v\n"
+    },
+    "you_currently_have_0_club_available_please_create": {
+        "other": "You currently have 0 club available, please create a club first"
+    },
+    "you_have_selected": {
+        "other": "You have selected"
+    },
+    "you_have_unsaved_changes": {
+        "other": "You have unsaved changes. Do you want to save them before logging out?"
+    },
+    "you_have_unsaved_changes_alt": {
+        "other": "You have unsaved changes. Do you want to save them before returning to the main page?"
+    },
+    "your_clubs": {
+        "other": "Your clubs"
+    },
+    "your_database": {
+        "other": "Your database"
+    },
+    "your_informations": {
+        "other": "Your informations"
+    },
+    "your_informations_in_edition": {
+        "other": "Your informations* (in edition)"
+    },
+    "your_players": {
+        "other": "Your players"
+    },
+    "your_teams": {
+        "other": "Your teams"
+    },
+    "your_user_account_has_been_created": {
+        "other": "Your user account has been created !"
+    }
+}
