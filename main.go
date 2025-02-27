@@ -1,4 +1,4 @@
-package ttcompanion
+package main
 
 import (
 	"embed"

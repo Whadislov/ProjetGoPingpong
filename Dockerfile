@@ -9,28 +9,50 @@
 ################################################################################
 # Create a stage for building the application.
 ARG GO_VERSION=1.22.2
+# --platform=$BUILDPLATFORM = image based on Debian or Ubuntu (not Alpine)
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 WORKDIR /src
 
-# Install build depedences (fyne lib), notably mingw-w64 for windows 
+# if targetos = windows, uncomment
+#ARG TARGETOS=windows # add CC=x86_64-w64-mingw32-gcc after GOARCH and before \
+
+# This is the architecture you're building for, which is passed in by the builder.
+# Placing it here allows the previous steps to be cached across architectures.
+#ARG TARGETOS=windows
+
+# Fyne uses GLFW (Graphics Library Framework) and GLFW needs the library X11 to compile. Mingw-64 (gcc compiler) FOR WINDOWS
+#RUN apt-get update && apt-get install -y \
+#    gcc-mingw-w64 \
+#    libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev \
+#    && rm -rf /var/lib/apt/lists/*
+
+# if targetos = linux, uncomment
+
+# This is the architecture you're building for, which is passed in by the builder.
+# Placing it here allows the previous steps to be cached across architectures.
+ARG TARGETOS=linux
+
+# Fyne uses GLFW (Graphics Library Framework) and GLFW needs the library X11 to compile. GCC compiler as well FOR LINUX
 RUN apt-get update && apt-get install -y \
-    gcc-mingw-w64 \
+    gcc musl-dev \
+    libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev \
+    libgl1-mesa-dev xorg-dev \
     && rm -rf /var/lib/apt/lists/*
+
+#ARG TARGETOS=windows # add CC=x86_64-w64-mingw32-gcc after GOARCH and before \
+ARG TARGETARCH=amd64
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-# This is the architecture you're building for, which is passed in by the builder.
-# Placing it here allows the previous steps to be cached across architectures.
-ARG TARGETARCH=amd64
 
 # https://hub.docker.com/r/fyneio/fyne-cross-images
 
 # Intall fyne-cross and the binary to PATH
-RUN go install github.com/fyne-io/fyne-cross@latest && \
-    export PATH=$PATH:$(go env GOPATH)/bin
+#RUN go install github.com/fyne-io/fyne-cross@latest && \
+#    export PATH=$PATH:$(go env GOPATH)/bin
 
 # Use fyne-cross to compile the app for windows
 # RUN fyne-cross windows -arch=amd64
@@ -39,8 +61,16 @@ RUN go install github.com/fyne-io/fyne-cross@latest && \
 # Leverage a cache mount to /go/pkg/mod/ to speed up subsequent builds.
 # Leverage a bind mount to the current directory to avoid having to copy the
 # source code into the container.
-RUN CGO_ENABLED=1 GOOS=windows GOARCH=$TARGETARCH CC=x86_64-w64-mingw32-gcc \
-    go build -v -x -o /bin/server .
+
+# Windows
+#RUN CGO_ENABLED=1 GOOS=$TARGETOS GOARCH=$TARGETARCH CC=x86_64-w64-mingw32-gcc \
+#    go build -v -x -o /bin/server .
+
+#Linux alpine
+RUN CGO_ENABLED=1 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /bin/server .
+
+# Is the binary built ?
+RUN ls -l /bin/
 
 # RUN --mount=type=cache,target=/go/pkg/mod/ \
 #    --mount=type=bind,target=. \
@@ -62,11 +92,12 @@ FROM alpine:latest AS final
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
 RUN --mount=type=cache,target=/var/cache/apk \
-    apk --update add \
+    apk add --no-cache \
         ca-certificates \
         tzdata \
-        && \
-        update-ca-certificates
+        libx11 libxcursor libxrandr libxinerama libxi mesa-gl && \
+    update-ca-certificates
+
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -81,13 +112,18 @@ RUN adduser \
     appuser
 USER appuser
 
-RUN ls -lah /bin/
-
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
+
+RUN ls -l /bin/
+
+# Give permission to be executed
+#RUN chmod +x /bin/server
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
 # What the container should run when it is started.
-ENTRYPOINT [ "sh", "-c", "sleep 10 && /bin/server" ]
+ENTRYPOINT ["/bin/server" ]
+
+
