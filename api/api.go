@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
 	"github.com/joho/godotenv"
 	"log"
@@ -27,13 +28,17 @@ func RunApi() {
 	http.Handle("/api/login", CorsMiddleware(http.HandlerFunc(LoginHandler)))
 	http.Handle("/api/signup", CorsMiddleware(http.HandlerFunc(SignUpHandler)))
 
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Welcome to TT Companion's API")
+	})
+
 	// Get server address and port
-	config, err := loadConfig("api/config_api.json")
+	config, err := loadConfig("config_api.json")
 	if err != nil {
 		log.Fatalf("Cannot read config file: %v", err)
 	}
 
-	log.Printf("API started on %s:%s", config.ServerAddress, config.ServerPort)
+	log.Printf("API started on %s%s:%s", config.ServerPrefix, config.ServerAddress, config.ServerPort)
 	log.Fatal(http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil))
 }
 

@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/Whadislov/TTCompanion/api"
 	"log"
 	"net/http"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/Whadislov/TTCompanion/api"
 
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
@@ -20,6 +21,7 @@ func loadConfig(filename string) (string, string, error) {
 	defer file.Close()
 
 	type Config struct {
+		ServerPrefix  string `json:"server_prefix"`
 		ServerAddress string `json:"server_address"`
 		ServerPort    string `json:"server_port"`
 	}
@@ -35,7 +37,7 @@ func loadConfig(filename string) (string, string, error) {
 }
 
 func waitForAPI(url string, retries int, delay time.Duration) {
-	for i := 0; i < retries; i++ {
+	for range retries {
 		resp, err := http.Get(url)
 		if err == nil && resp.StatusCode == http.StatusOK {
 			log.Println("API is ready!")
@@ -59,7 +61,11 @@ func main() {
 	}()
 
 	// Verify that the API is ready
-	apiURL := "http://localhost:8001/api/healthz"
+	apiAddress, apiPort, err := loadConfig("config_api.json")
+	if err != nil {
+		log.Fatalf("Cannot read config file: %v", err)
+	}
+	apiURL := "http://" + apiAddress + ":" + apiPort
 	waitForAPI(apiURL, 10, 500*time.Millisecond)
 
 	// App
