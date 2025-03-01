@@ -9,7 +9,6 @@ COPY internal/my_functions internal/my_functions
 COPY internal/my_types internal/my_types
 COPY credentials.env ./
 COPY config_app.json ./
-COPY config_api.json ./
 COPY go.mod go.sum ./
 RUN go mod tidy
 
