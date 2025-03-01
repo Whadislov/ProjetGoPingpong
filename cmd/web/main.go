@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/Whadislov/TTCompanion/api"
@@ -16,37 +15,36 @@ import (
 
 func main() {
 
-	var wg sync.WaitGroup
-
 	serverAddress, serverPort, err := loadConfig("config_app.json")
 	if err != nil {
 		log.Fatalf("Cannot read config file: %v", err)
 	}
 
+	// Create multiplexer to manage all routes
+	mux := http.NewServeMux()
+
 	// API
-	wg.Add(1)
+	api.RegisterRoutes(mux)
+
+	// App frontend
+	mux.Handle("/", http.FileServer(http.Dir("./wasm")))
+
+	log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
 	go func() {
-		defer wg.Done()
-		api.RunApi()
-	}()
-
-	// Verify that the API is ready
-	waitForAPI(serverPort, 10, 500*time.Millisecond)
-
-	// App
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
-		errLS := http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
-		if errLS != nil {
+		err := http.ListenAndServe(serverAddress+":"+serverPort, mux)
+		//errLS := http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
+		if err != nil {
 			log.Fatalf("App server error: %v", err)
 		}
 
 	}()
 
-	wg.Wait()
+	// Verify that the API is ready
+	waitForAPI(serverPort, 10, 500*time.Millisecond)
+
+	// Loop to keep the program alive
+	// replaced var wg sync.WaitGroup, wg.Wait()
+	select {}
 
 }
 
