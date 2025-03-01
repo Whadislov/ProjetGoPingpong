@@ -18,6 +18,11 @@ func main() {
 
 	var wg sync.WaitGroup
 
+	serverAddress, serverPort, err := loadConfig("config_app.json")
+	if err != nil {
+		log.Fatalf("Cannot read config file: %v", err)
+	}
+
 	// API
 	wg.Add(1)
 	go func() {
@@ -26,20 +31,13 @@ func main() {
 	}()
 
 	// Verify that the API is ready
-	_, apiPort, err := loadConfig("config_api.json")
-	if err != nil {
-		log.Fatalf("Cannot read config file: %v", err)
-	}
-	waitForAPI(apiPort, 10, 500*time.Millisecond)
+	waitForAPI(serverPort, 10, 500*time.Millisecond)
 
 	// App
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		serverAddress, serverPort, err := loadConfig("config_app.json")
-		if err != nil {
-			log.Fatalf("Cannot read config file: %v", err)
-		}
+
 		log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
 		errLS := http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
 		if errLS != nil {
@@ -78,7 +76,7 @@ func loadConfig(filename string) (string, string, error) {
 }
 
 func waitForAPI(apiPort string, retries int, delay time.Duration) {
-	apiURL := "http://127.0.0.1:" + apiPort
+	apiURL := "http://127.0.0.1:" + apiPort + "/api/healthz"
 	for range retries {
 		resp, err := http.Get(apiURL)
 		if err == nil && resp.StatusCode == http.StatusOK {
