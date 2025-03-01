@@ -38,8 +38,9 @@ func RunApi() {
 		log.Fatalf("Cannot read config file: %v", err)
 	}
 
-	log.Printf("API started on %s%s:%s", config.ServerPrefix, config.ServerAddress, config.ServerPort)
-	log.Fatal(http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil))
+	log.Printf("API started on %s:%s", config.ServerAddress, config.ServerPort)
+	// Remove http://
+	log.Fatal(http.ListenAndServe(config.ServerAddress[7:]+":"+config.ServerPort, nil))
 }
 
 func loadConfig(filename string) (*Config, error) {

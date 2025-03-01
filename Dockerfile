@@ -33,7 +33,7 @@ RUN apk add --no-cache curl
 COPY --from=builder /src/backend ./backend
 
 # Copier les fichiers WASM + la config
-COPY wasm ./
+COPY wasm ./wasm
 COPY credentials.env ./
 COPY config_app.json ./
 COPY config_api.json ./
@@ -53,7 +53,7 @@ RUN chmod +x /app/backend
 
 # Exposer les ports
 #EXPOSE 8000 8001 8002
-EXPOSE 8000 8001
+EXPOSE 8080 8081
 
 # Lancer le backend et Nginx simultanément
 #CMD ["/bin/sh", "-c", "/app/backend & nginx -g 'daemon off;'"]

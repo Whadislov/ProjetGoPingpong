@@ -21,7 +21,6 @@ func loadConfig(filename string) (string, string, error) {
 	defer file.Close()
 
 	type Config struct {
-		ServerPrefix  string `json:"server_prefix"`
 		ServerAddress string `json:"server_address"`
 		ServerPort    string `json:"server_port"`
 	}
@@ -65,7 +64,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Cannot read config file: %v", err)
 	}
-	apiURL := "http://" + apiAddress + ":" + apiPort
+	apiURL := apiAddress + ":" + apiPort
 	waitForAPI(apiURL, 10, 500*time.Millisecond)
 
 	// App
@@ -77,8 +76,8 @@ func main() {
 			log.Fatalf("Cannot read config file: %v", err)
 		}
 		log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
-
-		err = http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
+		// Remove http://
+		err = http.ListenAndServe(serverAddress[7:]+":"+serverPort, http.FileServer(http.Dir("./wasm")))
 		if err != nil {
 			log.Fatalf("App server error: %v", err)
 		}
@@ -87,3 +86,11 @@ func main() {
 	wg.Wait()
 
 }
+
+/*
+
+{
+  "server_prefix": "http://",
+  "server_address": "0.0.0.0",
+
+*/
