@@ -32,7 +32,7 @@ func StarterPage() fyne.App {
 		// Know if light mode is activated or not
 		loadTheme(a)
 	} else if appStartOption == "browser" {
-		loadThemeWeb()
+		loadThemeWeb(a)
 	}
 
 	// Starter page
