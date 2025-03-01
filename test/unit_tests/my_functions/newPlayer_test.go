@@ -20,8 +20,8 @@ func TestNewPlayer(t *testing.T) {
 	t.Run("Delete Player", func(t *testing.T) {
 		_, err1 := mf.NewPlayer("", "", &d)
 		_, err2 := mf.NewPlayer("firstname2", "lastname2", &d)
-		_, err3 := mf.NewPlayer("firstnameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "lastname", &d)
-		_, err4 := mf.NewPlayer("firstname", "lastname", &d)
+		_, err3 := mf.NewPlayer("firstnameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "lastname", &d)
+		_, err4 := mf.NewPlayer("ok-éèêçàÉÈÊÇÀ-ßöäüÖÜÄ", "lastname", &d)
 
 		if err1 == nil {
 			t.Errorf("Expected error %v, got %v", expectedError1, err1)
