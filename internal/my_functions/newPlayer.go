@@ -18,7 +18,7 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 		return nil, err
 	}
 
-	b, err = IsStrTooLong(firstname, 30)
+	b, err = IsStrTooLong(firstname, 40)
 	if b {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 		return nil, err
 	}
 
-	b, err = IsStrTooLong(lastname, 30)
+	b, err = IsStrTooLong(lastname, 40)
 	if b {
 		return nil, err
 	}
