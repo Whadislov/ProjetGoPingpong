@@ -32,7 +32,6 @@ func main() {
 	log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
 	go func() {
 		err := http.ListenAndServe(serverAddress+":"+serverPort, mux)
-		//errLS := http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
 		if err != nil {
 			log.Fatalf("App server error: %v", err)
 		}
