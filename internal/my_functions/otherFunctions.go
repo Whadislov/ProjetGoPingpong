@@ -55,12 +55,19 @@ func IsValidName(name string) (bool, error) {
 		return false, fmt.Errorf("name cannot be empty")
 	}
 
-	for _, r := range name {
-		if r < 'A' || r > 'z' {
-			return false, fmt.Errorf("name can only contain letters")
-		}
+	// Name can be composed (not mandatory with the ()), will start will a -
+	// * means that the group can be repeated
+	nameRegex := `^[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+(-[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+)*$`
+
+	// Compile the regex
+	re := regexp.MustCompile(nameRegex)
+
+	// Verify if the string matches the regex
+	if re.MatchString(name) {
+		return re.MatchString(name), nil
+	} else {
+		return re.MatchString(name), fmt.Errorf("name must be valid. For exemple, Jean-François, Evelin")
 	}
-	return true, nil
 }
 
 // isValidName verifies that the name follows some criterias
@@ -74,7 +81,7 @@ func IsValidUsername(username string) (bool, error) {
 	// Compile the regex
 	re := regexp.MustCompile(usernameRegex)
 
-	// Verify if the string is a regex
+	// Verify if the string matches the regex
 	if re.MatchString(username) {
 		return re.MatchString(username), nil
 	} else {
@@ -92,7 +99,7 @@ func IsValidEmail(email string) (bool, error) {
 	// Compile the regex
 	re := regexp.MustCompile(emailRegex)
 
-	// Verify if the string is a regex, true means yes
+	// Verify if the string matches the regex, true means yes
 	if re.MatchString(email) {
 		return re.MatchString(email), nil
 	} else {
@@ -126,7 +133,7 @@ func IsValidTeamClubName(name string) (bool, error) {
 	// Compile the regex
 	re := regexp.MustCompile(nameRegex)
 
-	// Verify if the string is a regex
+	// Verify if the string matches the regex
 	if re.MatchString(name) {
 		return re.MatchString(name), nil
 	} else {
