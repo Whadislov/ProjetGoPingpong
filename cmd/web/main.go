@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -12,6 +13,44 @@ import (
 
 	_ "github.com/mattn/go-sqlite3" // Import the SQLite driver
 )
+
+func main() {
+
+	var wg sync.WaitGroup
+
+	// API
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		api.RunApi()
+	}()
+
+	// Verify that the API is ready
+	_, apiPort, err := loadConfig("config_api.json")
+	if err != nil {
+		log.Fatalf("Cannot read config file: %v", err)
+	}
+	waitForAPI(apiPort, 10, 500*time.Millisecond)
+
+	// App
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		serverAddress, serverPort, err := loadConfig("config_app.json")
+		if err != nil {
+			log.Fatalf("Cannot read config file: %v", err)
+		}
+		log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
+		errLS := http.ListenAndServe(serverAddress+":"+serverPort, http.FileServer(http.Dir("./wasm")))
+		if errLS != nil {
+			log.Fatalf("App server error: %v", err)
+		}
+
+	}()
+
+	wg.Wait()
+
+}
 
 func loadConfig(filename string) (string, string, error) {
 	file, err := os.Open(filename)
@@ -32,12 +71,16 @@ func loadConfig(filename string) (string, string, error) {
 		return "", "", err
 	}
 
+	// Remove http:// if present
+	config.ServerAddress = cleanAddress(config.ServerAddress)
+
 	return config.ServerAddress, config.ServerPort, nil
 }
 
-func waitForAPI(url string, retries int, delay time.Duration) {
+func waitForAPI(apiPort string, retries int, delay time.Duration) {
+	apiURL := "http://127.0.0.1:" + apiPort
 	for range retries {
-		resp, err := http.Get(url)
+		resp, err := http.Get(apiURL)
 		if err == nil && resp.StatusCode == http.StatusOK {
 			log.Println("API is ready!")
 			return
@@ -48,49 +91,9 @@ func waitForAPI(url string, retries int, delay time.Duration) {
 	log.Fatal("API did not start in time")
 }
 
-func main() {
-
-	var wg sync.WaitGroup
-
-	// API
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		api.RunApi()
-	}()
-
-	// Verify that the API is ready
-	apiAddress, apiPort, err := loadConfig("config_api.json")
-	if err != nil {
-		log.Fatalf("Cannot read config file: %v", err)
+func cleanAddress(address string) string {
+	if strings.HasPrefix(address, "http://") {
+		return address[7:]
 	}
-	apiURL := apiAddress + ":" + apiPort
-	waitForAPI(apiURL, 10, 500*time.Millisecond)
-
-	// App
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		serverAddress, serverPort, err := loadConfig("config_app.json")
-		if err != nil {
-			log.Fatalf("Cannot read config file: %v", err)
-		}
-		log.Printf("Starting app server on %v:%v", serverAddress, serverPort)
-		// Remove http://
-		err = http.ListenAndServe(serverAddress[7:]+":"+serverPort, http.FileServer(http.Dir("./wasm")))
-		if err != nil {
-			log.Fatalf("App server error: %v", err)
-		}
-	}()
-
-	wg.Wait()
-
+	return address
 }
-
-/*
-
-{
-  "server_prefix": "http://",
-  "server_address": "0.0.0.0",
-
-*/

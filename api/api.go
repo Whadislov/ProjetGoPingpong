@@ -3,11 +3,13 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+	"strings"
+
+	mdb "github.com/Whadislov/TTCompanion/internal/my_db"
+	"github.com/joho/godotenv"
 )
 
 func RunApi() {
@@ -39,8 +41,11 @@ func RunApi() {
 	}
 
 	log.Printf("API started on %s:%s", config.ServerAddress, config.ServerPort)
-	// Remove http://
-	log.Fatal(http.ListenAndServe(config.ServerAddress[7:]+":"+config.ServerPort, nil))
+
+	errLS := http.ListenAndServe(config.ServerAddress+":"+config.ServerPort, nil)
+	if err != nil {
+		log.Fatalf("Api error: %v", errLS)
+	}
 }
 
 func loadConfig(filename string) (*Config, error) {
@@ -57,5 +62,15 @@ func loadConfig(filename string) (*Config, error) {
 		return nil, err
 	}
 
+	// Remove http:// if present
+	c.ServerAddress = cleanAddress(c.ServerAddress)
+
 	return c, nil
+}
+
+func cleanAddress(address string) string {
+	if strings.HasPrefix(address, "http://") {
+		return address[7:]
+	}
+	return address
 }
