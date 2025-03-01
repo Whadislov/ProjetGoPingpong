@@ -149,6 +149,11 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 		sendJSONError(w, "Could not create user", "INTERNAL_ERROR", http.StatusInternalServerError)
 		return
 	}
+	errS := mdb.SaveDB(db)
+	if errS != nil {
+		sendJSONError(w, "Could not save the new user", "INTERNAL_ERROR", http.StatusInternalServerError)
+		return
+	}
 
 	// User Id is the number of current registered users (there is possibility yet to delete a user, so this should work for now)
 	credToken, err := generateJWT(newUser.ID)
