@@ -130,8 +130,7 @@ func standardizeSpaces(s string) string {
 
 // setTitle sets the string as a title for the page. The string is centered, respects dark/light mode and has its size
 func setTitle(s string, size float32) *canvas.Text {
-	a := fyne.CurrentApp()
-	themeColor := a.Settings().Theme().Color("foreground",
+	themeColor := fyne.CurrentApp().Settings().Theme().Color("foreground",
 		func() fyne.ThemeVariant {
 			if darkTheme.IsActivated {
 				return theme.VariantDark
@@ -139,6 +138,7 @@ func setTitle(s string, size float32) *canvas.Text {
 				return theme.VariantLight
 			}
 		}())
+
 	title := canvas.NewText(s, themeColor)
 	title.Alignment = fyne.TextAlignCenter
 	title.TextSize = size
@@ -173,6 +173,7 @@ func loadTheme(a fyne.App) {
 }
 
 // loadTheme sets the flags for the light Theme and the dark Theme, browser
-func loadThemeWeb() {
+func loadThemeWeb(a fyne.App) {
 	darkTheme.IsActivated = true
+	a.Settings().SetTheme(&darkTheme)
 }
