@@ -48,12 +48,12 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				container.NewVBox(
 					PlayerInfos(p),
 					widget.NewButton(T("delete"), func() {
-						showConfirmationDialog(w, fmt.Sprintf("Delete player %v %v?", p.Firstname, p.Lastname), func() {
+						showConfirmationDialog(w, fmt.Sprintf(T("delete_player"), p.Firstname, p.Lastname), func() {
 							err := mf.DeletePlayer(p, db)
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								successMsg := fmt.Sprintf("%v %v has been successfully deleted\n", p.Firstname, p.Lastname)
+								successMsg := fmt.Sprintf(T("delete_player_succes"), p.Firstname, p.Lastname)
 								fmt.Println(successMsg)
 								dialog.ShowInformation(T("success"), successMsg, w)
 
@@ -82,12 +82,12 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 				container.NewVBox(
 					TeamInfos(t),
 					widget.NewButton(T("delete"), func() {
-						showConfirmationDialog(w, fmt.Sprintf("Delete team %v?", t.Name), func() {
+						showConfirmationDialog(w, fmt.Sprintf(T("delete_team"), t.Name), func() {
 							err := mf.DeleteTeam(t, db)
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								successMsg := fmt.Sprintf("%v has been successfully deleted\n", t.Name)
+								successMsg := fmt.Sprintf(T("delete_team_succes"), t.Name)
 								fmt.Println(successMsg)
 								dialog.ShowInformation(T("success"), successMsg, w)
 
@@ -125,7 +125,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							teamNames = teamNames[:len(teamNames)-2]
 						}
 
-						showConfirmationDialog(w, fmt.Sprintf("Delete club %v? You are also going to delete the following teams: %v", c.Name, teamNames), func() {
+						showConfirmationDialog(w, fmt.Sprintf(T("delete_club"), c.Name, teamNames), func() {
 							// Get teamIDs without the link with the club (to avoid slice modification while iterating)
 							var teamIDs []uuid.UUID
 							for teamID := range c.TeamIDs {
@@ -143,7 +143,7 @@ func DeletePage(db *mt.Database, w fyne.Window, a fyne.App) {
 							if err != nil {
 								dialog.ShowError(err, w)
 							} else {
-								successMsg := fmt.Sprintf("%v has been successfully deleted\n", c.Name)
+								successMsg := fmt.Sprintf(T("delete_club_succes"), c.Name)
 								fmt.Println(successMsg)
 								dialog.ShowInformation(T("success"), successMsg, w)
 

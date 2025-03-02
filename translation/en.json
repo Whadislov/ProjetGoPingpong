@@ -143,6 +143,24 @@
     "delete": {
         "other": "Delete"
     },
+    "delete_player": {
+        "other": "Delete player %v %v?"
+    },
+    "delete_player_succes": {
+        "other": "%v %v has been successfully deleted\n"
+    },
+    "delete_team": {
+        "other": "Delete team %v?"
+    },
+    "delete_team_succes": {
+        "other": "%v has been successfully deleted\n"
+    },
+    "delete_club": {
+        "other": "Delete club %v? You are also going to delete the following teams: %v"
+    },
+    "delete_club_succes": {
+        "other": "%v has been successfully deleted\n"
+    },
     "edit_email": {
         "other": "Edit email"
     },
