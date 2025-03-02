@@ -143,6 +143,24 @@
     "delete": {
         "other": "Supprimer"
     },
+    "delete_player": {
+    "other": "Supprimer joueur/joueuse %v %v ?"
+    },
+    "delete_player_succes": {
+        "other": "%v %v a été supprimé avec succès\n"
+    },
+    "delete_team": {
+        "other": "Supprimer l'équipe %v ?"
+    },
+    "delete_team_succes": {
+        "other": "%v a été supprimée avec succès\n"
+    },
+    "delete_club": {
+        "other": "Supprimer le club %v ? Vous allez également supprimer les équipes suivantes : %v"
+    },
+    "delete_club_succes": {
+        "other": "%v a été supprimé avec succès\n"
+    },
     "edit_email": {
         "other": "Modifier l'e-mail"
     },
@@ -156,7 +174,7 @@
         "other": "Modifier le nom d'utilisateur"
     },
     "editing_email": {
-        "other": "Édition ✉️ Email"
+        "other": "Édition ✉️ E-mail"
     },
     "editing_password": {
         "other": "Édition 🔒 Mot de passe"

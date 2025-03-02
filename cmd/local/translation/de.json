@@ -143,8 +143,26 @@
     "delete": {
         "other": "Löschen"
     },
+   "delete_player": {
+    "other": "Spieler(in) %v %v löschen?"
+    },
+    "delete_player_succes": {
+        "other": "%v %v wurde erfolgreich gelöscht\n"
+    },
+    "delete_team": {
+        "other": "Team %v löschen?"
+    },
+    "delete_team_succes": {
+        "other": "%v wurde erfolgreich gelöscht\n"
+    },
+    "delete_club": {
+        "other": "Club %v löschen? Sie werden auch die folgenden Teams löschen: %v"
+    },
+    "delete_club_succes": {
+        "other": "%v wurde erfolgreich gelöscht\n"
+    },
     "edit_email": {
-        "other": "E -Mail bearbeiten"
+        "other": "E-Mail bearbeiten"
     },
     "edit_password": {
         "other": "Passwort bearbeiten"
@@ -156,7 +174,7 @@
         "other": "Benutzernamen bearbeiten"
     },
     "editing_email": {
-        "other": "Bearbeitung ✉️ E -Mail"
+        "other": "Bearbeitung ✉️ E-Mail"
     },
     "editing_password": {
         "other": "Bearbeiten 🔒 Passwort"
@@ -174,7 +192,7 @@
         "other": "Die E-Mail muss gültig sein. Beispiel: abc@def.com"
     },
     "email_successfully_changed": {
-        "other": "E -Mail erfolgreich geändert"
+        "other": "E-Mail erfolgreich geändert"
     },
     "enter_current_password": {
         "other": "Geben Sie Ihr aktuelles Passwort ein"
@@ -183,7 +201,7 @@
         "other": "Geben Sie Ihre E-Mail-Adresse ein"
     },
     "enter_new_email": {
-        "other": "Geben Sie Ihre neue E -Mail ein. Beispiel: abc@def.com"
+        "other": "Geben Sie Ihre neue E-Mail ein. Beispiel: abc@def.com"
     },
     "enter_new_password": {
         "other": "Geben Sie Ihr neues Passwort ein"
@@ -279,10 +297,10 @@
         "other": "Ihr Benutzerkonto wurde erstellt!"
     },
     "message.email_not_found": {
-        "other": "Ihre E-Mail {E-Mail} wurde in unserer Datenbank nicht gefunden.\nBitte überprüfen Sie, ob Sie die E-Mail-Adresse, die Sie zum Anmelden verwendet haben, korrekt eingegeben haben."
+        "other": "Ihre E-Mail %v wurde in unserer Datenbank nicht gefunden.\nBitte überprüfen Sie, ob Sie die E-Mail-Adresse, die Sie zum Anmelden verwendet haben, korrekt eingegeben haben."
     },
     "message.email_sent": {
-        "other": "Eine Nachricht wurde an {E -Mail} gesendet.\nWenn Sie es nicht in Ihrem Posteingang finden können, überprüfen Sie Ihre Junk -Mail.\nÜberprüfen Sie ansonsten, dass Sie die E-Mail-Adresse, die Sie zum Anmelden verwendet haben, korrekt eingegeben haben."
+        "other": "Eine Nachricht wurde an %v gesendet.\nWenn Sie es nicht in Ihrem Posteingang finden können, überprüfen Sie Ihre Junk -Mail.\nÜberprüfen Sie ansonsten, dass Sie die E-Mail-Adresse, die Sie zum Anmelden verwendet haben, korrekt eingegeben haben."
     },
     "my_profile": {
         "other": "Mein Profil"

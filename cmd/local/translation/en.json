@@ -123,7 +123,7 @@
         "other": "Create your account"
     },
     "current_email": {
-        "other": "Your current email: "
+        "other": "Your current e-mail: "
     },
     "current_username": {
         "other": "Your current username: "
@@ -143,8 +143,26 @@
     "delete": {
         "other": "Delete"
     },
+    "delete_player": {
+        "other": "Delete player %v %v?"
+    },
+    "delete_player_succes": {
+        "other": "%v %v has been successfully deleted\n"
+    },
+    "delete_team": {
+        "other": "Delete team %v?"
+    },
+    "delete_team_succes": {
+        "other": "%v has been successfully deleted\n"
+    },
+    "delete_club": {
+        "other": "Delete club %v? You are also going to delete the following teams: %v"
+    },
+    "delete_club_succes": {
+        "other": "%v has been successfully deleted\n"
+    },
     "edit_email": {
-        "other": "Edit email"
+        "other": "Edit e-mail"
     },
     "edit_password": {
         "other": "Edit password"
@@ -156,7 +174,7 @@
         "other": "Edit username"
     },
     "editing_email": {
-        "other": "Editing ✉️ email"
+        "other": "Editing ✉️ e-mail"
     },
     "editing_password": {
         "other": "Editing 🔒 password"
@@ -174,7 +192,7 @@
         "other": "e-mail must be valid. Example: abc@def.com"
     },
     "email_successfully_changed": {
-        "other": "Email successfully changed"
+        "other": "E-mail successfully changed"
     },
     "enter_current_password": {
         "other": "Enter your current password"
@@ -183,7 +201,7 @@
         "other": "Enter your e-mail address"
     },
     "enter_new_email": {
-        "other": "Enter your new email. Example: abc@def.com"
+        "other": "Enter your new e-mail. Example: abc@def.com"
     },
     "enter_new_password": {
         "other": "Enter your new password"
@@ -279,10 +297,10 @@
         "other": "Your user account has been created!"
     },
     "message.email_not_found": {
-        "other": "Your e-mail {email} has not been found in our database.\nPlease check that you have correctly entered the e-mail address you used to log in."
+        "other": "Your e-mail %v has not been found in our database.\nPlease check that you have correctly entered the e-mail address you used to log in."
     },
     "message.email_sent": {
-        "other": "A message has been sent to {email}.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in."
+        "other": "A message has been sent to %v.\nIf you can't find it in your inbox, check your junk mail.\nOtherwise, check that you have correctly entered the e-mail address you used to log in."
     },
     "my_profile": {
         "other": "My profile"
