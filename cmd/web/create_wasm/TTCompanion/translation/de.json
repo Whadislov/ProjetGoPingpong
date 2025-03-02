@@ -143,6 +143,24 @@
     "delete": {
         "other": "Löschen"
     },
+   "delete_player": {
+    "other": "Spieler(in) %v %v löschen?"
+    },
+    "delete_player_succes": {
+        "other": "%v %v wurde erfolgreich gelöscht\n"
+    },
+    "delete_team": {
+        "other": "Team %v löschen?"
+    },
+    "delete_team_succes": {
+        "other": "%v wurde erfolgreich gelöscht\n"
+    },
+    "delete_club": {
+        "other": "Club %v löschen? Sie werden auch die folgenden Teams löschen: %v"
+    },
+    "delete_club_succes": {
+        "other": "%v wurde erfolgreich gelöscht\n"
+    },
     "edit_email": {
         "other": "E -Mail bearbeiten"
     },
@@ -225,7 +243,7 @@
         "other": "Vorhand"
     },
     "forgot_password": {
-        "other": "Ihr Passwort vergessen?"
+        "other": "Passwort vergessen?"
     },
     "functionalities": {
         "other": "Funktionen"
