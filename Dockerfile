@@ -12,6 +12,11 @@ COPY config_app.json ./
 COPY go.mod go.sum ./
 RUN go mod tidy
 
+# Diagnostics
+RUN ls -la /src/cmd/web/ && cat /src/cmd/web/main.go
+RUN go list -m all
+RUN go build -v ./cmd/web
+
 # Compile backend
 RUN CGO_ENABLED=0 GOARCH=amd64 go build -o backend ./cmd/web
 # Step 2 : launch app
