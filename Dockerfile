@@ -13,8 +13,7 @@ COPY go.mod go.sum ./
 RUN go mod tidy
 
 # Compile backend
-RUN CGO_ENABLED=0 GOARCH=amd64 go build -o backend ./cmd/web/main.go
-
+RUN CGO_ENABLED=0 GOARCH=amd64 go build -o backend ./cmd/web
 # Step 2 : launch app
 
 FROM alpine:latest
