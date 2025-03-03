@@ -3,14 +3,13 @@ FROM golang:1.22.2 AS builder
 WORKDIR /src
 
 COPY api api
-COPY cmd/web/main.go cmd/web/.
+COPY cmd/web/main.go cmd/web/main.go
 COPY internal/my_db internal/my_db
 COPY internal/my_functions internal/my_functions
 COPY internal/my_types internal/my_types
 COPY credentials.env ./
 COPY config_app.json ./
 COPY go.mod go.sum ./
-RUN go mod tidy
 
 # Diagnostics
 RUN ls -la /src/cmd/web/ && cat /src/cmd/web/main.go
