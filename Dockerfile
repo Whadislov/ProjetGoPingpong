@@ -3,18 +3,16 @@ FROM golang:1.22.2 AS builder
 WORKDIR /src
 
 COPY api api
-COPY cmd/web/main.go cmd/web/.
+COPY cmd/web/main.go cmd/web/main.go
 COPY internal/my_db internal/my_db
 COPY internal/my_functions internal/my_functions
 COPY internal/my_types internal/my_types
 COPY credentials.env ./
 COPY config_app.json ./
 COPY go.mod go.sum ./
-RUN go mod tidy
 
 # Compile backend
-RUN CGO_ENABLED=0 GOARCH=amd64 go build -o backend ./cmd/web/main.go
-
+RUN CGO_ENABLED=0 GOARCH=amd64 go build -o backend ./cmd/web
 # Step 2 : launch app
 
 FROM alpine:latest

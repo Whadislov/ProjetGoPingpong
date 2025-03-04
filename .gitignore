@@ -1,3 +1,5 @@
 credentials.env
 builds
-fyne-cross
+FyneApp.toml
+nginx.conf
+env
