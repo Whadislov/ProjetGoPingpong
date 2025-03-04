@@ -55,9 +55,8 @@ jobs:
       if: github.ref == 'refs/heads/main'
       env:
         PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       run: |
-        docker tag $DOCKER_USERNAME/ttcompanion:latest europe-west9-docker.pkg.dev/$PROJECT_ID/ttcompanion-repo/ttcompanion:latest
+        docker tag ${{ secrets.DOCKER_USERNAME }}/ttcompanion:latest europe-west9-docker.pkg.dev/$PROJECT_ID/ttcompanion-repo/ttcompanion:latest
         docker push europe-west9-docker.pkg.dev/$PROJECT_ID/ttcompanion-repo/ttcompanion:latest
     - name: "Deploy prod: Deploy to Google Cloud Run"
       if: github.ref == 'refs/heads/main'
