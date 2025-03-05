@@ -48,12 +48,33 @@ func AuthentificationPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		))
 	})
 
+	demoButton := widget.NewButton(T("demo"), func() {
+
+		db, token, err := mr.Login("demo", "demo")
+		if err != nil {
+			dialog.ShowError(errors.New(T("internal_error")), w)
+		}
+
+		credToken = token
+		log.Println("Demo account logged in")
+		for _, user := range db.Users {
+			if user.Name == "demo" {
+				userOfSession = user
+			} else {
+				dialog.ShowError(errors.New(T("failed_to_load_profile")), w)
+			}
+		}
+		w.SetContent(MainPage(db, w, a))
+		w.SetMainMenu(MainMenu(db, w, a))
+	})
+
 	authentificationPageWeb := container.NewVBox(
 		pageTitle,
 		authLabel,
 		logInButton,
 		signUpButton,
 		optionPageButton,
+		demoButton,
 	)
 
 	w.SetContent(authentificationPageWeb)
@@ -160,8 +181,16 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 		db, token, err := mr.Login(usernameEntry.Text, passwordEntry.Text)
 		credToken = token
 		if err != nil {
-			dialog.ShowError(fmt.Errorf(T("failed_to_log_in"), " %v", err), w)
-			w.SetContent(loginPageWeb(w, a))
+			err_username_password_missmatch := errors.New("username or password is invalid")
+			if err_username_password_missmatch == err {
+				dialog.ShowError(fmt.Errorf(T("username_and_password_missmatch"), err), w)
+				w.SetContent(loginPageWeb(w, a))
+				return
+			} else {
+				dialog.ShowError(fmt.Errorf(T("failed_to_log_in"), " %v", err), w)
+				w.SetContent(loginPageWeb(w, a))
+				return
+			}
 		} else {
 			log.Println("Login is successfull")
 			// Set the user of the session for the profile page on the menu. There is only one user on the Users map

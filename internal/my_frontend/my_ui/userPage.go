@@ -19,7 +19,7 @@ import (
 func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	//pageTitle := setTitle("Your informations", 32)
 	pageTitle := setTitle(T("your_informations"), 32)
-	if HasChanged {
+	if HasUserProfileChanged {
 		pageTitle = setTitle(T("your_informations_in_edition"), 32)
 	} else {
 		// Display the correct user info after modifications even before saving
@@ -31,7 +31,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	usernameLabel2 := widget.NewLabel(currentUsername)
 	usernameContent := container.NewGridWithColumns(2, usernameLabel1, usernameLabel2)
 
-	emailLabel1 := widget.NewLabel("✉️ Email:")
+	emailLabel1 := widget.NewLabel("✉️ E-mail" + ":")
 	emailLabel2 := widget.NewLabel(currentEmail)
 	emailContent := container.NewGridWithColumns(2, emailLabel1, emailLabel2)
 
@@ -59,7 +59,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 	passwordContent := container.NewGridWithColumns(2, passwordLabel)
 
 	saveChangesButton := widget.NewButton(T("save_changes"), func() {
-		if !HasChanged {
+		if !HasUserProfileChanged {
 			dialog.ShowInformation(T("information"), T("there_is_nothing_new_to_save"), w)
 			return
 		} else {
@@ -74,14 +74,14 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 				dialog.ShowError(err, w)
 			} else {
 				dialog.ShowInformation(T("success"), T("changes_saved"), w)
-				HasChanged = false
+				HasUserProfileChanged = false
 			}
 			UserPage(user, db, w, a)
 		}
 	})
 
 	returnToMainPageButton := widget.NewButton(T("return_to_main_page"), func() {
-		if HasChanged {
+		if HasUserProfileChanged {
 			dialog.ShowConfirm(T("unsaved_changes"), T("you_have_unsaved_changes_alt"), func(confirm bool) {
 				if confirm {
 					if appStartOption == "local" {
@@ -97,7 +97,7 @@ func UserPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) {
 					}
 				}
 				//Reset flag in both case
-				HasChanged = false
+				HasUserProfileChanged = false
 				//Set Main page in both case
 				w.SetContent(MainPage(db, w, a))
 			}, w)
@@ -135,7 +135,7 @@ func ChangeUsernamePage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 			editUsernameEntry.SetPlaceHolder(T("enter_new_username"))
 		} else {
 			dialog.ShowInformation(T("success"), T("username_successfully_changed"), w)
-			HasChanged = true
+			HasUserProfileChanged = true
 			currentUsername = editUsernameEntry.Text
 			UserPage(user, db, w, a)
 		}
@@ -172,7 +172,7 @@ func ChangeEmailPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.App) 
 			editEmailEntry.SetPlaceHolder(T("enter_new_email"))
 		} else {
 			dialog.ShowInformation(T("success"), T("email_successfully_changed"), w)
-			HasChanged = true
+			HasUserProfileChanged = true
 			currentEmail = editEmailEntry.Text
 			UserPage(user, db, w, a)
 		}
@@ -228,7 +228,7 @@ func ChangePasswordPage(user *mt.User, db *mt.Database, w fyne.Window, a fyne.Ap
 				confirmEditPasswordEntry.SetText("")
 			} else {
 				dialog.ShowInformation(T("success"), T("password_successfully_changed"), w)
-				HasChanged = true
+				HasUserProfileChanged = true
 				UserPage(user, db, w, a)
 			}
 		}

@@ -9,6 +9,10 @@ import (
 	"golang.org/x/text/language"
 )
 
+// Tracks if the database has changed
+var HasChanged bool
+var HasUserProfileChanged bool
+
 var appStartOption string
 var userOfSession *mt.User
 var credToken string

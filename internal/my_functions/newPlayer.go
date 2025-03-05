@@ -58,6 +58,6 @@ func NewPlayer(firstname string, lastname string, db *mt.Database) (*mt.Player, 
 	}
 
 	db.AddPlayer(p)
-	log.Printf("Player %v sucessfully created.", firstname+lastname)
+	log.Printf("Player %v %v sucessfully created.", firstname, lastname)
 	return p, nil
 }

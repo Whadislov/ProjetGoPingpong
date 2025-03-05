@@ -161,6 +161,9 @@
     "delete_club_succes": {
         "other": "%v wurde erfolgreich gelöscht\n"
     },
+    "demo": {
+        "other": "Demo"
+    },
     "edit_email": {
         "other": "E-Mail bearbeiten"
     },
@@ -233,8 +236,8 @@
     "firstname": {
         "other": "Vorname"
     },
-    "firstname.must_be_letters_only": {
-        "other": "Der Vorname darf nur aus Buchstaben bestehen"
+    "firstname.must_be_valid": {
+        "other": "Der Vorname muss gültig sein. Zum Beispiel Jean-François, Evelin."
     },
     "firstname.must_not_be_empty": {
         "other": "Der Vorname darf nicht leer sein"
@@ -272,8 +275,8 @@
     "lastname": {
         "other": "Lastname"
     },
-    "lastname.must_be_letters_only": {
-        "other": "Der Nachname darf nur aus Buchstaben bestehen"
+    "lastname.must_be_valid": {
+        "other": "Der Nachname muss gültig sein. Zum Beispiel Dupont, Müller"
     },
     "lastname.must_not_be_empty": {
         "other": "Der Nachname darf nicht leer sein"
@@ -292,6 +295,9 @@
     },
     "main_page": {
         "other": "Hauptseite"
+    },
+    "material_name_invalid": {
+        "other": "Der Materialname ist ungültig"
     },
     "message.account_created": {
         "other": "Ihr Benutzerkonto wurde erstellt!"
@@ -537,7 +543,7 @@
         "other": "Der Benutzername muss gültig sein (nur Buchstaben und Zahlen sind zulässig, Räume sind nicht erlaubt)"
     },
     "username_and_password_missmatch": {
-        "other": "Benutzername und Passwort -Nichtübereinstimmung"
+        "other": "Fehler bei der Anmeldung: Sie haben einen falschen Benutzernamen oder ein falsches Passwort eingegeben"
     },
     "username_successfully_changed": {
         "other": "Benutzername hat sich erfolgreich verändert"

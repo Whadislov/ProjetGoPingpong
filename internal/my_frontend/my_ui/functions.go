@@ -84,14 +84,46 @@ func reinitWidgetEntryText(entry *widget.Entry, entryHolder string) {
 	entry.SetPlaceHolder(entryHolder)
 }
 
-// Verify if the string is letters only
-func IsLettersOnly(s string) bool {
-	for _, r := range s {
-		if r < 'A' || r > 'z' {
-			return false
-		}
+// isValidName verifies that the name follows some criterias
+func IsValidFirstname(name string) (bool, error) {
+	if name == "" {
+		return false, fmt.Errorf(T("firstname.must_not_be_empty"))
 	}
-	return true
+
+	// Name can be composed (not mandatory with the ()), will start will a -
+	// * means that the group can be repeated
+	nameRegex := `^[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+(-[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+)*$`
+
+	// Compile the regex
+	re := regexp.MustCompile(nameRegex)
+
+	// Verify if the string matches the regex
+	if re.MatchString(name) {
+		return re.MatchString(name), nil
+	} else {
+		return re.MatchString(name), fmt.Errorf(T("firstname.must_be_valid"))
+	}
+}
+
+// isValidName verifies that the name follows some criterias
+func IsValidLastname(name string) (bool, error) {
+	if name == "" {
+		return false, fmt.Errorf(T("lastname.must_not_be_empty"))
+	}
+
+	// Name can be composed (not mandatory with the ()), will start will a -
+	// * means that the group can be repeated
+	nameRegex := `^[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+(-[a-zA-ZéèêçàÉÈÊÇÀßöäüÖÜÄ]+)*$`
+
+	// Compile the regex
+	re := regexp.MustCompile(nameRegex)
+
+	// Verify if the string matches the regex
+	if re.MatchString(name) {
+		return re.MatchString(name), nil
+	} else {
+		return re.MatchString(name), fmt.Errorf(T("lastname.must_be_valid"))
+	}
 }
 
 // Verify if the string is numbers only
@@ -104,13 +136,9 @@ func isNumbersOnly(s string) bool {
 	return true
 }
 
-// isValidString verifies that the string is not empty and only contain letters, figures and some spaces
-func isValidString(s string) (bool, error) {
-	if s == "" {
-		return false, fmt.Errorf("string cannot be empty")
-	}
-
-	sRegex := `^[a-zA-Z0-9      ]+$`
+// isValidMaterialName verifies that the name follows some criterias
+func isValidMaterialName(s string) (bool, error) {
+	sRegex := `^[a-zA-Z0-9éèêçàÉÈÊÇÀßöäüÖÜÄ ]+([- ][a-zA-Z0-9éèêçàÉÈÊÇÀßöäüÖÜÄ ]+)*$`
 
 	// Compile the regex
 	re := regexp.MustCompile(sRegex)
@@ -119,7 +147,7 @@ func isValidString(s string) (bool, error) {
 	if re.MatchString(s) {
 		return re.MatchString(s), nil
 	} else {
-		return re.MatchString(s), fmt.Errorf("string must be valid (letters, figures and one space are allowed)")
+		return re.MatchString(s), fmt.Errorf(T("material_name_invalid"))
 	}
 }
 

@@ -49,12 +49,48 @@ func AuthentificationPage(w fyne.Window, a fyne.App) *fyne.Container {
 		))
 	})
 
+	demoButton := widget.NewButton(T("demo"), func() {
+
+		db, err := mdb.LoadUsersOnly()
+		if err != nil {
+			panic(err)
+		}
+
+		for _, user := range db.Users {
+			if user.Name == "demo" {
+				err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte("demo"))
+				if err != nil {
+					dialog.ShowError(fmt.Errorf(T("username_and_password_missmatch"), err), w)
+					return
+				} else {
+					log.Println("Demo account logged in")
+					mdb.SetUserIDOfSession(user.ID)
+					// Now load the corresponding database of the user
+					var err error
+
+					mdb.SetUserIDOfSession(user.ID)
+					db, err = mdb.LoadDB()
+
+					if err != nil {
+						dialog.ShowError(err, w)
+					} else {
+						userOfSession = db.Users[user.ID]
+						w.SetContent(MainPage(db, w, a))
+						w.SetMainMenu(MainMenu(db, w, a))
+						return
+					}
+				}
+			}
+		}
+	})
+
 	authentificationPage := container.NewVBox(
 		pageTitle,
 		authLabel,
 		logInButton,
 		signUpButton,
 		optionPageButton,
+		demoButton,
 	)
 	return authentificationPage
 
@@ -147,9 +183,14 @@ func signUpPage(w fyne.Window, a fyne.App) *fyne.Container {
 			if err != nil {
 				dialog.ShowError(err, w)
 			} else {
-				userOfSession = db.Users[newUser.ID]
-				w.SetContent(MainPage(db, w, a))
-				w.SetMainMenu(MainMenu(db, w, a))
+				// Only one user is loaded
+				for _, user := range db.Users {
+					userOfSession = user
+					mdb.SetUserIDOfSession(userOfSession.ID)
+					w.SetContent(MainPage(db, w, a))
+					w.SetMainMenu(MainMenu(db, w, a))
+					return
+				}
 			}
 		}
 	})
@@ -198,7 +239,7 @@ func loginPage(w fyne.Window, a fyne.App) *fyne.Container {
 			if usernameEntry.Text == user.Name {
 				err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(passwordEntry.Text))
 				if err != nil {
-					dialog.ShowError(fmt.Errorf(T("internal_error")+" : %v", err), w)
+					dialog.ShowError(fmt.Errorf(T("username_and_password_missmatch")), w)
 					return
 				} else {
 					log.Println("Login is successfull")
@@ -220,8 +261,6 @@ func loginPage(w fyne.Window, a fyne.App) *fyne.Container {
 				}
 			}
 		}
-		// Username and password mismatch
-		log.Println("Login failed : Username and password mismatch")
 		dialog.ShowError(errors.New(T("username_and_password_missmatch")), w)
 		// Reset entries
 		reinitWidgetEntryText(usernameEntry, "")
