@@ -543,7 +543,7 @@
         "other": "username must be valid (only letters and figures are allowed, spaces are not allowed)"
     },
     "username_and_password_missmatch": {
-        "other": "Username and password mismatch"
+        "other": "Login error: You have entered an incorrect user name or password"
     },
     "username_successfully_changed": {
         "other": "Username successfully changed"

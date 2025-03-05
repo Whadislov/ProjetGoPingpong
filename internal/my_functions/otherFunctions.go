@@ -70,7 +70,7 @@ func IsValidName(name string) (bool, error) {
 	}
 }
 
-// isValidName verifies that the name follows some criterias
+// IsValidUsername verifies that the name follows some criterias
 func IsValidUsername(username string) (bool, error) {
 	if username == "" {
 		return false, fmt.Errorf("username cannot be empty")

@@ -543,7 +543,7 @@
         "other": "Der Benutzername muss gültig sein (nur Buchstaben und Zahlen sind zulässig, Räume sind nicht erlaubt)"
     },
     "username_and_password_missmatch": {
-        "other": "Benutzername und Passwort -Nichtübereinstimmung"
+        "other": "Fehler bei der Anmeldung: Sie haben einen falschen Benutzernamen oder ein falsches Passwort eingegeben"
     },
     "username_successfully_changed": {
         "other": "Benutzername hat sich erfolgreich verändert"

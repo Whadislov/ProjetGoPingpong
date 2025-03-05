@@ -543,7 +543,7 @@
         "other": "Le nom d'utilisateur doit être valide (seules les lettres et les chiffres sont autorisés, les espaces ne sont pas autorisés)"
     },
     "username_and_password_missmatch": {
-        "other": "Nom d'utilisateur et décalage de mot de passe"
+        "other": "Erreur lors de la connexion : vous avez saisi un nom d'utilisateur ou un mot de passe erroné"
     },
     "username_successfully_changed": {
         "other": "Le nom d'utilisateur a changé avec succès"
