@@ -161,6 +161,9 @@
     "delete_club_succes": {
         "other": "%v has been successfully deleted\n"
     },
+    "demo": {
+        "other": "Demo"
+    },
     "edit_email": {
         "other": "Edit e-mail"
     },
