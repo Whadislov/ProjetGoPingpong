@@ -67,6 +67,6 @@ func NewUser(username string, email string, password string, confirmPassword str
 	}
 
 	db.AddUser(u)
-	log.Printf("User creation : User sucessfully created.")
+	log.Printf("User creation : User %v sucessfully created.", username)
 	return u, nil
 }

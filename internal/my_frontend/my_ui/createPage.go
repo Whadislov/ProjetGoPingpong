@@ -82,25 +82,18 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						age := -1
 						ranking := -1
 
-						// Check player name
-						if firstnameEntry.Text == "" {
-							dialog.ShowError(errors.New(T("firstname.must_not_be_empty")), w)
-							firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
-							return
-						} else if !IsLettersOnly(firstnameEntry.Text) {
-							dialog.ShowError(errors.New(T("firstname.must_be_letters_only")), w)
-							firstnameEntry.SetPlaceHolder(entryFirstnameHolder)
+						bf, errf := mf.IsValidName(firstnameEntry.Text)
+						if !bf {
+							dialog.ShowError(errf, w)
 							return
 						}
-						if lastnameEntry.Text == "" {
-							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
-							lastnameEntry.SetPlaceHolder(entryLastnameHolder)
-							return
-						} else if !IsLettersOnly(lastnameEntry.Text) {
-							dialog.ShowError(errors.New(T("lastname.must_be_letters_only")), w)
-							lastnameEntry.SetPlaceHolder(entryLastnameHolder)
+
+						bl, errl := mf.IsValidName(lastnameEntry.Text)
+						if !bl {
+							dialog.ShowError(errl, w)
 							return
 						}
+
 						// Set player age
 						if ageEntry.Text != "" {
 							a, errAge := strconv.Atoi(ageEntry.Text)
@@ -140,7 +133,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						// Check player material
 						if forehandEntry.Text != "" {
 							forehandEntry.Text = standardizeSpaces(forehandEntry.Text)
-							b, err := isValidString(forehandEntry.Text)
+							b, err := isValidMaterialName(forehandEntry.Text)
 							if !b {
 								dialog.ShowError(err, w)
 								forehandEntry.SetPlaceHolder(entryForehandHolder)
@@ -152,7 +145,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 						if backhandEntry.Text != "" {
 							backhandEntry.Text = standardizeSpaces(backhandEntry.Text)
-							b, err := isValidString(backhandEntry.Text)
+							b, err := isValidMaterialName(backhandEntry.Text)
 							if !b {
 								dialog.ShowError(err, w)
 								backhandEntry.SetPlaceHolder(entryBackhandHolder)
@@ -164,7 +157,7 @@ func CreatePage(db *mt.Database, w fyne.Window, a fyne.App) {
 						}
 						if bladeEntry.Text != "" {
 							bladeEntry.Text = standardizeSpaces(bladeEntry.Text)
-							b, err := isValidString(bladeEntry.Text)
+							b, err := isValidMaterialName(bladeEntry.Text)
 							if !b {
 								dialog.ShowError(err, w)
 								bladeEntry.SetPlaceHolder(entryBladeHolder)

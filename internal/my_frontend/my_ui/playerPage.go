@@ -30,45 +30,6 @@ func PlayerInfos(player *mt.Player) *fyne.Container {
 	// Sort clubs alphabetically
 	slices.Sort(clubs)
 
-	/*
-		// To much space between lines
-		firstnameLabel1 := widget.NewLabel(T("firstname") + ":")
-		firstnameLabel2 := widget.NewLabel(player.Firstname)
-		firstnameContent := container.NewGridWithColumns(2, firstnameLabel1, firstnameLabel2)
-
-		lastnameLabel1 := widget.NewLabel(T("lastname") + ":")
-		lastnameLabel2 := widget.NewLabel(player.Lastname)
-		lastnameContent := container.NewGridWithColumns(2, lastnameLabel1, lastnameLabel2)
-
-		ageLabel1 := widget.NewLabel(T("age") + ":")
-		ageLabel2 := widget.NewLabel(strconv.Itoa(player.Age))
-		ageContent := container.NewGridWithColumns(2, ageLabel1, ageLabel2)
-
-		forehandLabel1 := widget.NewLabel(T("forehand") + ":")
-		forehandLabel2 := widget.NewLabel(player.Material[0])
-		forehandContent := container.NewGridWithColumns(2, forehandLabel1, forehandLabel2)
-
-		backhandLabel1 := widget.NewLabel(T("backhand") + ":")
-		backhandLabel2 := widget.NewLabel(player.Material[1])
-		backhandContent := container.NewGridWithColumns(2, backhandLabel1, backhandLabel2)
-
-		bladeLabel1 := widget.NewLabel(T("blade") + ":")
-		bladeLabel2 := widget.NewLabel(player.Material[2])
-		bladeContent := container.NewGridWithColumns(2, bladeLabel1, bladeLabel2)
-
-		rankingLabel1 := widget.NewLabel(T("ranking") + ":")
-		rankingLabel2 := widget.NewLabel(strconv.Itoa(player.Ranking))
-		rankingContent := container.NewGridWithColumns(2, rankingLabel1, rankingLabel2)
-
-		teamsLabel1 := widget.NewLabel(T("teams") + ":")
-		teamsLabel2 := widget.NewLabel(strHelper(teams))
-		teamsContent := container.NewGridWithColumns(2, teamsLabel1, teamsLabel2)
-
-		clubsLabel1 := widget.NewLabel(T("clubs") + ":")
-		clubsLabel2 := widget.NewLabel(strHelper(clubs))
-		clubsContent := container.NewGridWithColumns(2, clubsLabel1, clubsLabel2)
-	*/
-
 	leftText := T("firstname") + ":\n" + T("lastname") + ":\n" + T("age") + ":\n" + T("forehand") + ":\n" + T("backhand") + ":\n" + T("blade") + ":\n" + T("ranking") + ":\n" + T("teams") + ":\n" + T("clubs") + ":"
 	rightText := player.Firstname + "\n" + player.Lastname + "\n" + strconv.Itoa(player.Age) + "\n" + player.Material[0] + "\n" + player.Material[1] + "\n" + player.Material[2] + "\n" + strconv.Itoa(player.Ranking) + "\n" + strHelper(teams) + "\n" + strHelper(clubs)
 
