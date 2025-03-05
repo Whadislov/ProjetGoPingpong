@@ -178,7 +178,8 @@ func loginPageWeb(w fyne.Window, a fyne.App) *fyne.Container {
 	passwordEntry := widget.NewPasswordEntry()
 
 	validationButton := widget.NewButton(T("login"), func() {
-		db, token, err := mr.Login(usernameEntry.Text, passwordEntry.Text)
+		db, token, err := loginWithSpinner(a, usernameEntry.Text, passwordEntry.Text)
+		//db, token, err := mr.Login(usernameEntry.Text, passwordEntry.Text)
 		credToken = token
 		if err != nil {
 			err_username_password_missmatch := errors.New("username or password is invalid")
