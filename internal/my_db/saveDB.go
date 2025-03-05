@@ -42,8 +42,8 @@ func (db *Database) SaveUsers(users map[uuid.UUID]*mt.User) error {
 }
 
 // SavePlayers saves players in the database.
-func (db *Database) SavePlayers(players map[uuid.UUID]*mt.Player) error {
-	for _, player := range players {
+func (db *Database) SavePlayers(golangDB *mt.Database) error {
+	for _, player := range golangDB.Players {
 		if player.IsNew {
 			// Let postgresql creates its own ID for a new player
 			var postgresPlayerID uuid.UUID
@@ -71,12 +71,23 @@ func (db *Database) SavePlayers(players map[uuid.UUID]*mt.Player) error {
 			}
 		}
 	}
+
+	for _, player := range golangDB.Players {
+		for oldTeamID := range player.TeamIDs {
+			if newTeamID, exists := idMapping[oldTeamID]; exists {
+				// Replace old ID with the new one
+				delete(player.TeamIDs, oldTeamID)
+				player.TeamIDs[newTeamID] = golangDB.Teams[oldTeamID].Name
+			}
+		}
+	}
+
 	return nil
 }
 
 // SaveTeams saves teams in the database.
-func (db *Database) SaveTeams(teams map[uuid.UUID]*mt.Team) error {
-	for _, team := range teams {
+func (db *Database) SaveTeams(golangDB *mt.Database) error {
+	for _, team := range golangDB.Teams {
 		if team.IsNew {
 			// Let postgresql creates its own ID for a new team
 			var postgresTeamID uuid.UUID
@@ -89,6 +100,8 @@ func (db *Database) SaveTeams(teams map[uuid.UUID]*mt.Team) error {
 			if err != nil {
 				return fmt.Errorf("failed to save the new team: %w", err)
 			}
+			// Store the link between the old and the new ID
+			idMapping[team.ID] = postgresTeamID
 			// Change the ID for the relationship tables
 			team.ID = postgresTeamID
 		} else {
@@ -108,8 +121,8 @@ func (db *Database) SaveTeams(teams map[uuid.UUID]*mt.Team) error {
 }
 
 // SaveClubs saves clubs in the database.
-func (db *Database) SaveClubs(clubs map[uuid.UUID]*mt.Club) error {
-	for _, club := range clubs {
+func (db *Database) SaveClubs(golangDB *mt.Database) error {
+	for _, club := range golangDB.Clubs {
 		if club.IsNew {
 			// Let postgresql creates its own ID for a new club
 			var postgresClubID uuid.UUID
@@ -122,6 +135,8 @@ func (db *Database) SaveClubs(clubs map[uuid.UUID]*mt.Club) error {
 			if err != nil {
 				return fmt.Errorf("failed to save the new club: %w", err)
 			}
+			// Store the link between the old and the new ID
+			idMapping[club.ID] = postgresClubID
 			// Change the ID for the relationship tables
 			club.ID = postgresClubID
 		} else {
@@ -137,6 +152,27 @@ func (db *Database) SaveClubs(clubs map[uuid.UUID]*mt.Club) error {
 			}
 		}
 	}
+
+	for _, player := range golangDB.Players {
+		for oldClubID := range player.ClubIDs {
+			if newClubID, exists := idMapping[oldClubID]; exists {
+				// Replace old ID with the new one
+				delete(player.ClubIDs, oldClubID)
+				player.ClubIDs[newClubID] = golangDB.Clubs[oldClubID].Name
+			}
+		}
+	}
+
+	for _, team := range golangDB.Teams {
+		for oldClubID := range team.ClubID {
+			if newClubID, exists := idMapping[oldClubID]; exists {
+				// Replace old ID with the new one
+				delete(team.ClubID, oldClubID)
+				team.ClubID[newClubID] = golangDB.Clubs[oldClubID].Name
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -145,10 +181,10 @@ func (db *Database) SavePlayerClubs(players map[uuid.UUID]*mt.Player) error {
 	for _, player := range players {
 		for clubID := range player.ClubIDs {
 			query := `
-			INSERT INTO player_club (player_id, club_id, user_id)
-			VALUES ($1, $2, $3)
-			ON CONFLICT (player_id, club_id) DO NOTHING;
-			`
+				INSERT INTO player_club (player_id, club_id, user_id)
+				VALUES ($1, $2, $3)
+				ON CONFLICT (player_id, club_id) DO NOTHING;
+				`
 			_, err := db.Conn.Exec(query, player.ID, clubID, userIDOfSession)
 			if err != nil {
 				return fmt.Errorf("failed to save the new player_club relationship: %w", err)
@@ -229,26 +265,25 @@ func SaveDB(golangDB *mt.Database) error {
 		fmt.Println("Error while connecting to postgres database:", err)
 	}
 	sqlDB.ResetTables()
-
+	// Respect order, user then clubs, then team, then players
 	log.Println("Saving user")
 	err = sqlDB.SaveUsers(golangDB.Users)
 	if err != nil {
 		return err
 	}
-	log.Println("Saving players")
-	err = sqlDB.SavePlayers(golangDB.Players)
+	log.Println("Saving clubs")
+	err = sqlDB.SaveClubs(golangDB)
 	if err != nil {
 		return err
 	}
 	log.Println("Saving teams")
-	err = sqlDB.SaveTeams(golangDB.Teams)
+	err = sqlDB.SaveTeams(golangDB)
 	if err != nil {
 		return err
 	}
-	log.Println("Saving clubs")
-	err = sqlDB.SaveClubs(golangDB.Clubs)
+	log.Println("Saving players")
+	err = sqlDB.SavePlayers(golangDB)
 	if err != nil {
-		log.Println("(SaveDb SaveC) Error", err)
 		return err
 	}
 	log.Println("Saving player team relationships")

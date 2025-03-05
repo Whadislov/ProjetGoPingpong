@@ -181,7 +181,7 @@ func LoadDB() (*mt.Database, error) {
 	}
 
 	log.Println("Loading user")
-	users, err := db.LoadUser()
+	user, err := db.LoadUser()
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func LoadDB() (*mt.Database, error) {
 		return nil, err
 	}
 	golangDB := &mt.Database{
-		Users:           users,
+		Users:           user,
 		Players:         players,
 		Teams:           teams,
 		Clubs:           clubs,

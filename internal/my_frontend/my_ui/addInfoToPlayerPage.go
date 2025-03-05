@@ -126,7 +126,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		// Check player material
 		if forehandEntry.Text != "" {
 			forehandEntry.Text = standardizeSpaces(forehandEntry.Text)
-			b, err := isValidString(forehandEntry.Text)
+			b, err := isValidMaterialName(forehandEntry.Text)
 			if !b {
 				dialog.ShowError(err, w)
 				forehandEntry.SetPlaceHolder(entryForehandHolder)
@@ -138,7 +138,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		}
 		if backhandEntry.Text != "" {
 			backhandEntry.Text = standardizeSpaces(backhandEntry.Text)
-			b, err := isValidString(backhandEntry.Text)
+			b, err := isValidMaterialName(backhandEntry.Text)
 			if !b {
 				dialog.ShowError(err, w)
 				backhandEntry.SetPlaceHolder(entryBackhandHolder)
@@ -150,7 +150,7 @@ func AddInfoToSelectedPlayerPage(p *mt.Player, db *mt.Database, w fyne.Window, a
 		}
 		if bladeEntry.Text != "" {
 			bladeEntry.Text = standardizeSpaces(bladeEntry.Text)
-			b, err := isValidString(bladeEntry.Text)
+			b, err := isValidMaterialName(bladeEntry.Text)
 			if !b {
 				dialog.ShowError(err, w)
 				bladeEntry.SetPlaceHolder(entryBladeHolder)

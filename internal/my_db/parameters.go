@@ -19,6 +19,8 @@ func SetPsqlInfo(link string) {
 
 var dbName string
 
+var idMapping = make(map[uuid.UUID]uuid.UUID)
+
 func SetDBName(name string) {
 	dbName = name
 }

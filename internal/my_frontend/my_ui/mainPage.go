@@ -8,9 +8,6 @@ import (
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 )
 
-// Tracks if the database has changed
-var HasChanged bool
-
 // MainPage creates the main page
 func MainPage(db *mt.Database, w fyne.Window, a fyne.App) *fyne.Container {
 

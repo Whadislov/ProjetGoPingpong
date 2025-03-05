@@ -161,6 +161,9 @@
     "delete_club_succes": {
         "other": "%v a été supprimé avec succès\n"
     },
+    "demo": {
+        "other": "Démo"
+    },
     "edit_email": {
         "other": "Modifier l'e-mail"
     },
@@ -233,8 +236,8 @@
     "firstname": {
         "other": "Prénom"
     },
-    "firstname.must_be_letters_only": {
-        "other": "Le prénom ne doit être uniquement composé de lettres"
+    "firstname.must_be_valid": {
+        "other": "Le prénom doit être valide. Par exemple, Jean-François, Evelin"
     },
     "firstname.must_not_be_empty": {
         "other": "Le prénom ne doit pas être vide"
@@ -272,8 +275,8 @@
     "lastname": {
         "other": "Nom de famille"
     },
-    "lastname.must_be_letters_only": {
-        "other": "Le nom de famille ne doit être uniquement composé de lettres"
+    "lastname.must_be_valid": {
+        "other": "Le nom de famille doit être valide. Par exemple, Dupont, Müller"
     },
     "lastname.must_not_be_empty": {
         "other": "Le nom de famille ne doit pas être vide"
@@ -292,6 +295,9 @@
     },
     "main_page": {
         "other": "Page principale"
+    },
+    "material_name_invalid": {
+        "other": "Le nom du matériel est invalide"
     },
     "message.account_created": {
         "other": "Votre compte d'utilisateur a été créé!"
@@ -537,7 +543,7 @@
         "other": "Le nom d'utilisateur doit être valide (seules les lettres et les chiffres sont autorisés, les espaces ne sont pas autorisés)"
     },
     "username_and_password_missmatch": {
-        "other": "Nom d'utilisateur et décalage de mot de passe"
+        "other": "Erreur lors de la connexion : vous avez saisi un nom d'utilisateur ou un mot de passe erroné"
     },
     "username_successfully_changed": {
         "other": "Le nom d'utilisateur a changé avec succès"
