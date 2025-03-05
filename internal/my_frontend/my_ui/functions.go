@@ -1,10 +1,15 @@
 package myapp
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"image/gif"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -12,6 +17,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
+	mr "github.com/Whadislov/TTCompanion/internal/my_frontend/my_requests"
 	mt "github.com/Whadislov/TTCompanion/internal/my_types"
 	"github.com/google/uuid"
 )
@@ -204,4 +210,132 @@ func loadTheme(a fyne.App) {
 func loadThemeWeb(a fyne.App) {
 	darkTheme.IsActivated = true
 	a.Settings().SetTheme(&darkTheme)
+}
+
+// loadingSpinnerStart starts a spinner gif that indicates that an operation is working
+func loadingSpinnerStart(a fyne.App) (fyne.Window, chan struct{}) {
+	w := a.NewWindow("Loading")
+
+	gifData, err := loadGIF()
+	if err != nil {
+		dialog.ShowError(err, w)
+		return w, nil
+	}
+
+	stopChan := make(chan struct{})
+
+	gifImage := startGIFAnimation(w, gifData, stopChan)
+
+	w.Resize(fyne.NewSize(300, 100))
+	w.SetContent(gifImage)
+	w.CenterOnScreen()
+	w.SetCloseIntercept(func() {
+		// User can't close
+	})
+	w.Show()
+
+	return w, stopChan
+}
+
+// loadDatabaseWithSpinner uses a spinner gif to indicate that the database is loading
+func loadDatabaseWithSpinner(a fyne.App, credToken string) (*mt.Database, error) {
+	w, stopChan := loadingSpinnerStart(a)
+
+	resultChan := make(chan struct {
+		db  *mt.Database // Remplace par ton type
+		err error
+	})
+
+	go func() {
+		db, err := mr.LoadDB(credToken) // Ton chargement de DB
+		resultChan <- struct {
+			db  *mt.Database
+			err error
+		}{db, err}
+	}()
+
+	timeout := time.After(1 * time.Minute)
+
+	select {
+	case result := <-resultChan:
+		close(stopChan) // Arrête l'animation
+		w.Close()
+		return result.db, result.err
+	case <-timeout:
+		close(stopChan) // Arrête l'animation
+		w.Close()
+		return nil, errors.New("operation timed out")
+	}
+}
+
+// loadDatabaseWithSpinner uses a spinner gif to indicate that the database is loading
+func loginWithSpinner(a fyne.App, username string, password string) (*mt.Database, string, error) {
+	w, stopChan := loadingSpinnerStart(a)
+
+	resultChan := make(chan struct {
+		db    *mt.Database
+		token string
+		err   error
+	})
+
+	go func() {
+		db, token, err := mr.Login(username, password)
+		resultChan <- struct {
+			db    *mt.Database
+			token string
+			err   error
+		}{db, token, err}
+	}()
+
+	timeout := time.After(1 * time.Minute)
+
+	select {
+	case result := <-resultChan:
+		close(stopChan) // Arrête l'animation
+		w.Close()
+		return result.db, result.token, result.err
+	case <-timeout:
+		close(stopChan) // Arrête l'animation
+		w.Close()
+		return nil, "", errors.New("operation timed out")
+	}
+}
+
+// loadGIF loads a gif
+func loadGIF() (*gif.GIF, error) {
+
+	data, err := os.ReadFile("wasm/spinner_dark.gif")
+	if err != nil {
+		return nil, err
+	}
+	g, err := gif.DecodeAll(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	return g, nil
+}
+
+// startGIFAnimation creates an animation from a gif
+func startGIFAnimation(w fyne.Window, gifData *gif.GIF, stopChan chan struct{}) *canvas.Image {
+	// Create an inital image from the first frames
+	img := canvas.NewImageFromImage(gifData.Image[0])
+	img.FillMode = canvas.ImageFillContain
+	img.SetMinSize(fyne.NewSize(100, 100))
+
+	// Animation
+	go func() {
+		frame := 0
+		for {
+			select {
+			case <-time.After(time.Duration(gifData.Delay[frame]*10) * time.Millisecond): // respects gif delays
+				frame = (frame + 1) % len(gifData.Image) // Loop on frames
+				img.Image = gifData.Image[frame]
+				img.Refresh()
+			case <-stopChan: // Stops the animation if called
+				return
+			}
+		}
+	}()
+
+	return img
 }
