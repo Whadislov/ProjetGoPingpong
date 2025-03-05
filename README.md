@@ -7,30 +7,19 @@ TT companion is a table tennis application built with Go. It allows users to man
 - Create a database of players, teams and clubs
 - Manage relationship between players, teams and clubs
 - User-friendly interface
-- A lot more is to come
 
-## Installation
-1. Clone the repository:
+## Run the application on desktop
+1. Have PostgreSQL installed
+2. Run the application:
     ```
-    git clone https://github.com/yourusername/ProjetGoPingpong.git
-    ```
-2. Navigate to the project directory:
-    ```
-    cd ProjetGoPingpong
-    ```
-3. Install dependencies:
-    ```
-    go mod tidy
+    go run cmd/local/main.go
     ```
 
-## Usage
-1. Run the application:
-    ```
-    go run main.go
-    ```
+## Run the application on browser
+1. ttcompanion.onrender.com
 
 ## Contributing
-Personal project
+It is a personal project
 
 ## License
 No
